@@ -13,20 +13,19 @@ class ImplAddressRepository implements AddressRepositoryInterface {
     public function create(Address $address): void
     {
         try{
-        
-        $address = new AddressModel;
-        $address->id_people = $address->id_people->value;
-        $address->street = $address->street->value;
-        $address->street_number = $address->street_number->value;
-        $address->neighborhood = $address->neighborhood->value;
-        $address->id_district = $address->id_district->value;
-        $address->house_number = $address->house_number->value;
-        $address->block = $address->block->value;
-        $address->pathway = $address->pathway->value;
-        $address->current = $address->current->value;
-
-        $address->save();
-
+            //dd($address);
+        $addressModel = new AddressModel;
+        $addressModel->id_people = $address->id_people->value();
+        $addressModel->street = $address->street->value();
+        $addressModel->street_number = $address->street_number->value();
+        $addressModel->neighborhood = $address->neighborhood->value();
+        $addressModel->id_district = $address->id_district->value();
+        $addressModel->house_number = $address->house_number->value();
+        $addressModel->block = $address->block->value();
+        $addressModel->pathway = $address->pathway->value();
+        $addressModel->current = $address->current->value();
+        $addressModel->save();
+        //dd($address);
         }catch(ErrorException $e){
             throw $e;
         }

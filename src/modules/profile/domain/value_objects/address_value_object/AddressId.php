@@ -26,4 +26,7 @@ class AddressId
             throw new AddressException("El campo id address debe ser de tipo entero");
         }
     }
+    public function value() : int {
+        return $this->value;
+    }
 }

@@ -26,4 +26,7 @@ class AddressIdMunicipality
             throw new AddressException("El campo debe id_municipality ser de tipo entero");
         }
     }
+    public function value() : int {
+        return $this->value;
+    }
 }

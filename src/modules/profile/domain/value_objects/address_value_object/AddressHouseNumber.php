@@ -19,4 +19,8 @@ class AddressHouseNumber
             throw new AddressException("El campo numero de casa es obligatorio");
         }
     }
+
+    public function value() : string {
+        return $this->value;
+    }
 }

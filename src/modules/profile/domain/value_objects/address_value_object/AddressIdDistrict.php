@@ -26,4 +26,7 @@ class AddressIdDistrict
             throw new AddressException("El campo id_district debe ser de tipo entero");
         }
     }
+    public function value() : int {
+        return $this->value;
+    }
 }

@@ -6,7 +6,7 @@ use Src\modules\profile\domain\exceptions\AddressException;
 
 class AddressCurrent
 {
-    private string $value;
+    private bool $value;
     public function __construct(bool $value)
     {
         $this->value = $value;
@@ -19,4 +19,8 @@ class AddressCurrent
     //         throw new AddressException("El campo numero de casa es obligatorio");
     //     }
     // }
+
+    public function value() : string {
+        return $this->value;
+    }
 }

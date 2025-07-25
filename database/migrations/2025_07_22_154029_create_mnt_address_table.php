@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer("id_people");
             $table->string("street", length: 150);
-            $table->string("stree_number", length: 150);
+            $table->string("street_number", length: 150);
             $table->string("neighborhood", length: 150);
             $table->integer("id_district");
             $table->string("house_number", length: 150);

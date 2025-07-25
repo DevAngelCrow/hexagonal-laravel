@@ -18,4 +18,8 @@ class AddressStreet
     //         throw new AddressException("El campo bloque es obligatorio");
     //     }
     // }
+
+    public function value() : string {
+        return $this->value;
+    }
 }

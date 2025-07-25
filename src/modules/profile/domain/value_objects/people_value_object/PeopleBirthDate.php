@@ -17,4 +17,8 @@ class PeopleBirthDate {
             throw new AddressException("El campo de fecha de nacimiento es obligatorio");
         }
     }
+
+    public function value() : DateTimeImmutable {
+        return $this->value;
+    }
 }

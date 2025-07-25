@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class MntAddress extends Model
 {
-    protected $table = "mnt_table";
+    protected $table = "mnt_address";
     protected $fillable = [
         "id",
         "id_people",

@@ -26,4 +26,8 @@ class AddressIdDepartment
             throw new AddressException("El campo id_department debe ser de tipo entero");
         }
     }
+
+    public function value() : int {
+        return $this->value;
+    }
 }
