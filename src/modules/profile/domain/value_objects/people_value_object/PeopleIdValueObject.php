@@ -23,7 +23,7 @@ class PeopleId {
 
     private function isNumber(){
         if($this->value <= 0 || is_int($this->value)){
-            throw new PeopleException("El campo debe ser de tipo entero");
+            throw new PeopleException("El campo id_people debe ser de tipo entero");
         }
     }
 }

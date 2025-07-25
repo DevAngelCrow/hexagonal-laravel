@@ -9,7 +9,7 @@ class AddressIdDepartment
     private int $value;
     public function __construct(int $value)
     {
-        $this->$value = $value;
+        $this->value = $value;
         $this->required();
         $this->isNumber();
     }
@@ -23,7 +23,7 @@ class AddressIdDepartment
 
     private function isNumber(){
         if($this->value <= 0 || is_int($this->value)){
-            throw new AddressException("El campo debe ser de tipo entero");
+            throw new AddressException("El campo id_department debe ser de tipo entero");
         }
     }
 }

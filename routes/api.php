@@ -7,4 +7,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::prefix("address")->group(base_path("src/modules/profile/infrastructure/routes/AddressRoutes.php"));
+Route::prefix("address")->group(base_path("Src/modules/profile/infrastructure/routes/AddressRoutes.php"));

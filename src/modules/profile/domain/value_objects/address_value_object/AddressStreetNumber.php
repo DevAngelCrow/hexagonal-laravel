@@ -3,12 +3,12 @@
 namespace Src\modules\profile\domain\value_objects\address_value_object;
 
 
-class AddressStreet
+class AddressStreetNumber
 {
     private string $value;
     public function __construct(string $value)
     {
-        $this->$value = $value;
+        $this->value = $value;
         // $this->required();
     }
 

@@ -34,9 +34,8 @@ class AddressCreate {
     bool $current,
     int $id_people,
     ) : void {
-
         $address = new Address(
-            //new AddressStreet($street),
+            new AddressStreet($street),
             new AddressStreetNumber($street_number),
             new AddressNeighborhood($neighborhood),
             new AddressIdDistrict($id_district),
@@ -46,12 +45,13 @@ class AddressCreate {
             new AddressCurrent($current),
             new AddressIdPeople($id_people),
         );
+        $this->repository->create($address);
 
-        $addressResult = $this->repository->create($address);
+    
 
-        if(!$addressResult){
-            throw new AddressException("Dirección no encontrada");
-        }
+        // if(!$addressResult){
+        //     throw new AddressException("Dirección no encontrada");
+        // }
 
         
 

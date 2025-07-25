@@ -27,7 +27,7 @@ class Address
     readonly AddressIdPeople $id_people;
 
     public function __construct(
-        //AddressStreet $street,
+        AddressStreet $street,
         AddressStreetNumber $street_number,
         AddressNeighborhood $neighborhood,
         AddressIdDistrict $id_district,

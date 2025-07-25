@@ -14,17 +14,16 @@ class AddressController extends Controller {
     }
 
     public function createAddress(Request $request) {
-
+        
         $street = $request->street;
         $street_number = $request->street_number;
         $neighborhood = $request->neighborhood;
-        $id_district = $request->id_district;
+        $id_district = (int) $request->id_district;
         $house_number = $request->house_number;
         $block = $request->block;
         $pathway = $request->pathway;
         $current = $request->current;
-        $id_people = $request->id_people;
-
+        $id_people = (int) $request->id_people;
         $this->addressCreate->run($street, $street_number, $neighborhood, $id_district, $house_number, $block, $pathway, $current, $id_people);
 
     }

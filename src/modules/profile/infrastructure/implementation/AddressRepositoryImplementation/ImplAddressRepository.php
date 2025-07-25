@@ -15,7 +15,6 @@ class ImplAddressRepository implements AddressRepositoryInterface {
         try{
         
         $address = new AddressModel;
-
         $address->id_people = $address->id_people->value;
         $address->street = $address->street->value;
         $address->street_number = $address->street_number->value;
