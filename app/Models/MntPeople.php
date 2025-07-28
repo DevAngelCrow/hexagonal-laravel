@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -28,9 +27,6 @@ class MntPeople extends Model
     public function user() : HasOne{
         return $this->hasOne(MntUser::class);
     }
-    // public function document() : BelongsToMany {
-    //     return $this->belongsToMany(MntDocument::class, "document_people","id_people", "id_document" );
-    // }
     public function document() : HasMany {
         return $this->hasMany(MntDocument::class);
     }
@@ -46,7 +42,4 @@ class MntPeople extends Model
     public function gender() : BelongsTo{
         return $this->belongsTo(CtlGender::class);
     }
-   
-    
-
 }

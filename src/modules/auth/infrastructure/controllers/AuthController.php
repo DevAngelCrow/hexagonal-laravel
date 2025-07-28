@@ -3,10 +3,14 @@
 namespace Src\modules\auth\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\MntUser;
 use DateTimeImmutable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Src\shared\infrastructure\HttpResponses;
 use Src\modules\auth\application\useCases\auth\Register;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
 
 class AuthController extends Controller
 {
@@ -39,8 +43,7 @@ class AuthController extends Controller
         $last_access = new \DateTimeImmutable($request->last_access);
         $is_validated = $request->is_validated;
 
-        //dd($is_validated);
-        $this->registerUser->run(
+        $user =$this->registerUser->run(
             $first_name,
             $middle_name,
             $last_name,
@@ -58,6 +61,45 @@ class AuthController extends Controller
             $is_validated
         );
 
+        //$token = $user->createToken('auth-token')->accessToken;        
+
         return $this->created([], "Registro de usuario exitoso");
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'user_name' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $user = MntUser::where('user_name', $request->user_name)->first();
+        $token = $user->createToken('authToken')->accessToken;
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user' => $user
+        ]);
+    }
+    
+    public function verifyEmail(Request $request){
+        if($request->user()->hasVerifiedEmail()){
+            return $this->success([], "Usuario ya verificado");
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return $this->success([], "Correo de verificación enviado");
+    }
+
+    public function receptionToValidate(EmailVerificationRequest $request){
+        $request->fulfill();
+
+        return $this->success([], "Correo verificado exitosamente");
     }
 }

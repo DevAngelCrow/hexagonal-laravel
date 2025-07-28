@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             CtlMaritalStatusSeeder::class,
             CtlGenderSeeder::class,
             CtlTypeDocumentSeeder::class,
-            MntPeopleSeeder::class
+            CtlStatusUserSeeder::class,
+            MntPeopleSeeder::class,
         ]);
     }
 }

@@ -2,13 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Laravel\Passport\HasApiTokens;
 
-class MntUser extends Model
+
+class MntUser extends Authenticatable implements MustVerifyEmail
 {
+    use HasApiTokens, Notifiable;
     protected $table = "mnt_user";
+    protected $primaryKey = "id";
     protected $fillable = [
         "id",
         "id_people",
@@ -18,15 +27,46 @@ class MntUser extends Model
         "last_access",
         "is_validated"
     ];
-    protected $casts = ["last_access"=> 'datetime'];
+    protected $casts = ["last_access" => 'datetime', "is_validated" => "boolean"];
 
-    public function people() : BelongsTo {
-        return $this->belongsTo(MntPeople::class);
+    protected $hidden = ['password', "remember_token"];
+
+    public function people(): BelongsTo
+    {
+        return $this->belongsTo(MntPeople::class, "id_people", "id");
     }
-    public function rol() : BelongsToMany{
+    public function rol(): BelongsToMany
+    {
         return $this->belongsToMany(MntRol::class, "user_rol", "id_user", "id_rol");
     }
-    public function status() : BelongsTo {
+    public function status(): BelongsTo
+    {
         return $this->belongsTo(CtlStatusUser::class);
+    }
+
+    public function findForPassport($username)
+    {
+        return $this->where('user_name', $username)->first();
+    }
+
+    public function validateForPassportPasswordGrant($password)
+    {
+        return Hash::check($password, $this->password); // Now 'Hash' is recognized
+    }
+
+    public function getEmailForVerification() : string
+    {
+        
+        Log::info($this->people->email);
+        return $this->people->email;        
+    }
+
+    public function hasVerifiedEmail() : bool {
+        return (bool) $this->is_validated;
+    }
+
+    public function markEmailAsVerified() : bool
+    {
+        return $this->forceFill(["is_validated" => true,])->save();
     }
 }

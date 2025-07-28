@@ -5,6 +5,7 @@ namespace Src\modules\profile\infrastructure\controllers;
 use Src\modules\profile\application\useCases\people\PeopleCreate;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Src\modules\profile\application\useCases\people\PeopleGetOneByEmail;
 use Src\modules\profile\application\useCases\people\PeopleGetOneById;
 use Src\modules\profile\infrastructure\dtos\peopleDtoHttpResponse\PeopleDtoHttp;
 use Src\shared\infrastructure\HttpResponses;
@@ -13,11 +14,13 @@ class PeopleController extends Controller{
     use HttpResponses;
     protected PeopleCreate $peopleCreate;
     protected PeopleGetOneById $peopleGetOneById;
+    protected PeopleGetOneByEmail $peopleGetOneByEmail;
 
-    public function __construct(PeopleCreate $people_create, PeopleGetOneById $people_get_one_by_id)
+    public function __construct(PeopleCreate $people_create, PeopleGetOneById $people_get_one_by_id, PeopleGetOneByEmail $people_get_one_by_email)
     {
         $this->peopleCreate = $people_create;
         $this->peopleGetOneById = $people_get_one_by_id;
+        $this->peopleGetOneByEmail = $people_get_one_by_email;
     }
 
     public function createPeople(Request $request){
@@ -49,5 +52,11 @@ class PeopleController extends Controller{
         return $this->success([
             "data" => PeopleDtoHttp::fromEntity($person),
         ], "Success");
+    }
+
+    public function getOneByEmail(Request $request, string $email){
+        $person = $this->peopleGetOneByEmail->run($email);
+
+        return $this->success(["data" => PeopleDtoHttp::fromEntity($person), "Success"]);
     }
 }

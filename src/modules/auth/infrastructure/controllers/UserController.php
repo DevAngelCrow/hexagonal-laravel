@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Src\shared\infrastructure\HttpResponses;
 use Src\modules\auth\application\useCases\user\UserCreate;
 
+
 class UserController extends Controller
 {
     use HttpResponses;

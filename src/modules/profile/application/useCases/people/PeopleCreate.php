@@ -26,8 +26,6 @@ class PeopleCreate
 
     public function run(string $first_name, string $middle_name, string $last_name, DateTimeImmutable $birthdate, int $id_gender, string $email, int $id_marital_status, string $img_path, string $phone, int $id_status): ?People
     {
-        
-
         $person = new People(
             new PeopleFirstName($first_name),
             new PeopleBirthDate($birthdate),

@@ -14,5 +14,4 @@ interface UserRepositoryInterface {
     public function getAll() : array;
     public function getOneById(UserId $id): ?User;
     public function delete(UserId $id) : void;
-    
 }

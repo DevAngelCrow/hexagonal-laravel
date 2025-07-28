@@ -42,7 +42,7 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
             $peopleModel->img_path = $person->getImgPath()->value();
 
             $peopleModel->save();
-
+            //dd($peopleModel);
             return $this->mapToDomain($peopleModel);
 
         } catch (Exception $e) {
@@ -68,8 +68,8 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
             if(!$peopleModel){
                 throw new InfrastructureException("Registro de persona no encontrado", Response::HTTP_NOT_FOUND);
             }
-
-            $person = $this->mapToDomain($peopleModel);
+            //dd($peopleModel);
+            $person = $this->mapToDomain($peopleModel, true);
 
             return $person;
     }
@@ -79,9 +79,29 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
         throw new LogicException("El método aun no ha sido implementado");
     }
 
-    private function mapToDomain(PeopleModel $people): People
+    public function getOneByEmail(PeopleEmail $email): ?People
     {
-        //dd($people);
+        try{
+            $peopleModel = PeopleModel::where("email", $email->value())->first();
+
+            if(!$peopleModel){
+                throw new InfrastructureException("Registro de persona no encontrado", Response::HTTP_NOT_FOUND);
+            }
+
+            $person = $this->mapToDomain($peopleModel, true);
+
+            return $person;
+
+        }catch(Exception $e){
+            throw new InfrastructureException("Registro de persona no encontrado", Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    private function mapToDomain(PeopleModel $people, bool $is_get = false): People
+    {
+        if($is_get){
+            $people->birthdate = new \DateTimeImmutable($people->birthdate);
+        }
         return new People(
             new PeopleFirstName($people->first_name),
             new PeopleBirthDate($people->birthdate),
