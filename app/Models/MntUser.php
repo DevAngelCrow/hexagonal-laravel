@@ -18,6 +18,7 @@ class MntUser extends Model
         "last_access",
         "is_validated"
     ];
+    protected $casts = ["last_access"=> 'datetime'];
 
     public function people() : BelongsTo {
         return $this->belongsTo(MntPeople::class);

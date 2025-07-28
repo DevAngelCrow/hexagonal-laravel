@@ -6,7 +6,7 @@ class PeopleEmail {
     private string $value;
     public function __construct(string $value)
     {
-        $this->$value = $value;
+        $this->value = $value;
         $this->required();
         $this->validEmail();
     }
@@ -23,5 +23,9 @@ class PeopleEmail {
         if(!preg_match($pattern, $this->value)){
             throw new PeopleException("El correo no es válido"); 
         }
+    }
+
+    public function value() : string {
+        return $this->value;
     }
 }

@@ -20,7 +20,7 @@ class AddressCurrent
     //     }
     // }
 
-    public function value() : string {
+    public function value() : bool {
         return $this->value;
     }
 }

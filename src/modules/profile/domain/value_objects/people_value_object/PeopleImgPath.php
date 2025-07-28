@@ -17,4 +17,8 @@ class PeopleImgPath{
             throw new PeopleException("El campo img_path es obligatorio");
         }
     }
+
+    public function value() : string {
+        return $this->value;
+    }
 }

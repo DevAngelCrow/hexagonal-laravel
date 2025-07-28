@@ -3,10 +3,8 @@
 namespace Src\modules\profile\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
-use ErrorException;
 use Illuminate\Http\Request;
 use Src\modules\profile\application\useCases\address\AddressCreate;
-use Src\modules\profile\domain\exceptions\AddressException;
 use Src\shared\infrastructure\HttpResponses;
 
 class AddressController extends Controller
@@ -21,7 +19,7 @@ class AddressController extends Controller
 
     public function createAddress(Request $request)
     {
-        try {
+        //try {
             $street = $request->street;
             $street_number = $request->street_number;
             $neighborhood = $request->neighborhood;
@@ -32,11 +30,11 @@ class AddressController extends Controller
             $current = $request->current;
             $id_people = (int) $request->id_people;
             $this->addressCreate->run($street, $street_number, $neighborhood, $id_district, $house_number, $block, $pathway, $current, $id_people);
-            return response("creado exitosamente");
-        }
-        catch (ErrorException $e) {
-            //dd($e);
-            return $this->badRequest($e);
-        }
+            return $this->created([], "Direccion creada satisfactoriamente");
+        //}
+        // catch (Exception $e) {
+        //     //dd($e);
+           
+        // }
     }
 }

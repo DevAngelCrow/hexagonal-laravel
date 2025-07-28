@@ -66,15 +66,9 @@ class CustomErrorHttp
     public function toArray(): array
     {
         return [
-            'message' => $this->message,
-            'code' => $this->statusCode, 
+            'errorMessage' => $this->message,
+            'statusCode' => $this->statusCode, 
             'details' => $this->details, 
         ];
     }
-    
-
-    // public static function wrapperError(string $message, int $statusCode): self
-    // {
-    //     return new self($statusCode, $message);
-    // }
 }

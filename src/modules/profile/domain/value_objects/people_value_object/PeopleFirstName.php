@@ -17,4 +17,8 @@ class PeopleFirstName{
             throw new PeopleException("El campo primer nombre es obligatorio");
         }
     }
+
+    public function value() : string {
+        return $this->value;
+    }
 }

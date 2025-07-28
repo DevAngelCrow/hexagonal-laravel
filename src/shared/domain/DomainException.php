@@ -14,7 +14,7 @@ class DomainException extends Exception{
     int $httpStatusCode = self::DEFAULT_HTTP_STATUS_CODE,
      ?\Throwable $previous = null)
     {
-        parent::__construct($message, 0, $previous);
+        parent::__construct($message, $previous);
         $this->errorCode = $errorCode;
         $this->httpStatusCode = $httpStatusCode;
     }

@@ -1,5 +1,7 @@
 <?php
 
+namespace Src\modules\profile\domain\entities\people;
+
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleBirthDate;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleEmail;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleFirstName;
@@ -37,18 +39,73 @@ class People
         PeopleMiddleName $middle_name,
         PeopleLastName $last_name,
         PeopleImgPath $img_path,
-        PeopleId $id
+        ?PeopleId $id = null,
     ) {
-     $this->first_name = $first_name;
-     $this->birthdate = $birthdate;
-     $this->id_gender = $id_gender;
-     $this->email = $email;
-     $this->id_marital_status = $id_marital_status;
-     $this->phone = $phone;
-     $this->id_status = $id_status;
-     $this->middle_name = $middle_name;
-     $this->last_name = $last_name;
-     $this->img_path = $img_path;
-     $this->id = $id;
+        $this->first_name = $first_name;
+        $this->birthdate = $birthdate;
+        $this->id_gender = $id_gender;
+        $this->email = $email;
+        $this->id_marital_status = $id_marital_status;
+        $this->phone = $phone;
+        $this->id_status = $id_status;
+        $this->middle_name = $middle_name;
+        $this->last_name = $last_name;
+        $this->img_path = $img_path;
+        $this->id = $id;
+    }
+
+    public function getFirstName(): PeopleFirstName
+    {
+        return $this->first_name;
+    }
+
+    public function getBirthdate(): PeopleBirthdate
+    {
+        return $this->birthdate;
+    }
+
+    public function getIdGender(): PeopleIdGender
+    {
+        return $this->id_gender;
+    }
+
+    public function getEmail(): PeopleEmail
+    {
+        return $this->email;
+    }
+
+    public function getIdMaritalStatus(): PeopleIdMaritalStatus
+    {
+        return $this->id_marital_status;
+    }
+
+    public function getPhone(): PeoplePhone
+    {
+        return $this->phone;
+    }
+
+    public function getIdStatus(): PeopleIdStatus
+    {
+        return $this->id_status;
+    }
+
+    public function getMiddleName(): PeopleMiddleName
+    {
+        return $this->middle_name;
+    }
+
+    public function getLastName(): PeopleLastName
+    {
+        return $this->last_name;
+    }
+
+    public function getImgPath(): PeopleImgPath
+    {
+        return $this->img_path;
+    }
+
+    public function getId(): ?PeopleId
+    {
+        return $this->id;
     }
 }

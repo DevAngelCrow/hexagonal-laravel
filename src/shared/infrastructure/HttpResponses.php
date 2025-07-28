@@ -11,7 +11,8 @@ trait HttpResponses {
     public function success(mixed $data = null, string $message = "Success", int $statusCode = Response::HTTP_OK) : JsonResponse{
         return response()->json([
             "message" => $message,
-            "data" => $data
+            "data" => $data,
+            "statusCode" => $statusCode
         ], $statusCode);
     }
 

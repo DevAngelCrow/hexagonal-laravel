@@ -3,8 +3,14 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Src\modules\auth\domain\repositories\user\UserRepositoryInterface;
+use Src\modules\auth\infrastructure\implementation\UserRepositoryImplementation\ImplUserRepository;
 use Src\modules\profile\domain\repositories\address\AddressRepositoryInterface;
+use Src\modules\profile\domain\repositories\people\PeopleRepositoryInterface;
 use Src\modules\profile\infrastructure\implementation\AddressRepositoryImplementation\ImplAddressRepository;
+use Src\modules\profile\infrastructure\implementation\PeopleRepositoryImplementation\ImplPeopleRepository;
+use Src\shared\domain\repositories\UnitOfWorkTransactionDbInterface;
+use Src\shared\infrastructure\implementations\EloquentUnitOfWork;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +21,9 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         $this->app->bind(AddressRepositoryInterface::class, ImplAddressRepository::class);
+        $this->app->bind(PeopleRepositoryInterface::class, ImplPeopleRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, ImplUserRepository::class);
+        $this->app->bind(UnitOfWorkTransactionDbInterface::class, EloquentUnitOfWork::class);
     }
 
     /**

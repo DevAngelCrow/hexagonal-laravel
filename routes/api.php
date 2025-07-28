@@ -8,3 +8,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix("address")->group(base_path("Src/modules/profile/infrastructure/routes/AddressRoutes.php"));
+Route::prefix("person")->group(base_path("Src/modules/profile/infrastructure/routes/PeopleRoutes.php"));
+Route::prefix("user")->group(base_path("Src/modules/auth/infrastructure/routes/UserRoutes.php"));
+Route::prefix("auth")->group(base_path("Src/modules/auth/infrastructure/routes/AuthRoutes.php"));

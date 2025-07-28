@@ -17,4 +17,8 @@ class PeoplePhone{
             throw new PeopleException("El campo phone es obligatorio");
         }
     }
+
+    public function value() : string {
+        return $this->value;
+    }
 }
