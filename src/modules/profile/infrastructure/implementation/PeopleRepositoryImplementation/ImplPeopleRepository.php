@@ -52,7 +52,26 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
 
     public function update(People $person): void
     {
-        throw new LogicException("El método aun no ha sido implementado");
+        try{
+
+            $peopleModel = PeopleModel::find($person->getId()->value());
+
+            $peopleModel->first_name = $person->getFirstName()->value();
+            $peopleModel->birthdate = $person->getBirthdate()->value();
+            $peopleModel->id_gender = $person->getIdGender()->value();
+            $peopleModel->email = $person->getEmail()->value();
+            $peopleModel->id_marital_status = $person->getIdMaritalStatus()->value();
+            $peopleModel->phone = $person->getPhone()->value();
+            $peopleModel->id_status = $person->getIdStatus()->value();
+            $peopleModel->middle_name = $person->getMiddleName()->value();
+            $peopleModel->last_name = $person->getLastName()->value();
+            $peopleModel->img_path = $person->getImgPath()->value();
+
+            $peopleModel->save();
+
+        }catch(Exception $e){
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function getAll(): array

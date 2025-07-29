@@ -9,7 +9,7 @@ interface AddressRepositoryInterface{
     /**
      * @return Address[];
      */
-    public function getAll() : array;
+    public function getAll(int $page, int $per_page) : array;
     public function getOneById(AddressId $id): ?Address;
     public function delete(AddressId $id) : void;
 }

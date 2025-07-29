@@ -26,6 +26,7 @@ class AuthController extends Controller
 
     public function singUp(Request $request)
     {
+        //people data input
         $first_name = $request->first_name;
         $birthdate = new \DateTimeImmutable($request->birthdate);
         $id_gender = $request->id_gender;
@@ -37,11 +38,22 @@ class AuthController extends Controller
         $last_name = $request->last_name;
         $img_path = $request->img_path;
 
+        //user data input
         $user_name = $request->user_name;
         $password = $request->password;
         $id_status_user = $request->id_status_user;
         $last_access = new \DateTimeImmutable($request->last_access);
         $is_validated = $request->is_validated;
+
+        //address data input
+        $street = $request->street;
+        $street_number = $request->street_number;
+        $neighborhood = $request->neighborhood;
+        $id_district = $request->id_district;
+        $house_number = $request->house_number;
+        $block = $request->block;
+        $pathway = $request->pathway;
+        $current = $request->current;
 
         $user =$this->registerUser->run(
             $first_name,
@@ -58,7 +70,15 @@ class AuthController extends Controller
             $password,
             $id_status_user,
             $last_access,
-            $is_validated
+            $is_validated,
+            $street,
+            $street_number,
+            $neighborhood,
+            $id_district,
+            $house_number,
+            $block,
+            $pathway,
+            $current
         );
 
               
