@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Src\modules\auth\application\useCases\auth\Register;
 
 class ImplUserRepository implements UserRepositoryInterface
@@ -30,8 +31,9 @@ class ImplUserRepository implements UserRepositoryInterface
             $userModel->is_validated = false /*$user->getIsValidated()->value()*/;
 
             $userModel->save();
-
+            $userModel->load('people');
             event(new Registered($userModel));
+            $userModel->sendEmailVerificationNotification();
             Log::info($userModel);
         } catch (Exception $e) {
             throw new InfrastructureException($e);

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer("id_status");
             $table->date("last_access");
             $table->boolean("is_validated");
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign("id_people")->references("id")->on("mnt_people");

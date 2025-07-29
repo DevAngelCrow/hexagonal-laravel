@@ -25,7 +25,8 @@ class MntUser extends Authenticatable implements MustVerifyEmail
         "password",
         "id_status",
         "last_access",
-        "is_validated"
+        "is_validated",
+        "email_verified_at"
     ];
     protected $casts = ["last_access" => 'datetime', "is_validated" => "boolean"];
 
@@ -51,7 +52,7 @@ class MntUser extends Authenticatable implements MustVerifyEmail
 
     public function validateForPassportPasswordGrant($password)
     {
-        return Hash::check($password, $this->password); // Now 'Hash' is recognized
+        return Hash::check($password, $this->password);
     }
 
     public function getEmailForVerification() : string
