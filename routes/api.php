@@ -18,28 +18,28 @@ Route::prefix("user")->group(base_path("Src/modules/auth/infrastructure/routes/U
 Route::prefix("auth")->group(base_path("Src/modules/auth/infrastructure/routes/AuthRoutes.php"));
 
 
-// Enviar correo de verificación nuevamente
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
+// // Enviar correo de verificación nuevamente
+// Route::post('/email/verification-notification', function (Request $request) {
+//     $request->user()->sendEmailVerificationNotification();
 
-    return response()->json(['message' => 'Correo enviado']);
-})->middleware(['auth:api', 'throttle:6,1']);
+//     return response()->json(['message' => 'Correo enviado']);
+// })->middleware(['auth:api', 'throttle:6,1']);
 
-// Verificar email
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill(); // marca como verificado
+// // Verificar email
+// Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+//     $request->fulfill(); // marca como verificado
 
-    return response()->json(['message' => 'Correo verificado']);
-})->middleware(['auth:api', 'signed']);
+//     return response()->json(['message' => 'Correo verificado']);
+// })->middleware(['auth:api', 'signed']);
 
 
-Route::get('/test-mail', function () {
-    $user = MntUser::with('people')->first();
+// Route::get('/test-mail', function () {
+//     $user = MntUser::with('people')->first();
 
-    Mail::raw('Test correo', function ($message) use ($user) {
-        $message->to($user->getEmailForVerification())
-                ->subject('Correo de prueba');
-    });
+//     Mail::raw('Test correo', function ($message) use ($user) {
+//         $message->to($user->getEmailForVerification())
+//                 ->subject('Correo de prueba');
+//     });
 
-    return 'Correo de prueba enviado (o en proceso)';
-});
+//     return 'Correo de prueba enviado (o en proceso)';
+// });

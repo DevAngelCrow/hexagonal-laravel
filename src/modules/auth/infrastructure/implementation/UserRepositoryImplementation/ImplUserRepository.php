@@ -33,8 +33,7 @@ class ImplUserRepository implements UserRepositoryInterface
             $userModel->save();
             $userModel->load('people');
             event(new Registered($userModel));
-            $userModel->sendEmailVerificationNotification();
-            Log::info($userModel);
+            //Log::info($userModel);
         } catch (Exception $e) {
             throw new InfrastructureException($e);
         }

@@ -55,19 +55,33 @@ class MntUser extends Authenticatable implements MustVerifyEmail
         return Hash::check($password, $this->password);
     }
 
-    public function getEmailForVerification() : string
+    public function getEmailForVerification(): string
     {
-        
+        if (!$this->relationLoaded('people')) {
+            $this->load('people');
+        }
         Log::info($this->people->email);
-        return $this->people->email;        
+        return $this->people->email;
     }
 
-    public function hasVerifiedEmail() : bool {
+    public function hasVerifiedEmail(): bool
+    {
         return (bool) $this->is_validated;
     }
 
-    public function markEmailAsVerified() : bool
+    public function markEmailAsVerified(): bool
     {
         return $this->forceFill(["is_validated" => true,])->save();
     }
+
+    // public function sendEmailVerificationNotification()
+    // {
+    //     Log::info('Enviando verificación a: ' . $this->getEmailForVerification());
+    //     parent::sendEmailVerificationNotification();
+    // }
+
+    public function routeNotificationForMail($notification)
+{
+    return $this->getEmailForVerification();
+}
 }

@@ -61,8 +61,8 @@ class AuthController extends Controller
             $is_validated
         );
 
-        //$token = $user->createToken('auth-token')->accessToken;        
-
+        //$token = $user->createToken('auth-token')->accessToken;
+        //$this->login($user);        
         return $this->created([], "Registro de usuario exitoso");
     }
 
