@@ -1,10 +1,10 @@
 <?php
 
-namespace Src\modules\profile\domain\value_objects\document_value_object;
+namespace Src\modules\profile\domain\value_objects\country_value_object;
 
-use Src\modules\profile\domain\exceptions\DocumentException;
+use Src\modules\profile\domain\exceptions\CountryException;
 
-class DocumentIdTypeDocument
+class CountryId
 {
     private int $value;
     public function __construct(int $value)
@@ -17,13 +17,13 @@ class DocumentIdTypeDocument
     private function required()
     {
         if (!$this->value) {
-            throw new DocumentException("El campo id es obligatorio");
+            throw new CountryException("El campo id es obligatorio");
         }
     }
 
     private function isNumber(){
         if($this->value <= 0 || !is_int($this->value)){
-            throw new DocumentException("El campo id type document debe ser de tipo entero");
+            throw new CountryException("El campo id country debe ser de tipo entero");
         }
     }
     public function value() : int {

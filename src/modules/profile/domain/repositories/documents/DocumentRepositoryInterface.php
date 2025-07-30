@@ -2,7 +2,7 @@
 namespace Src\modules\profile\domain\repositories\documents;
 
 use Src\modules\profile\domain\entities\documents\Document;
-use Src\modules\profile\domain\value_objects\address_value_object\DocumentId;
+use Src\modules\profile\domain\value_objects\document_value_object\DocumentId;
 
 interface DocumentRepositoryInterface {
     public function create(Document $document) : void;

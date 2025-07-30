@@ -17,16 +17,17 @@ class DocumentCreateService
         int $id_type_document,
         int $id_people,
         string $description,
+        string $document_number, 
         bool $state
     ) {
-
-        $address = $this->documentCreate->run(
+        $document = $this->documentCreate->run(
             $id_type_document,
             $id_people,
             $description,
+            $document_number,
             $state
         );
 
-        return $address;
+        return $document;
     }
 }

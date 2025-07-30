@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\modules\profile\domain\value_objects\address_value_object;
+namespace Src\modules\profile\domain\value_objects\document_value_object;
 
 use Src\modules\profile\domain\exceptions\DocumentException;
 

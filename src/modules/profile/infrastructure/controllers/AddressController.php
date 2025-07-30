@@ -67,9 +67,9 @@ class AddressController extends Controller
         
         $addressCollection = $this->addressGetAll->run($request->query('page'), $request->query('per_page'));
         
-        $collectiones = array_map(fn($item) => AddressDtoHttp::fromEntity($item), $addressCollection["data"]);
+        $collections = array_map(fn($item) => AddressDtoHttp::fromEntity($item), $addressCollection["data"]);
         
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collectiones, $addressCollection['pagination']);
+        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $addressCollection['pagination']);
         
         return $this->success($paginateData, "Success");
     }

@@ -44,9 +44,10 @@ class PeopleController extends Controller
         $middle_name = $request->middle_name;
         $last_name = $request->last_name;
         $img_path = $request->img_path;
+        $nationalities = $request->nationalities;
 
-        //dd($birthdate);
-        $this->peopleCreate->run($first_name, $middle_name, $last_name, $birthdate, $id_gender, $email, $id_marital_status, $img_path, $phone, $id_status);
+
+        $this->peopleCreate->run($first_name, $middle_name, $last_name, $birthdate, $id_gender, $email, $id_marital_status, $img_path, $phone, $id_status, $nationalities);
 
         return $this->created([], "Persona creada satisfactoriamente");
     }

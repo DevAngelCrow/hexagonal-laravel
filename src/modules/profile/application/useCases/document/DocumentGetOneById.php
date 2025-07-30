@@ -4,7 +4,7 @@ namespace Src\modules\profile\application\useCases\document;
 
 use Src\modules\profile\domain\entities\documents\Document;
 use Src\modules\profile\domain\repositories\documents\DocumentRepositoryInterface;
-use Src\modules\profile\domain\value_objects\address_value_object\DocumentId;
+use Src\modules\profile\domain\value_objects\document_value_object\DocumentId;
 
 class DocumentGetOneById
 {

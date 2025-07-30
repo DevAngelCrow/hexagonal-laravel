@@ -24,6 +24,6 @@ class CtlCountry extends Model
         return $this->hasMany(CtlDepartment::class);
     }
     public function people() : BelongsToMany {
-        return $this->belongsToMany(MntPeople::class, "people_country", "id_country", "id_people" );
+        return $this->belongsToMany(MntPeople::class);
     }
 }

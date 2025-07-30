@@ -8,6 +8,7 @@ use Src\modules\profile\domain\entities\people\People;
 use Src\modules\profile\domain\repositories\people\PeopleRepositoryInterface;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleId;
 use App\Models\MntPeople as PeopleModel;
+use Src\modules\profile\domain\value_objects\country_value_object\CountryId;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleBirthDate;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleEmail;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleFirstName;
@@ -20,6 +21,8 @@ use Src\modules\profile\domain\value_objects\people_value_object\PeopleMiddleNam
 use Src\modules\profile\domain\value_objects\people_value_object\PeoplePhone;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Symfony\Component\HttpFoundation\Response;
+
+use function PHPUnit\Framework\isEmpty;
 
 class ImplPeopleRepository implements PeopleRepositoryInterface
 {
@@ -41,10 +44,18 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
             $peopleModel->last_name = $person->getLastName()->value();
             $peopleModel->img_path = $person->getImgPath()->value();
 
-            $peopleModel->save();
-            //dd($peopleModel);
-            return $this->mapToDomain($peopleModel);
 
+            $peopleModel->save();
+
+            $countryIds = array_map(fn($id_country) => $id_country->value(), $person->getCountries());
+
+
+            $peopleModel->countries()->syncWithoutDetaching($countryIds);
+
+            //dd($peopleModel->countries->toArray());
+            $mapeoDominio = $this->mapToDomain($peopleModel);
+            
+             return $mapeoDominio;
         } catch (Exception $e) {
             throw $e;
         }
@@ -81,16 +92,19 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
 
     public function getOneById(PeopleId $id): ?People
     {
-        //try {
+        try {
             $peopleModel = PeopleModel::where("id", $id->value())->first();
 
             if(!$peopleModel){
                 throw new InfrastructureException("Registro de persona no encontrado", Response::HTTP_NOT_FOUND);
             }
-            //dd($peopleModel);
+            
             $person = $this->mapToDomain($peopleModel, true);
 
             return $person;
+        }catch(Exception $e){
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function delete(PeopleId $id): void
@@ -118,9 +132,22 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
 
     private function mapToDomain(PeopleModel $people, bool $is_get = false): People
     {
+        $nationalities = null;
+
+       //dd($people->country->toArray());
+        
         if($is_get){
             $people->birthdate = new \DateTimeImmutable($people->birthdate);
         }
+        if(isEmpty($people->countries->toArray())){
+
+            
+            $nationalities = array_map(fn($id_nation) => new CountryId($id_nation), $people->countries);
+            
+        }
+
+        dd($nationalities);        
+        
         return new People(
             new PeopleFirstName($people->first_name),
             new PeopleBirthDate($people->birthdate),
@@ -132,7 +159,8 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
             new PeopleMiddleName($people->middle_name),
             new PeopleLastName($people->last_name),
             new PeopleImgPath($people->img_path),
-            new PeopleId($people->id)
+            new PeopleId($people->id),
+            $nationalities
         );
     }
 }

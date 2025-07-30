@@ -2,6 +2,8 @@
 
 namespace Src\modules\profile\domain\entities\people;
 
+use Src\modules\profile\domain\exceptions\PeopleException;
+use Src\modules\profile\domain\value_objects\country_value_object\CountryId;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleBirthDate;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleEmail;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleFirstName;
@@ -13,7 +15,6 @@ use Src\modules\profile\domain\value_objects\people_value_object\PeopleImgPath;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleLastName;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleMiddleName;
 use Src\modules\profile\domain\value_objects\people_value_object\PeoplePhone;
-
 class People
 {
     private readonly  PeopleFirstName $first_name;
@@ -26,6 +27,8 @@ class People
     private readonly  PeopleMiddleName $middle_name;
     private readonly  PeopleLastName $last_name;
     private readonly  PeopleImgPath $img_path;
+    /** @var CountryId[] */
+    private readonly  array $countriesId;
     private readonly  ?PeopleId $id;
 
     public function __construct(
@@ -40,6 +43,7 @@ class People
         PeopleLastName $last_name,
         PeopleImgPath $img_path,
         ?PeopleId $id = null,
+        ?array $countriesId = null,
     ) {
         $this->first_name = $first_name;
         $this->birthdate = $birthdate;
@@ -51,7 +55,14 @@ class People
         $this->middle_name = $middle_name;
         $this->last_name = $last_name;
         $this->img_path = $img_path;
+        $this->countriesId = $countriesId;
         $this->id = $id;
+
+        foreach($this->countriesId as $countryId){
+            if(!$countryId instanceof CountryId){
+                throw new PeopleException("La instancia de cada elemento debe ser de tipo CountryId");
+            }
+        }
     }
 
     public function getFirstName(): PeopleFirstName
@@ -108,4 +119,9 @@ class People
     {
         return $this->id;
     }
+
+    public function getCountries() : array {
+        return $this->countriesId;
+    }
+
 }

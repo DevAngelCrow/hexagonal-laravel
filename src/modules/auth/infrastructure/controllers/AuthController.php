@@ -37,6 +37,7 @@ class AuthController extends Controller
         $middle_name = $request->middle_name;
         $last_name = $request->last_name;
         $img_path = $request->img_path;
+        $nationalities = $request->nationalities;
 
         //user data input
         $user_name = $request->user_name;
@@ -55,7 +56,13 @@ class AuthController extends Controller
         $pathway = $request->pathway;
         $current = $request->current;
 
-        $user =$this->registerUser->run(
+        //document data input
+        $id_type_document = $request->id_type_document;
+        $document_number = $request->document_number;
+        $description = $request->description;
+        $state = $request->state;
+
+        $user = $this->registerUser->run(
             $first_name,
             $middle_name,
             $last_name,
@@ -66,6 +73,7 @@ class AuthController extends Controller
             $img_path,
             $phone,
             $id_status,
+            $nationalities,
             $user_name,
             $password,
             $id_status_user,
@@ -78,10 +86,14 @@ class AuthController extends Controller
             $house_number,
             $block,
             $pathway,
-            $current
+            $current,
+            $id_type_document,
+            $description,
+            $document_number,
+            $state
         );
 
-              
+
         return $this->created([], "Registro de usuario exitoso");
     }
 
@@ -105,9 +117,10 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
-    
-    public function verifyEmail(Request $request){
-        if($request->user()->hasVerifiedEmail()){
+
+    public function verifyEmail(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
             return $this->success([], "Usuario ya verificado");
         }
 
@@ -116,7 +129,8 @@ class AuthController extends Controller
         return $this->success([], "Correo de verificación enviado");
     }
 
-    public function receptionToValidate(EmailVerificationRequest $request){
+    public function receptionToValidate(EmailVerificationRequest $request)
+    {
         $request->fulfill();
 
         return $this->success([], "Correo verificado exitosamente");
