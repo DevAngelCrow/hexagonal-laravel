@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MntPeople extends Model
 {
+    use SoftDeletes;
     protected $table = "mnt_people";
     protected $fillable = [
         "id",
@@ -34,8 +36,8 @@ class MntPeople extends Model
     public function address() : HasMany {
         return $this->hasMany(MntAddress::class);
     }
-    public function statusPeople() : BelongsTo {
-        return $this->belongsTo(CtlStatusPeople::class);
+    public function status() : BelongsTo {
+        return $this->belongsTo(CtlStatus::class);
     }
     public function maritalStatus() : BelongsTo {
         return $this->belongsTo(CtlMaritalStatus::class);

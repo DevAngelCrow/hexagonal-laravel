@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer("id_status");
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign("id_status")->references("id")->on("ctl_status_rol");
+            $table->foreign("id_status")->references("id")->on("ctl_status");
         });
     }
 

@@ -19,8 +19,8 @@ class MntRol extends Model
     public function user() : BelongsToMany {
         return $this->belongsToMany(MntUser::class);
     }
-    public function statusRol() : BelongsTo {
-        return $this->belongsTo(CtlStatusRol::class);
+    public function status() : BelongsTo {
+        return $this->belongsTo(CtlStatus::class);
     }
     public function permissions() : BelongsToMany {
         return $this->belongsToMany(CtlPermissions::class, "rol_permissions", "id_rol", "id_permission");

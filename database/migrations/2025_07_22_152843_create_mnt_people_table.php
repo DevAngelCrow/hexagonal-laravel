@@ -27,7 +27,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->foreign("id_gender")->references("id")->on("ctl_gender");
             $table->foreign("id_marital_status")->references("id")->on("ctl_marital_status");
-            $table->foreign("id_status")->references("id")->on("ctl_status_people");
+            $table->foreign("id_status")->references("id")->on("ctl_status");
         });
     }
 

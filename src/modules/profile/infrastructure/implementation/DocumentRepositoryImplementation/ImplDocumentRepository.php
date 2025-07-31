@@ -94,7 +94,7 @@ class ImplDocumentRepository implements DocumentRepositoryInterface
             $documentModel = DocumentModel::find($id->value());
 
             $documentModel->state = false;
-
+            $documentModel->save();
             $documentModel->delete();
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);

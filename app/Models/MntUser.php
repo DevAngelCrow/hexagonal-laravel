@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +16,7 @@ use Laravel\Passport\HasApiTokens;
 
 class MntUser extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, SoftDeletes;
     protected $table = "mnt_user";
     protected $primaryKey = "id";
     protected $fillable = [
@@ -40,9 +41,8 @@ class MntUser extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(MntRol::class, "user_rol", "id_user", "id_rol");
     }
-    public function status(): BelongsTo
-    {
-        return $this->belongsTo(CtlStatusUser::class);
+    public function status() : BelongsTo {
+        return $this->belongsTo(CtlStatus::class);
     }
 
     public function findForPassport($username)

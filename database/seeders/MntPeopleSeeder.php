@@ -18,7 +18,7 @@ class MntPeopleSeeder extends Seeder
     {
         $idGender = CtlGender::where("id", 1)->first();
         $idMaritalStatus = CtlMaritalStatus::where("id", 1)->first();
-        $idStatusPeople = CtlStatusPeople::where("id", 1)->first();
+        $idStatusPeople = CtlStatusPeople::where("id", 1, "table_heaer", "mnt_people")->first();
         DB::table('mnt_people')->insert([
             "first_name"=>"test",
             "middle_name"=>"test",

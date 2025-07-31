@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ctl_status_user', function (Blueprint $table) {
+        Schema::create('ctl_status', function (Blueprint $table) {
             $table->id();
-            $table->string("name", length: 150);
-            $table->string("description", length: 150);
-            $table->timestamps();
+            $table->string("table_header");
+            $table->string("name");
+            $table->string("description");
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ctl_status_user');
+        Schema::dropIfExists('ctl_status');
     }
 };

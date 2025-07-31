@@ -22,7 +22,6 @@ use Src\modules\profile\domain\value_objects\people_value_object\PeoplePhone;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Symfony\Component\HttpFoundation\Response;
 
-use function PHPUnit\Framework\isEmpty;
 
 class ImplPeopleRepository implements PeopleRepositoryInterface
 {
@@ -132,9 +131,6 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
     {
         try {
             $nationalities = null;
-
-            //dd($people->countries->toArray());
-
             if ($is_get) {
                 $people->birthdate = new \DateTimeImmutable($people->birthdate);
             }
@@ -145,7 +141,6 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
                     fn($country) => new CountryId($country->id)
                 )->toArray();
             }
-            //dd($nationalities);
             return new People(
                 new PeopleFirstName($people->first_name),
                 new PeopleBirthDate($people->birthdate),
