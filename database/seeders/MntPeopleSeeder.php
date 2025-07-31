@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\CtlGender;
 use App\Models\CtlMaritalStatus;
+use App\Models\CtlStatus;
 use App\Models\CtlStatusPeople;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,7 +19,7 @@ class MntPeopleSeeder extends Seeder
     {
         $idGender = CtlGender::where("id", 1)->first();
         $idMaritalStatus = CtlMaritalStatus::where("id", 1)->first();
-        $idStatusPeople = CtlStatusPeople::where("id", 1, "table_heaer", "mnt_people")->first();
+        $idStatusPeople = CtlStatus::where("id", 1, "table_header", "mnt_people")->first();
         DB::table('mnt_people')->insert([
             "first_name"=>"test",
             "middle_name"=>"test",
