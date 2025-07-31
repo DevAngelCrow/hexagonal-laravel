@@ -27,7 +27,7 @@ class PeopleCreate
 
     public function run(string $first_name, string $middle_name, string $last_name, 
     DateTimeImmutable $birthdate, int $id_gender, string $email, int $id_marital_status, 
-    string $img_path, string $phone, int $id_status, array $nationalities): ?People
+    string $img_path, string $phone, int $id_status, ?array $nationalities = null): ?People
     {
         $nationsId = array_map(fn($id_country) => new CountryId($id_country), $nationalities);
         

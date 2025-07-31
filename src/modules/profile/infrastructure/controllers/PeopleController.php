@@ -48,7 +48,7 @@ class PeopleController extends Controller
 
 
         $this->peopleCreate->run($first_name, $middle_name, $last_name, $birthdate, $id_gender, $email, $id_marital_status, $img_path, $phone, $id_status, $nationalities);
-
+        
         return $this->created([], "Persona creada satisfactoriamente");
     }
 

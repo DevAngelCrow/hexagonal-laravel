@@ -28,7 +28,7 @@ class People
     private readonly  PeopleLastName $last_name;
     private readonly  PeopleImgPath $img_path;
     /** @var CountryId[] */
-    private readonly  array $countriesId;
+    private readonly  ?array $countriesId;
     private readonly  ?PeopleId $id;
 
     public function __construct(
@@ -58,10 +58,12 @@ class People
         $this->countriesId = $countriesId;
         $this->id = $id;
 
-        foreach($this->countriesId as $countryId){
+        if(!empty($countriesId)){
+            foreach($this->countriesId as $countryId){
             if(!$countryId instanceof CountryId){
                 throw new PeopleException("La instancia de cada elemento debe ser de tipo CountryId");
             }
+        }
         }
     }
 

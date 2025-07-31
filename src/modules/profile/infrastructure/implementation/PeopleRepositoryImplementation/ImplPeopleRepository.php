@@ -54,8 +54,8 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
 
             //dd($peopleModel->countries->toArray());
             $mapeoDominio = $this->mapToDomain($peopleModel);
-            
-             return $mapeoDominio;
+            //dd($mapeoDominio);
+            return $mapeoDominio;
         } catch (Exception $e) {
             throw $e;
         }
@@ -63,7 +63,7 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
 
     public function update(People $person): void
     {
-        try{
+        try {
 
             $peopleModel = PeopleModel::find($person->getId()->value());
 
@@ -79,8 +79,7 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
             $peopleModel->img_path = $person->getImgPath()->value();
 
             $peopleModel->save();
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -95,14 +94,14 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
         try {
             $peopleModel = PeopleModel::where("id", $id->value())->first();
 
-            if(!$peopleModel){
+            if (!$peopleModel) {
                 throw new InfrastructureException("Registro de persona no encontrado", Response::HTTP_NOT_FOUND);
             }
-            
+
             $person = $this->mapToDomain($peopleModel, true);
 
             return $person;
-        }catch(Exception $e){
+        } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -114,53 +113,55 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
 
     public function getOneByEmail(PeopleEmail $email): ?People
     {
-        try{
+        try {
             $peopleModel = PeopleModel::where("email", $email->value())->first();
 
-            if(!$peopleModel){
+            if (!$peopleModel) {
                 throw new InfrastructureException("Registro de persona no encontrado", Response::HTTP_NOT_FOUND);
             }
 
             $person = $this->mapToDomain($peopleModel, true);
 
             return $person;
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             throw new InfrastructureException("Registro de persona no encontrado", Response::HTTP_NOT_FOUND);
         }
     }
 
     private function mapToDomain(PeopleModel $people, bool $is_get = false): People
     {
-        $nationalities = null;
+        try {
+            $nationalities = null;
 
-       //dd($people->country->toArray());
-        
-        if($is_get){
-            $people->birthdate = new \DateTimeImmutable($people->birthdate);
+            //dd($people->countries->toArray());
+
+            if ($is_get) {
+                $people->birthdate = new \DateTimeImmutable($people->birthdate);
+            }
+            if (!empty($people->countries->toArray())) {
+
+
+                $nationalities = collect($people->countries)->map(
+                    fn($country) => new CountryId($country->id)
+                )->toArray();
+            }
+            //dd($nationalities);
+            return new People(
+                new PeopleFirstName($people->first_name),
+                new PeopleBirthDate($people->birthdate),
+                new PeopleIdGender($people->id_gender),
+                new PeopleEmail($people->email),
+                new PeopleIdMaritalStatus($people->id_marital_status),
+                new PeoplePhone($people->phone),
+                new PeopleIdStatus($people->id_status),
+                new PeopleMiddleName($people->middle_name),
+                new PeopleLastName($people->last_name),
+                new PeopleImgPath($people->img_path),
+                new PeopleId($people->id),
+                $nationalities
+            );
+        } catch (Exception $e) {
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        if(isEmpty($people->countries->toArray())){
-
-            
-            $nationalities = array_map(fn($id_nation) => new CountryId($id_nation), $people->countries);
-            
-        }
-
-        dd($nationalities);        
-        
-        return new People(
-            new PeopleFirstName($people->first_name),
-            new PeopleBirthDate($people->birthdate),
-            new PeopleIdGender($people->id_gender),
-            new PeopleEmail($people->email),
-            new PeopleIdMaritalStatus($people->id_marital_status),
-            new PeoplePhone($people->phone),
-            new PeopleIdStatus($people->id_status),
-            new PeopleMiddleName($people->middle_name),
-            new PeopleLastName($people->last_name),
-            new PeopleImgPath($people->img_path),
-            new PeopleId($people->id),
-            $nationalities
-        );
     }
 }
