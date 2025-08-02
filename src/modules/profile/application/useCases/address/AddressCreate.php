@@ -1,6 +1,7 @@
 <?php
 namespace Src\modules\profile\application\useCases\address;
 
+use Src\modules\profile\application\dtos\AddressDto;
 use Src\modules\profile\domain\entities\address\Address;
 use Src\modules\profile\domain\exceptions\AddressException;
 use Src\modules\profile\domain\repositories\address\AddressRepositoryInterface;
@@ -24,26 +25,18 @@ class AddressCreate {
     }
 
     public function run(
-    string $street,
-    string $street_number,
-    string $neighborhood,
-    int $id_district,
-    string $house_number,
-    string $block,
-    string $pathway,
-    bool $current,
-    int $id_people,
+    AddressDto $address
     ) : void {
         $address = new Address(
-            new AddressStreet($street),
-            new AddressStreetNumber($street_number),
-            new AddressNeighborhood($neighborhood),
-            new AddressIdDistrict($id_district),
-            new AddressHouseNumber($house_number),
-            new AddressBlock($block),
-            new AddressPathway($pathway),
-            new AddressCurrent($current),
-            new AddressIdPeople($id_people),
+            new AddressStreet($address->street),
+            new AddressStreetNumber($address->street_number),
+            new AddressNeighborhood($address->neighborhood),
+            new AddressIdDistrict($address->id_district),
+            new AddressHouseNumber($address->house_number),
+            new AddressBlock($address->block),
+            new AddressPathway($address->pathway),
+            new AddressCurrent($address->current),
+            new AddressIdPeople($address->id_people),
         );
         $this->repository->create($address);
 

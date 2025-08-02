@@ -4,11 +4,13 @@ namespace Src\modules\profile\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Src\modules\profile\application\dtos\AddressDto;
 use Src\modules\profile\application\useCases\address\AddressGetAll;
 use Src\modules\profile\application\useCases\address\AddressCreate;
 use Src\modules\profile\application\useCases\address\AddressGetOneById;
 use Src\modules\profile\application\useCases\address\AddressUpdate;
 use Src\modules\profile\infrastructure\dtos\addressDtoHttpResponse\AddressDtoHttp;
+use Src\modules\profile\infrastructure\validators\address\CreateAddressRequest;
 use Src\shared\infrastructure\generalDtos\PaginatedResponseDto;
 use Src\shared\infrastructure\HttpResponses;
 
@@ -29,36 +31,41 @@ class AddressController extends Controller
         $this->addressUpdate = $address_update;
     }
 
-    public function createAddress(Request $request)
+    public function createAddress(CreateAddressRequest $request)
     {
-            $street = $request->street;
-            $street_number = $request->street_number;
-            $neighborhood = $request->neighborhood;
-            $id_district = (int) $request->id_district;
-            $house_number = $request->house_number;
-            $block = $request->block;
-            $pathway = $request->pathway;
-            $current = $request->current;
-            $id_people = (int) $request->id_people;
-            $this->addressCreate->run($street, $street_number, $neighborhood, $id_district, $house_number, $block, $pathway, $current, $id_people);
+            //dd($request);
+            $addressDto = new AddressDto(
+                $request->street,
+                $request->street_number,
+                $request->neighborhood,
+                (int) $request->id_district,
+                $request->house_number,
+                $request->block,
+                $request->pathway,
+                $request->current,
+                (int) $request->id_people
+            );
+
+            $this->addressCreate->run($addressDto);
             return $this->created([], "Direccion creada satisfactoriamente");
         
     }
 
     public function updateAddress(Request $request){
-            $id = (int) $request->id;
-            $id_people = (int) $request->id_people;
-            $street = $request->street;
-            $street_number = $request->street_number;
-            $neighborhood = $request->neighborhood;
-            $id_district = (int) $request->id_district;
-            $house_number = $request->house_number;
-            $block = $request->block;
-            $pathway = $request->pathway;
-            $current = $request->current;
             
-
-            $this->addressUpdate->run($id, $id_people, $street,  $street_number, $neighborhood, $id_district, $house_number, $block, $pathway, $current);
+            $addressDto = new AddressDto(
+                $request->street,
+                $request->street_number,
+                $request->neighborhood,
+                (int) $request->id_district,
+                $request->house_number,
+                $request->block,
+                $request->pathway,
+                $request->current,
+                (int) $request->id_people,
+                (int) $request->id
+            );
+            $this->addressUpdate->run($addressDto);
 
             return $this->success([], "Dirección actualizada con éxito");
     }
