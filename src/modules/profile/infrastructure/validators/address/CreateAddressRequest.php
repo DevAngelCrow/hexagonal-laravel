@@ -1,7 +1,7 @@
 <?php
 namespace Src\modules\profile\infrastructure\validators\address;
 
-use Src\modules\profile\infrastructure\validators\BaseRequest;
+use Src\shared\infrastructure\validators\BaseRequest;
 
 class CreateAddressRequest extends BaseRequest {
     public function rules() : array{

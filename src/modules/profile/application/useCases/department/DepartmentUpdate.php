@@ -1,6 +1,7 @@
 <?php
 namespace Src\modules\profile\application\useCases\department;
 
+use Src\modules\profile\application\dtos\DepartmentDto;
 use Src\modules\profile\domain\entities\department\Department;
 use Src\modules\profile\domain\repositories\department\DepartmentRepositoryInterface;
 use Src\modules\profile\domain\value_objects\department_value_object\DepartmentDescription;
@@ -18,19 +19,19 @@ class DepartmentUpdate {
         $this->departmentRepository = $department_repository;
     }
 
-    public function run(int $id, string $name, string $description, int $id_country) : void {
+    public function run(DepartmentDto $departmentDto) : void {
         
-        $departmentDb = $this->departmentRepository->getOneById(new DepartmentId($id));
+        $departmentDb = $this->departmentRepository->getOneById(new DepartmentId($departmentDto->id));
 
         if(!$departmentDb){
             throw new ApplicationException("Identificador del país no encontrado en los registros", HttpStatusCode::HTTP_BAD_REQUEST->value);
         }
         
         $department = new Department(
-            new DepartmentName($name),
-            new DepartmentDescription($description),
-            new DepartmentIdCountry($id_country),
-            new DepartmentId($id)
+            new DepartmentName($departmentDto->name),
+            new DepartmentDescription($departmentDto->description),
+            new DepartmentIdCountry($departmentDto->id_country),
+            new DepartmentId($departmentDto->id)
         );
 
         $this->departmentRepository->update($department);

@@ -3,7 +3,11 @@
 namespace Src\modules\auth\application\useCases\auth;
 
 use DateTimeImmutable;
+use Src\modules\auth\application\useCases\dtos\UserDto;
 use Src\modules\auth\application\useCases\user\UserCreate;
+use Src\modules\profile\application\dtos\AddressDto;
+use Src\modules\profile\application\dtos\DocumentDto;
+use Src\modules\profile\application\dtos\PeopleDto;
 use Src\modules\profile\application\services\address\AddressCreateService;
 use Src\modules\profile\application\services\document\DocumentCreateService;
 use Src\modules\profile\application\services\people\PeopleCreateService;
@@ -16,7 +20,7 @@ class Register
     private readonly AddressCreateService $addressCreateService;
     private readonly DocumentCreateService $documentCreateService;
     private readonly UnitOfWorkTransactionDbInterface $transaction;
-    
+
 
     public function __construct(
         UserCreate $user_create,
@@ -63,29 +67,62 @@ class Register
         //document elements
         int $id_type_document,
         string $description,
-        string $document_number, 
+        string $document_number,
         bool $state
     ) {
         $this->transaction->beginTransaction();
 
-        $person = $this->peopleCreateService->createPersonForUser(
+        $peopleDto = new PeopleDto(
             $first_name,
             $middle_name,
             $last_name,
             $birthdate,
-            $id_gender,
             $email,
+            $id_gender,
             $id_marital_status,
-            $img_path,
             $phone,
+            $img_path,
             $id_status,
             $nationalities
         );
 
-        
-        $this->addressCreateService->createAddressForUser($street, $street_number, $neighborhood, $id_district, $house_number, $block, $pathway, $current, $person->getId()->value());
-        $this->documentCreateService->createDocumentForUser($id_type_document, $person->getId()->value(), $description, $document_number, $state);
-        $this->userCreate->run($person->getId()->value(), $user_name, $password, $id_status_user, $last_access, $is_validated);
+        $person = $this->peopleCreateService->createPersonForUser(
+            $peopleDto
+        );
+
+        $addressDto = new AddressDto(
+            $street,
+            $street_number,
+            $neighborhood,
+            $id_district,
+            $house_number,
+            $block,
+            $pathway,
+            $current,
+            $person->getId()->value()
+        );
+
+        $this->addressCreateService->createAddressForUser($addressDto);
+
+        $documentDto = new DocumentDto(
+            $id_type_document,
+            $person->getId()->value(),
+            $description,
+            $document_number,
+            $state
+        );
+
+        $this->documentCreateService->createDocumentForUser($documentDto);
+
+        $userDto = new UserDto(
+            $person->getId()->value(),
+            $user_name,
+            $password,
+            $id_status_user,
+            $last_access,
+            $is_validated
+        );
+        $this->userCreate->run($userDto);
 
 
         $this->transaction->commit();

@@ -2,6 +2,7 @@
 
 namespace Src\modules\profile\application\services\address;
 
+use Src\modules\profile\application\dtos\AddressDto;
 use Src\modules\profile\application\useCases\address\AddressCreate;
 
 class AddressCreateService
@@ -14,27 +15,11 @@ class AddressCreateService
     }
 
     public function createAddressForUser(
-        string $street,
-        string $street_number,
-        string $neighborhood,
-        int $id_district,
-        string $house_number,
-        string $block,
-        string $pathway,
-        bool $current,
-        int $id_people,
+        AddressDto $addressDto
     ) {
 
         $address = $this->addressCreate->run(
-            $street,
-            $street_number,
-            $neighborhood,
-            $id_district,
-            $house_number,
-            $block,
-            $pathway,
-            $current,
-            $id_people
+            $addressDto
         );
 
         return $address;

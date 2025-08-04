@@ -4,12 +4,18 @@ namespace Src\modules\profile\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Src\modules\profile\application\dtos\MunicipalityDto;
 use Src\modules\profile\application\useCases\municipality\MunicipalityCreate;
 use Src\modules\profile\application\useCases\municipality\MunicipalityDelete;
 use Src\modules\profile\application\useCases\municipality\MunicipalityGetAll;
 use Src\modules\profile\application\useCases\municipality\MunicipalityGetOneById;
 use Src\modules\profile\application\useCases\municipality\MunicipalityUpdate;
 use Src\modules\profile\infrastructure\dtos\municipalityDtoHttpResponse\MunicipalityDtoHttp;
+use Src\modules\profile\infrastructure\validators\municipality\CreateMunicipalityRequest;
+use Src\modules\profile\infrastructure\validators\municipality\DeleteMunicipalityRequest;
+use Src\modules\profile\infrastructure\validators\municipality\GetAllMunicipalitiesRequest;
+use Src\modules\profile\infrastructure\validators\municipality\GetByIdMunicipalityRequest;
+use Src\modules\profile\infrastructure\validators\municipality\UpdateMunicipalityRequest;
 use Src\shared\infrastructure\generalDtos\PaginatedResponseDto;
 use Src\shared\infrastructure\HttpResponses;
 
@@ -37,36 +43,40 @@ class MunicipalityController extends Controller
         $this->municipalityDelete = $municipality_delete;
     }
 
-    public function createMunicipality(Request $request)
+    public function createMunicipality(CreateMunicipalityRequest $request)
     {
 
-        $name = $request->name;
-        $description = $request->description;
-        $id_department = (int) $request->id_department;
+        $municipality = new MunicipalityDto(
+            $request->name,
+            $request->description,
+            (int) $request->id_department
+        );
 
-        $this->municipalityCreate->run($name, $description, $id_department);
+        $this->municipalityCreate->run($municipality);
 
         return $this->created([], "Municipio creado exitosamente");
     }
-    public function updateMunicipality(Request $request)
+    public function updateMunicipality(UpdateMunicipalityRequest $request)
     {
-        $id = (int) $request->id;
-        $name = $request->name;
-        $description = $request->description;
-        $id_department = (int) $request->id_department;
+        $municipality = new MunicipalityDto(
+            $request->name,
+            $request->description,
+            (int) $request->id_department,
+            (int) $request->id
+        );
 
-        $this->municipalityUpdate->run($id, $name, $description, $id_department);
+        $this->municipalityUpdate->run($municipality);
 
         return $this->success([], "Municipio actualizado exitosamente");
     }
-    public function getOneByIdMunicipality(Request $request, int $id)
+    public function getOneByIdMunicipality(GetByIdMunicipalityRequest $request)
     {
 
-        $municipality = $this->municipalityGetOneById->run($id);
+        $municipality = $this->municipalityGetOneById->run($request->id);
         
         return $this->success(MunicipalityDtoHttp::fromEntity($municipality), "Success");
     }
-    public function getAllMunicipality(Request $request)
+    public function getAllMunicipality(GetAllMunicipalitiesRequest $request)
     {
         $page = $request->query("page");
         $per_page = $request->query("per_page");
@@ -79,9 +89,9 @@ class MunicipalityController extends Controller
 
         return $this->success($paginateData, "Success");
     }
-    public function deletemunicipality(Request $request, int $id)
+    public function deletemunicipality(DeleteMunicipalityRequest $request)
     {
-        $this->municipalityDelete->run($id);
+        $this->municipalityDelete->run($request->id);
 
         return $this->success([], "Registro de municipio borrado exitosamente");
     }

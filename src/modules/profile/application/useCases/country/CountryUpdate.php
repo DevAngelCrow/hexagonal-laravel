@@ -1,6 +1,7 @@
 <?php
 namespace Src\modules\profile\application\useCases\country;
 
+use Src\modules\profile\application\dtos\CountryDto;
 use Src\modules\profile\domain\entities\country\Country;
 use Src\modules\profile\domain\repositories\country\CountryRepositoryInterface;
 use Src\modules\profile\domain\value_objects\country_value_object\CountryAbbreviation;
@@ -19,20 +20,20 @@ class CountryUpdate {
         $this->countryRepository = $country_repository;
     }
 
-    public function run(int $id, string $name, string $abbreviation, string $code, bool $state) : void {
+    public function run(CountryDto $countryDto) : void {
         
-        $countryDb = $this->countryRepository->getOneById(new CountryId($id));
+        $countryDb = $this->countryRepository->getOneById(new CountryId($countryDto->id));
 
         if(!$countryDb){
             throw new ApplicationException("Identificador del país no encontrado en los registros", HttpStatusCode::HTTP_BAD_REQUEST->value);
         }
         
         $country = new Country(
-            new CountryName($name),
-            new CountryAbbreviation($abbreviation),
-            new CountryCode($code),
-            new CountryState($state),
-            new CountryId($id)
+            new CountryName($countryDto->name),
+            new CountryAbbreviation($countryDto->abbreviation),
+            new CountryCode($countryDto->code),
+            new CountryState($countryDto->state),
+            new CountryId($countryDto->id)
         );
 
         $this->countryRepository->update($country);

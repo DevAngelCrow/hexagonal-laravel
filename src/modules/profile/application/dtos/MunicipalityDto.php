@@ -3,7 +3,7 @@ namespace Src\modules\profile\application\dtos;
 
 use Src\modules\profile\domain\entities\municipality\Municipality;
 
-class MunicipalityDtoHttp
+class MunicipalityDto
 {
     public function __construct(
         

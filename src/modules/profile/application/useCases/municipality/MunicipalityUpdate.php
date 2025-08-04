@@ -1,6 +1,7 @@
 <?php
 namespace Src\modules\profile\application\useCases\municipality;
 
+use Src\modules\profile\application\dtos\MunicipalityDto;
 use Src\modules\profile\domain\entities\municipality\Municipality;
 use Src\modules\profile\domain\repositories\municipality\MunicipalityRepositoryInterface;
 use Src\modules\profile\domain\value_objects\municipality_value_object\MunicipalityDescription;
@@ -18,18 +19,18 @@ class MunicipalityUpdate {
         $this->municipalityRepository = $municipality_repository;
     }
 
-    public function run(int $id, string $name, string $description, int $id_department) : void {
+    public function run(MunicipalityDto $municipalityDto) : void {
         
-        $municipalityDb = $this->municipalityRepository->getOneById(new MunicipalityId($id));
+        $municipalityDb = $this->municipalityRepository->getOneById(new MunicipalityId($municipalityDto->id));
 
         if(!$municipalityDb){
             throw new ApplicationException("Identificador del municipio no encontrado en los registros", HttpStatusCode::HTTP_BAD_REQUEST->value);
         }
         
         $municipality = new Municipality(
-            new MunicipalityName($name),
-            new MunicipalityDescription($description),
-            new MunicipalityIdDepartment($id_department),
+            new MunicipalityName($municipalityDto->name),
+            new MunicipalityDescription($municipalityDto->description),
+            new MunicipalityIdDepartment($municipalityDto->id_department),
             $municipalityDb->getId(),
         );
 

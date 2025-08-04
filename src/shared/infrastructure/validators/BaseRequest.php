@@ -1,5 +1,5 @@
 <?php
-namespace Src\modules\profile\infrastructure\validators;
+namespace Src\shared\infrastructure\validators;
 
 use Illuminate\Foundation\Http\FormRequest;
 

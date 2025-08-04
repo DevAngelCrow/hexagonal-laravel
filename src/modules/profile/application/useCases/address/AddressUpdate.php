@@ -45,6 +45,7 @@ class AddressUpdate {
             new AddressPathway($address->pathway),
             new AddressCurrent($address->current),
             new AddressIdPeople($address->id_people),
+            new AddressId($address->id)
         );
 
         $this->addressRepository->update($addressUpdate);

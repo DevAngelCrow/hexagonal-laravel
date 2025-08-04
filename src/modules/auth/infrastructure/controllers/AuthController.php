@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Src\shared\infrastructure\HttpResponses;
 use Src\modules\auth\application\useCases\auth\Register;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-
+use Src\modules\auth\infrastructure\validators\auth\RegisterRequest;
 
 class AuthController extends Controller
 {
@@ -24,7 +24,7 @@ class AuthController extends Controller
     }
 
 
-    public function singUp(Request $request)
+    public function singUp(RegisterRequest $request)
     {
         //people data input
         $first_name = $request->first_name;

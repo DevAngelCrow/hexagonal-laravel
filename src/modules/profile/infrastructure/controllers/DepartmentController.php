@@ -4,13 +4,18 @@ namespace Src\modules\profile\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Src\modules\profile\application\dtos\DepartmentDto;
 use Src\modules\profile\application\useCases\department\DepartmentCreate;
 use Src\modules\profile\application\useCases\department\DepartmentDelete;
 use Src\modules\profile\application\useCases\department\DepartmentGetAll;
 use Src\modules\profile\application\useCases\department\DepartmentGetOneById;
 use Src\modules\profile\application\useCases\department\DepartmentUpdate;
-use Src\modules\profile\domain\entities\department\Department;
 use Src\modules\profile\infrastructure\dtos\departmentDtoHttpResponse\DepartmentDtoHttp;
+use Src\modules\profile\infrastructure\validators\department\CreateDepartmentRequest;
+use Src\modules\profile\infrastructure\validators\department\DeleteDepartmentRequest;
+use Src\modules\profile\infrastructure\validators\department\GetAllDepartmentRequest;
+use Src\modules\profile\infrastructure\validators\department\GetByIdDepartmentRequest;
+use Src\modules\profile\infrastructure\validators\department\UpdateDepartmentRequest;
 use Src\shared\infrastructure\generalDtos\PaginatedResponseDto;
 use Src\shared\infrastructure\HttpResponses;
 
@@ -38,36 +43,39 @@ class DepartmentController extends Controller
         $this->departmentDelete = $department_delete;
     }
 
-    public function createDepartment(Request $request)
+    public function createDepartment(CreateDepartmentRequest $request)
     {
 
-        $name = $request->name;
-        $description = $request->description;
-        $id_country = (int) $request->id_country;
+        $department = new DepartmentDto(
+            $request->name,
+            $request->description,
+            (int) $request->id_country
+        );
 
-        $this->departmentCreate->run($name, $description, $id_country);
+        $this->departmentCreate->run($department);
 
         return $this->created([], "Departamento creado exitosamente");
     }
-    public function updateDepartment(Request $request)
+    public function updateDepartment(UpdateDepartmentRequest $request)
     {
-        $id = (int) $request->id;
-        $name = $request->name;
-        $description = $request->description;
-        $id_country = (int) $request->id_country;
-
-        $this->departmentUpdate->run($id, $name, $description, $id_country);
+        $department = new DepartmentDto(
+            $request->name,
+            $request->description,
+            $request->id_country,
+            $request->id
+        );
+        $this->departmentUpdate->run($department);
 
         return $this->success([], "Departamento actualizado exitosamente");
     }
-    public function getOneByIdDepartment(Request $request, int $id)
+    public function getOneByIdDepartment(GetByIdDepartmentRequest $request)
     {
 
-        $department = $this->departmentGetOneById->run($id);
+        $department = $this->departmentGetOneById->run($request->id);
         
         return $this->success(DepartmentDtoHttp::fromEntity($department), "Success");
     }
-    public function getAllDepartment(Request $request)
+    public function getAllDepartment(GetAllDepartmentRequest $request)
     {
         $page = $request->query("page");
         $per_page = $request->query("per_page");
@@ -80,9 +88,9 @@ class DepartmentController extends Controller
 
         return $this->success($paginateData, "Success");
     }
-    public function deleteDepartment(Request $request, int $id)
+    public function deleteDepartment(DeleteDepartmentRequest $request)
     {
-        $this->departmentDelete->run($id);
+        $this->departmentDelete->run($request->id);
 
         return $this->success([], "Registro de departamento borrado exitosamente");
     }

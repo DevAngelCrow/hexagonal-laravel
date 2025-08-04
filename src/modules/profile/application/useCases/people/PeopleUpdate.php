@@ -3,8 +3,10 @@
 namespace Src\modules\profile\application\useCases\people;
 
 use DateTimeImmutable;
+use Src\modules\profile\application\dtos\PeopleDto;
 use Src\modules\profile\domain\entities\people\People;
 use Src\modules\profile\domain\repositories\people\PeopleRepositoryInterface;
+use Src\modules\profile\domain\value_objects\country_value_object\CountryId;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleBirthDate;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleEmail;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleFirstName;
@@ -28,27 +30,29 @@ class PeopleUpdate
         $this->peopleRepository = $people_repository;
     }
 
-    public function run(int $id, string $first_name, string $middle_name, string $last_name, 
-    DateTimeImmutable $birthdate, int $id_gender, string $email, int $id_marital_status, 
-    string $img_path, string $phone, int $id_status) {
-        $personDb = $this->peopleRepository->getOneById(new PeopleId($id));
+    public function run(PeopleDto $peopleDto) {
+        $personDb = $this->peopleRepository->getOneById(new PeopleId($peopleDto->id));
 
         if(!$personDb){
             throw new ApplicationException("Identificador de persona no encontrado", HttpStatusCode::HTTP_BAD_REQUEST->value);
         }
 
+        $nationsId = array_map(fn($id_country) => new CountryId($id_country), $peopleDto->nationalities);
 
         $person = new People(
-            new PeopleFirstName($first_name),
-            new PeopleBirthDate($birthdate),
-            new PeopleIdGender($id_gender),
-            new PeopleEmail($email),
-            new PeopleIdMaritalStatus($id_marital_status),
-            new PeoplePhone($phone),
-            new PeopleIdStatus($id_status),
-            new PeopleMiddleName($middle_name),
-            new PeopleLastName($last_name),
-            new PeopleImgPath($img_path),
+            new PeopleFirstName($peopleDto->first_name),
+            new PeopleBirthDate($peopleDto->birthdate),
+            new PeopleIdGender($peopleDto->id_gender),
+            new PeopleEmail($peopleDto->email),
+            new PeopleIdMaritalStatus($peopleDto->id_marital_status),
+            new PeoplePhone($peopleDto->phone),
+            new PeopleIdStatus($peopleDto->id_status),
+            new PeopleMiddleName($peopleDto->middle_name),
+            new PeopleLastName($peopleDto->last_name),
+            new PeopleImgPath($peopleDto->img_path),
+            new PeopleId($peopleDto->id),
+            $nationsId
+
         );
 
         $this->peopleRepository->update($person);

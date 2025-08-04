@@ -2,6 +2,7 @@
 namespace Src\modules\profile\application\services\people;
 
 use DateTimeImmutable;
+use Src\modules\profile\application\dtos\PeopleDto;
 use Src\modules\profile\application\useCases\people\PeopleCreate;
 
 class PeopleCreateService{
@@ -12,8 +13,8 @@ class PeopleCreateService{
         $this->peopleCreate = $people_create;
     }
 
-    public function createPersonForUser(string $first_name, string $middle_name, string $last_name, DateTimeImmutable $birthdate, int $id_gender, string $email, int $id_marital_status, string $img_path, string $phone, int $id_status, array $nationalities){
-        $person = $this->peopleCreate->run($first_name, $middle_name, $last_name, $birthdate, $id_gender, $email, $id_marital_status, $img_path, $phone, $id_status, $nationalities);
+    public function createPersonForUser(PeopleDto $peopleDto){
+        $person = $this->peopleCreate->run($peopleDto);
         
         return $person;
     }

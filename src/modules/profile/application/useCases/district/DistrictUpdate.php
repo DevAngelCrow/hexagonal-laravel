@@ -1,6 +1,7 @@
 <?php
 namespace Src\modules\profile\application\useCases\district;
 
+use Src\modules\profile\application\dtos\DistrictDto;
 use Src\modules\profile\domain\entities\district\District;
 use Src\modules\profile\domain\repositories\district\DistrictRepositoryInterface;
 use Src\modules\profile\domain\value_objects\district_value_object\DistrictDescription;
@@ -19,19 +20,19 @@ class DistrictUpdate {
         $this->districtRepository = $district_repository;
     }
 
-    public function run(int $id, string $name, string $description, int $id_municipality, bool $state) : void {
+    public function run(DistrictDto $districtDto) : void {
         
-        $districtDb = $this->districtRepository->getOneById(new DistrictId($id));
+        $districtDb = $this->districtRepository->getOneById(new DistrictId($districtDto->id));
 
         if(!$districtDb){
             throw new ApplicationException("Identificador del distrito no encontrado en los registros", HttpStatusCode::HTTP_BAD_REQUEST->value);
         }
         
         $district = new District(
-            new DistrictIdMunicipality($id_municipality),
-            new DistrictName($name),
-            new DistrictDescription($description),
-            new DistrictState($state),
+            new DistrictIdMunicipality($districtDto->id_municipality),
+            new DistrictName($districtDto->name),
+            new DistrictDescription($districtDto->description),
+            new DistrictState($districtDto->state),
             $districtDb->getId(),
         );
 

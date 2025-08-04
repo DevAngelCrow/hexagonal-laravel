@@ -4,9 +4,10 @@ namespace Src\modules\auth\infrastructure\controllers;
 use App\Http\Controllers\Controller;
 use DateTimeImmutable;
 use Illuminate\Http\Request;
+use Src\modules\auth\application\useCases\dtos\UserDto;
 use Src\shared\infrastructure\HttpResponses;
 use Src\modules\auth\application\useCases\user\UserCreate;
-
+use Src\modules\auth\infrastructure\validators\user\CreateUserRequest;
 
 class UserController extends Controller
 {
@@ -18,16 +19,18 @@ class UserController extends Controller
         $this->userCreate = $user_create;
     }
 
-    public function createUser(Request $request){
+    public function createUser(CreateUserRequest $request){
 
-        $id_people = $request->id_people;
-        $user_name = $request->user_name;
-        $password = $request->password;
-        $id_status = $request->id_status;
-        $last_access = new \DateTimeImmutable ($request->last_access);
-        $is_validated = $request->is_validated;
+        $user = new UserDto(
+            $request->id_people,
+            $request->user_name,
+            $request->password,
+            (int) $request->id_status,
+            new \DateTimeImmutable ($request->last_access),
+            $request->is_validated
+        );
 
-        $this->userCreate->run($id_people, $user_name, $password, $id_status, $last_access, $is_validated);
+        $this->userCreate->run($user);
 
         return $this->created([], "Usuario creado satisfactoriamente");
     }

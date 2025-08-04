@@ -1,6 +1,7 @@
 <?php
 namespace Src\modules\profile\application\useCases\document;
 
+use Src\modules\profile\application\dtos\DocumentDto;
 use Src\modules\profile\domain\entities\documents\Document;
 use Src\modules\profile\domain\repositories\documents\DocumentRepositoryInterface;
 use Src\modules\profile\domain\value_objects\document_value_object\DocumentIdPeople;
@@ -17,14 +18,14 @@ class DocumentCreate {
         $this->documentRepository = $document_repository;
     }
 
-    public function run(int $id_type_document, int $id_people, string $description, string $document_number, bool $state) : void {
+    public function run(DocumentDto $documentDto) : void {
 
         $document = new Document(
-            new DocumentNumberDoc($document_number),
-            new DocumentDescription($description),
-            new DocumentIdPeople($id_people),
-            new DocumentIdTypeDocument($id_type_document),
-            new DocumentState($state)
+            new DocumentNumberDoc($documentDto->document_number),
+            new DocumentDescription($documentDto->description),
+            new DocumentIdPeople($documentDto->id_people),
+            new DocumentIdTypeDocument($documentDto->id_type_document),
+            new DocumentState($documentDto->state)
         );
 
         $this->documentRepository->create($document);

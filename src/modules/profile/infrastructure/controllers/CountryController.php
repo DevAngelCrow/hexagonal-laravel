@@ -4,12 +4,17 @@ namespace Src\modules\profile\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Src\modules\profile\application\dtos\CountryDto;
 use Src\modules\profile\application\useCases\country\CountryCreate;
 use Src\modules\profile\application\useCases\country\CountryDelete;
 use Src\modules\profile\application\useCases\country\CountryGetAll;
 use Src\modules\profile\application\useCases\country\CountryGetOneById;
 use Src\modules\profile\application\useCases\country\CountryUpdate;
 use Src\modules\profile\infrastructure\dtos\countryDtoHttpResponse\CountryDtoHttp;
+use Src\modules\profile\infrastructure\validators\country\CreateCountryRequest;
+use Src\modules\profile\infrastructure\validators\country\DeleteCountryRequest;
+use Src\modules\profile\infrastructure\validators\country\GetAllCountriesRequest;
+use Src\modules\profile\infrastructure\validators\country\GetByIdCountryRequest;
 use Src\shared\infrastructure\generalDtos\PaginatedResponseDto;
 use Src\shared\infrastructure\HttpResponses;
 
@@ -37,38 +42,42 @@ class CountryController extends Controller
         $this->countryDelete = $country_delete;
     }
 
-    public function createCountry(Request $request)
+    public function createCountry(CreateCountryRequest $request)
     {
 
-        $name = $request->name;
-        $abbreviation = $request->abbreviation;
-        $code = $request->code;
-        $state = $request->state;
+        $country = new CountryDto(
+            $request->name,
+            $request->abbreviation,
+            $request->code,
+            $request->state
+        );
 
-        $this->countryCreate->run($name, $abbreviation, $code, $state);
+        $this->countryCreate->run($country);
 
         return $this->created([], "País creado exitosamente");
     }
     public function updateCountry(Request $request)
     {
-        $id = (int) $request->id;
-        $name = $request->name;
-        $abbreviation = $request->abbreviation;
-        $code = $request->code;
-        $state = $request->state;
+        $country = new CountryDto(
+            $request->name,
+            $request->abbreviation,
+            $request->code,
+            $request->state,
+            (int) $request->id
+        );
 
-        $this->countryUpdate->run($id, $name, $abbreviation, $code, $state);
+        $this->countryUpdate->run($country);
 
         return $this->success([], "País actualizado exitosamente");
     }
-    public function getOneByIdCountry(Request $request, int $id)
+    public function getOneByIdCountry(GetByIdCountryRequest $request)
     {
 
-        $country = $this->countryGetOneById->run($id);
+        $country = $this->countryGetOneById->run($request->id);
         
         return $this->success(CountryDtoHttp::fromEntity($country), "Success");
     }
-    public function getAllCountry(Request $request)
+    public function getAllCountry(GetAllCountriesRequest $request)
     {
         $page = $request->query("page");
         $per_page = $request->query("per_page");
@@ -81,9 +90,9 @@ class CountryController extends Controller
 
         return $this->success($paginateData, "Success");
     }
-    public function deleteCountry(Request $request, int $id)
+    public function deleteCountry(DeleteCountryRequest $request)
     {
-        $this->countryDelete->run($id);
+        $this->countryDelete->run($request->id);
 
         return $this->success([], "Registro de país borrado exitosamente");
     }

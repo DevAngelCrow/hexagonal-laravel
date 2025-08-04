@@ -1,6 +1,7 @@
 <?php
 namespace Src\modules\profile\application\useCases\country;
 
+use Src\modules\profile\application\dtos\CountryDto;
 use Src\modules\profile\domain\entities\country\Country;
 use Src\modules\profile\domain\repositories\country\CountryRepositoryInterface;
 use Src\modules\profile\domain\value_objects\country_value_object\CountryAbbreviation;
@@ -16,12 +17,12 @@ class CountryCreate {
         $this->countryRepository = $country_repository;
     }
 
-    public function run(string $name, string $abbreviation, string $code, bool $state) : void {
+    public function run(CountryDto $countryDto) : void {
         $country = new Country(
-            new CountryName($name),
-            new CountryAbbreviation($abbreviation),
-            new CountryCode($code),
-            new CountryState($state)
+            new CountryName($countryDto->name),
+            new CountryAbbreviation($countryDto->abbreviation),
+            new CountryCode($countryDto->code),
+            new CountryState($countryDto->state)
         );
 
         $this->countryRepository->create($country);

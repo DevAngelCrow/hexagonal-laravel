@@ -2,6 +2,7 @@
 
 namespace Src\modules\auth\domain\entities\user;
 
+use Src\modules\auth\domain\value_objects\user_value_objects\UserId;
 use Src\modules\auth\domain\value_objects\user_value_objects\UserIdPeople;
 use Src\modules\auth\domain\value_objects\user_value_objects\UserIdStatus;
 use Src\modules\auth\domain\value_objects\user_value_objects\UserIsValidated;
@@ -18,6 +19,7 @@ class User
     private readonly UserIdStatus $id_status;
     private readonly UserLastAccess $last_access;
     private readonly UserIsValidated $is_validated;
+    private readonly ?UserId $id;
 
     public function __construct(
         UserIdPeople $id_people,
@@ -25,7 +27,8 @@ class User
         UserPassword $password,
         UserIdStatus $id_status,
         UserLastAccess $last_access,
-        UserIsValidated $is_validated
+        UserIsValidated $is_validated,
+        ?UserId $id = null,
     ) {
         $this->id_people = $id_people;
         $this->user_name = $user_name;
@@ -33,6 +36,7 @@ class User
         $this->id_status = $id_status;
         $this->last_access = $last_access;
         $this->is_validated = $is_validated;
+        $this->id = $id;
     }
     public function getIdPeople(): UserIdPeople
     {
@@ -62,5 +66,8 @@ class User
     public function getIsValidated(): UserIsValidated
     {
         return $this->is_validated;
+    }
+    public function getId() : UserId {
+        return $this->id;
     }
 }

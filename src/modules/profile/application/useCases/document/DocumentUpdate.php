@@ -2,6 +2,7 @@
 
 namespace Src\modules\profile\application\useCases\document;
 
+use Src\modules\profile\application\dtos\DocumentDto;
 use Src\modules\profile\domain\entities\documents\Document;
 use Src\modules\profile\domain\repositories\documents\DocumentRepositoryInterface;
 use Src\modules\profile\domain\value_objects\document_value_object\DocumentId;
@@ -22,23 +23,21 @@ class DocumentUpdate
         $this->documentRepository = $document_repository;
     }
 
-    public function run(int $id, int $id_type_document, int $id_people, string $description,
-    string $document_number, 
-    bool $state): void {
+    public function run(DocumentDto $documentDto): void {
 
-        $documentDb = $this->documentRepository->getOneById(new DocumentId($id));
+        $documentDb = $this->documentRepository->getOneById(new DocumentId($documentDto->id));
 
         if(!$documentDb){
             throw new ApplicationException("Identificador de documento no encontrado", HttpStatusCode::HTTP_BAD_REQUEST->value);
         }
 
         $document = new Document(
-            new DocumentNumberDoc($document_number),
-            new DocumentDescription($description),
-            new DocumentIdPeople($id_people),
-            new DocumentIdTypeDocument($id_type_document),
-            new DocumentState($state),
-            new DocumentId($id)
+            new DocumentNumberDoc($documentDto->document_number),
+            new DocumentDescription($documentDto->description),
+            new DocumentIdPeople($documentDto->id_people),
+            new DocumentIdTypeDocument($documentDto->id_type_document),
+            new DocumentState($documentDto->state),
+            new DocumentId($documentDto->id)
         );
 
         $this->documentRepository->update($document);

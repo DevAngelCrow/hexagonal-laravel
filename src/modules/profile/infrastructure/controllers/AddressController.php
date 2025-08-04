@@ -11,6 +11,9 @@ use Src\modules\profile\application\useCases\address\AddressGetOneById;
 use Src\modules\profile\application\useCases\address\AddressUpdate;
 use Src\modules\profile\infrastructure\dtos\addressDtoHttpResponse\AddressDtoHttp;
 use Src\modules\profile\infrastructure\validators\address\CreateAddressRequest;
+use Src\modules\profile\infrastructure\validators\address\GetAllAddressRequest;
+use Src\modules\profile\infrastructure\validators\address\GetByIdAddressRequest;
+use Src\modules\profile\infrastructure\validators\address\UpdateAddressRequest;
 use Src\shared\infrastructure\generalDtos\PaginatedResponseDto;
 use Src\shared\infrastructure\HttpResponses;
 
@@ -33,7 +36,6 @@ class AddressController extends Controller
 
     public function createAddress(CreateAddressRequest $request)
     {
-            //dd($request);
             $addressDto = new AddressDto(
                 $request->street,
                 $request->street_number,
@@ -51,7 +53,7 @@ class AddressController extends Controller
         
     }
 
-    public function updateAddress(Request $request){
+    public function updateAddress(UpdateAddressRequest $request){
             
             $addressDto = new AddressDto(
                 $request->street,
@@ -69,7 +71,7 @@ class AddressController extends Controller
 
             return $this->success([], "Dirección actualizada con éxito");
     }
-    public function getAllAddress(Request $request){
+    public function getAllAddress(GetAllAddressRequest $request){
 
         
         $addressCollection = $this->addressGetAll->run($request->query('page'), $request->query('per_page'));
@@ -81,9 +83,10 @@ class AddressController extends Controller
         return $this->success($paginateData, "Success");
     }
 
-    public function getOneByIdAddress(Request $request, int $id){
+    public function getOneByIdAddress(GetByIdAddressRequest $request){
         
-        $address = $this->addressGetOneById->run($id);
+
+        $address = $this->addressGetOneById->run($request->id);
 
 
         return $this->success(AddressDtoHttp::fromEntity($address), "Success");
