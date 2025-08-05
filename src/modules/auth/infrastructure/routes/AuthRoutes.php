@@ -5,6 +5,7 @@ namespace Src\modules\auth\infrastructure\routes;
 use Illuminate\Support\Facades\Route;
 use Src\modules\auth\infrastructure\controllers\AuthController;
 
+
 Route::post("login", [AuthController::class, "login"]);
 Route::post("sing-up", [AuthController::class, "singUp"]);
 

@@ -6,6 +6,7 @@ use App\Models\CtlMunicipality as MunicipalityModel;
 use Exception;
 use Src\modules\profile\domain\entities\municipality\Municipality;
 use Src\modules\profile\domain\repositories\municipality\MunicipalityRepositoryInterface;
+use Src\modules\profile\domain\value_objects\municipality_value_object\MunicipalityActive;
 use Src\modules\profile\domain\value_objects\municipality_value_object\MunicipalityDescription;
 use Src\modules\profile\domain\value_objects\municipality_value_object\MunicipalityId;
 use Src\modules\profile\domain\value_objects\municipality_value_object\MunicipalityIdDepartment;
@@ -24,6 +25,7 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
             $municipalityModel->name = $municipality->getName()->value();
             $municipalityModel->description = $municipality->getDescription()->value();
             $municipalityModel->id_department = $municipality->getIdDepartment()->value();
+            $municipalityModel->active = $municipality->getActive()->value();
 
             $municipalityModel->save();
         } catch (Exception $e) {
@@ -38,6 +40,7 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
             $municipalityModel->name = $municipality->getName()->value();
             $municipalityModel->description = $municipality->getDescription()->value();
             $municipalityModel->id_department = $municipality->getIdDepartment()->value();
+            $municipalityModel->active = $municipality->getActive()->value();
 
             $municipalityModel->save();
             
@@ -86,7 +89,7 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
         try {
             $municipalityModel = MunicipalityModel::find($id->value());
 
-            $municipalityModel->state = false;
+            $municipalityModel->active = false;
             $municipalityModel->save();
             $municipalityModel->delete();
         } catch (Exception $e) {
@@ -101,6 +104,7 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
             new MunicipalityName($municipality->name),
             new MunicipalityDescription($municipality->description),
             new MunicipalityIdDepartment($municipality->id_department),
+            new MunicipalityActive($municipality->active),
             new MunicipalityId($municipality->id)
         );
 

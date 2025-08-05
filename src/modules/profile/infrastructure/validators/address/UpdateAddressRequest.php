@@ -3,6 +3,10 @@ namespace Src\modules\profile\infrastructure\validators\address;
 use Src\shared\infrastructure\validators\BaseRequest;
 
 class UpdateAddressRequest extends BaseRequest {
+    protected function prepareForValidation()
+    {
+        $this->merge(["id"=> $this->route("id")]);
+    }
     public function rules() : array{
         return [
             "id" => "required|integer",

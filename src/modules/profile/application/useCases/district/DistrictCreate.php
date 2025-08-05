@@ -22,7 +22,7 @@ class DistrictCreate {
             new DistrictIdMunicipality($districtDto->id_municipality),
             new DistrictName($districtDto->name),
             new DistrictDescription($districtDto->description),
-            new DistrictState($districtDto->state)
+            new DistrictState($districtDto->active)
         );
 
         $this->districtRepository->create($district);

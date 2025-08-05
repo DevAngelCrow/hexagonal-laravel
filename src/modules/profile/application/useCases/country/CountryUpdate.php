@@ -32,7 +32,7 @@ class CountryUpdate {
             new CountryName($countryDto->name),
             new CountryAbbreviation($countryDto->abbreviation),
             new CountryCode($countryDto->code),
-            new CountryState($countryDto->state),
+            new CountryState($countryDto->active),
             new CountryId($countryDto->id)
         );
 

@@ -27,7 +27,7 @@ class ImplDocumentRepository implements DocumentRepositoryInterface
             $documentModel->id_type_document = $document->getIdTypeDocument()->value();
             $documentModel->id_people = $document->getIdPeople()->value();
             $documentModel->description = $document->getDescription()->value();
-            $documentModel->state = $document->getState()->value();
+            $documentModel->active = $document->getActive()->value();
             $documentModel->document_number = $document->getNumberDocument()->value();
 
             $documentModel->save();
@@ -44,7 +44,7 @@ class ImplDocumentRepository implements DocumentRepositoryInterface
             $documentModel->id_type_document = $document->getIdTypeDocument()->value();
             $documentModel->id_people = $document->getIdPeople()->value();
             $documentModel->description = $document->getDescription()->value();
-            $documentModel->state = $document->getState()->value();
+            $documentModel->active = $document->getActive()->value();
             $documentModel->document_number = $document->getNumberDocument()->value();
 
             $documentModel->save();
@@ -93,7 +93,7 @@ class ImplDocumentRepository implements DocumentRepositoryInterface
         try {
             $documentModel = DocumentModel::find($id->value());
 
-            $documentModel->state = false;
+            $documentModel->active = false;
             $documentModel->save();
             $documentModel->delete();
         } catch (Exception $e) {
@@ -109,7 +109,7 @@ class ImplDocumentRepository implements DocumentRepositoryInterface
             new DocumentDescription($document->description),
             new DocumentIdPeople($document->id_people),
             new DocumentIdTypeDocument($document->id_type_document),
-            new DocumentState($document->state),
+            new DocumentState($document->active),
             new DocumentId($document->id),
         );
     }

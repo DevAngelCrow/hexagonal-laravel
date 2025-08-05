@@ -10,7 +10,7 @@ class DistrictDto
         public readonly string $name,
         public readonly string $description,
         public readonly int $id_municipality,
-        public readonly bool $state,
+        public readonly bool $active,
         public readonly ?int $id = null,
     ) {}
     public static function fromEntity(District $district){
@@ -19,7 +19,7 @@ class DistrictDto
             $district->getName()->value(),
             $district->getDescription()->value(),
             $district->getIdMunicipality()->value(),
-            $district->getState()->value(),
+            $district->getActive()->value(),
             $district->getId()->value() ?: null,
         );
     }

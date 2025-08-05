@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class CtlDistrict extends Model
 {
     protected $table = "ctl_district";
-    protected $fillable = ["id","id_municipality","name", "description", "state"];
+    protected $fillable = ["id","id_municipality","name", "description", "active"];
 
     public function address() : HasOne {
         return $this->hasOne(MntAddress::class);

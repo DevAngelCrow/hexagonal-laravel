@@ -12,7 +12,7 @@ class DocumentDto
         public readonly int $id_people,
         public readonly string $description,
         public readonly string $document_number,
-        public readonly bool $state,
+        public readonly bool $active,
         public readonly ?int $id = null
     ) {}
 
@@ -23,7 +23,7 @@ class DocumentDto
             $document->getIdPeople()->value(),
             $document->getDescription()->value(),
             $document->getNumberDocument()->value(),
-            $document->getState()->value(),
+            $document->getActive()->value(),
             $document->getId()->value() ?: null,
         );
     }

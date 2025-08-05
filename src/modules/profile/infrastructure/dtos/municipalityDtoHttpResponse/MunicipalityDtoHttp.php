@@ -11,12 +11,14 @@ class MunicipalityDtoHttp
         public readonly string $name,
         public readonly string $description,
         public readonly int $id_department,
+        public readonly bool $active,
     ) {}
     public static function fromEntity(Municipality $municipality){
         return new self(
             $municipality->getId()->value(),
             $municipality->getName()->value(),
             $municipality->getDescription()->value(),
+            $municipality->getActive()->value(),
             $municipality->getIdDepartment()->value(),
         );
     }

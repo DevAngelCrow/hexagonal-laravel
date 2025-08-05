@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ctl_status', function (Blueprint $table) {
+        Schema::create('ctl_category_permissions', function (Blueprint $table) {
             $table->id();
-            $table->string("table_header");
             $table->string("name");
             $table->string("description");
-            $table->boolean("state");
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ctl_status');
+        Schema::dropIfExists('ctl_category_permissions');
     }
 };

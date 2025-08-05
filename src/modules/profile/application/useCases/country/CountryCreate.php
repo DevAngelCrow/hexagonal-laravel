@@ -22,7 +22,7 @@ class CountryCreate {
             new CountryName($countryDto->name),
             new CountryAbbreviation($countryDto->abbreviation),
             new CountryCode($countryDto->code),
-            new CountryState($countryDto->state)
+            new CountryState($countryDto->active)
         );
 
         $this->countryRepository->create($country);

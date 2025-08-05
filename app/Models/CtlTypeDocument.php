@@ -9,7 +9,7 @@ class CtlTypeDocument extends Model
 {
     protected $table = "ctl_type_document";
     protected $fillable = [
-        "id", "name", "description"
+        "id", "name", "description", "active"
     ];
 
     public function document(): HasOne {

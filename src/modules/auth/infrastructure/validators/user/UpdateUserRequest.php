@@ -4,6 +4,10 @@ namespace Src\modules\auth\infrastructure\validators\user;
 use Src\shared\infrastructure\validators\BaseRequest;
 
 class UpdateUserRequest extends BaseRequest {
+    protected function prepareForValidation()
+    {
+        $this->merge(["id"=> $this->route("id")]);
+    }
     public function rules() : array{
         return [
             "id_people" => "required|integer",

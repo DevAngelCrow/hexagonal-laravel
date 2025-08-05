@@ -15,7 +15,7 @@ class Document
     private readonly DocumentDescription $description;
     private readonly DocumentIdPeople $id_people;
     private readonly DocumentIdTypeDocument $id_type_document;
-    private readonly DocumentState $state;
+    private readonly DocumentState $active;
     private readonly ?DocumentId $id;
 
     public function __construct(
@@ -23,7 +23,7 @@ class Document
         DocumentDescription $description,
         DocumentIdPeople $id_people,
         DocumentIdTypeDocument $id_type_document,
-        DocumentState $state,
+        DocumentState $active,
         ?DocumentId $id = null,
     ) {
         $this->id = $id;
@@ -31,7 +31,7 @@ class Document
         $this->description = $description;
         $this->id_people = $id_people;
         $this->id_type_document = $id_type_document;
-        $this->state = $state;
+        $this->active = $active;
     }
 
     public function getDescription(): DocumentDescription
@@ -49,9 +49,9 @@ class Document
         return $this->id_type_document;
     }
 
-    public function getState(): DocumentState
+    public function getActive(): DocumentState
     {
-        return $this->state;
+        return $this->active;
     }
 
     public function getId(): ?DocumentId

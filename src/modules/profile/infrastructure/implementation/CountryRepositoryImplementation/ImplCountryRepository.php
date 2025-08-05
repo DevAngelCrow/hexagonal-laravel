@@ -26,7 +26,7 @@ class ImplCountryRepository implements CountryRepositoryInterface
             $countryModel->name = $country->getName()->value();
             $countryModel->abbreviation = $country->getAbbreviation()->value();
             $countryModel->code = $country->getCode()->value();
-            $countryModel->state = $country->getState()->value();
+            $countryModel->active = $country->getActive()->value();
 
             $countryModel->save();
         } catch (Exception $e) {
@@ -41,7 +41,7 @@ class ImplCountryRepository implements CountryRepositoryInterface
             $countryModel->name = $country->getName()->value();
             $countryModel->abbreviation = $country->getAbbreviation()->value();
             $countryModel->code = $country->getCode()->value();
-            $countryModel->state = $country->getState()->value();
+            $countryModel->active = $country->getActive()->value();
 
             $countryModel->save();
         } catch (Exception $e) {
@@ -89,7 +89,7 @@ class ImplCountryRepository implements CountryRepositoryInterface
         try {
             $countryModel = CountryModel::find($id->value());
 
-            $countryModel->state = false;
+            $countryModel->active = false;
             $countryModel->save();
             $countryModel->delete();
         } catch (Exception $e) {
@@ -103,7 +103,7 @@ class ImplCountryRepository implements CountryRepositoryInterface
             new CountryName($country->name),
             new CountryAbbreviation($country->abbreviation),
             new CountryCode($country->code),
-            new CountryState($country->state),
+            new CountryState($country->active),
             new CountryId($country->id)
         );
 

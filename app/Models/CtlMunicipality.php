@@ -13,7 +13,8 @@ class CtlMunicipality extends Model
         "id",
         "id_department",
         "name",
-        "description"
+        "description",
+        "active"
     ];
 
     public function district() : HasMany {

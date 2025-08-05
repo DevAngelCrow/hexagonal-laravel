@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string("name", length: 150);
             $table->string("abbreviation", length: 150);
             $table->string("code", length: 150);
-            $table->boolean("state");
+            $table->boolean("active");
             $table->timestamps();
             $table->softDeletes();
         });

@@ -11,7 +11,7 @@ class DistrictDtoHttp
         public readonly string $name,
         public readonly string $description,
         public readonly int $id_municipality,
-        public readonly bool $state
+        public readonly bool $active
     ) {}
     public static function fromEntity(District $district){
         return new self(
@@ -19,7 +19,7 @@ class DistrictDtoHttp
             $district->getName()->value(),
             $district->getDescription()->value(),
             $district->getIdMunicipality()->value(),
-            $district->getState()->value()
+            $district->getActive()->value()
         );
     }
 }

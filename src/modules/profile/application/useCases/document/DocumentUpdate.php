@@ -36,7 +36,7 @@ class DocumentUpdate
             new DocumentDescription($documentDto->description),
             new DocumentIdPeople($documentDto->id_people),
             new DocumentIdTypeDocument($documentDto->id_type_document),
-            new DocumentState($documentDto->state),
+            new DocumentState($documentDto->active),
             new DocumentId($documentDto->id)
         );
 

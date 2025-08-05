@@ -11,7 +11,7 @@ class CountryDtoHttp
         public readonly string $name,
         public readonly string $abbreviation,
         public readonly string $code,
-        public readonly bool $state,
+        public readonly bool $active,
     ) {}
     public static function fromEntity(Country $country){
         return new self(
@@ -19,7 +19,7 @@ class CountryDtoHttp
             $country->getName()->value(),
             $country->getAbbreviation()->value(),
             $country->getCode()->value(),
-            $country->getState()->value()
+            $country->getActive()->value()
         );
     }
 }

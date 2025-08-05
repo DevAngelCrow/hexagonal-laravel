@@ -49,7 +49,7 @@ class DistrictController extends Controller
             $request->name,
             $request->description,
             (int) $request->id_municipality,
-            $request->state
+            $request->active
         );
 
         $this->districtCreate->run($district);
@@ -63,7 +63,7 @@ class DistrictController extends Controller
             $request->name,
             $request->description,
             (int) $request->id_municipality,
-            $request->state
+            $request->active
         );
       
         $this->districtUpdate->run($district);

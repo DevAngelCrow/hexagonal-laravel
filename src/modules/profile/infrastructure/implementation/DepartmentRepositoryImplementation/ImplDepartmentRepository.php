@@ -6,6 +6,7 @@ use App\Models\CtlDepartment as DepartmentModel;
 use Exception;
 use Src\modules\profile\domain\entities\department\Department;
 use Src\modules\profile\domain\repositories\department\DepartmentRepositoryInterface;
+use Src\modules\profile\domain\value_objects\department_value_object\DepartmentActive;
 use Src\modules\profile\domain\value_objects\department_value_object\DepartmentDescription;
 use Src\modules\profile\domain\value_objects\department_value_object\DepartmentId;
 use Src\modules\profile\domain\value_objects\department_value_object\DepartmentIdCountry;
@@ -24,6 +25,7 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
             $departmentModel->name = $department->getName()->value();
             $departmentModel->description = $department->getDescription()->value();
             $departmentModel->id_country = $department->getIdCountry()->value();
+            $departmentModel->active = $department->getActive()->value();
 
             $departmentModel->save();
         } catch (Exception $e) {
@@ -38,6 +40,7 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
             $departmentModel->name = $department->getName()->value();
             $departmentModel->description = $department->getDescription()->value();
             $departmentModel->id_country = $department->getIdCountry()->value();
+            $departmentModel->active = $department->getActive()->value();
 
             $departmentModel->save();
         } catch (Exception $e) {
@@ -85,7 +88,7 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
         try {
             $departmentModel = DepartmentModel::find($id->value());
 
-            $departmentModel->state = false;
+            $departmentModel->active = false;
             $departmentModel->save();
             $departmentModel->delete();
         } catch (Exception $e) {
@@ -99,6 +102,7 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
             new DepartmentName($department->name),
             new DepartmentDescription($department->description),
             new DepartmentIdCountry($department->id_country),
+            new DepartmentActive($department->active),
             new DepartmentId($department->id)
         );
 

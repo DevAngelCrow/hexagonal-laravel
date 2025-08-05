@@ -49,7 +49,8 @@ class DepartmentController extends Controller
         $department = new DepartmentDto(
             $request->name,
             $request->description,
-            (int) $request->id_country
+            (int) $request->id_country,
+            $request->active
         );
 
         $this->departmentCreate->run($department);
@@ -62,6 +63,7 @@ class DepartmentController extends Controller
             $request->name,
             $request->description,
             $request->id_country,
+            $request->active,
             $request->id
         );
         $this->departmentUpdate->run($department);

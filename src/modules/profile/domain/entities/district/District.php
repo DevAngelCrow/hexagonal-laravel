@@ -13,20 +13,20 @@ class District
     private readonly DistrictIdMunicipality $id_municipality;
     private readonly DistrictName $name;
     private readonly DistrictDescription $description;
-    private readonly DistrictState $state;
+    private readonly DistrictState $active;
     private readonly ?DistrictId $id;
 
     public function __construct(
         DistrictIdMunicipality $id_municipality,
         DistrictName $name,
         DistrictDescription $description,
-        DistrictState $state,
+        DistrictState $active,
         ?DistrictId $id = null
     ) {
         $this->id_municipality = $id_municipality;
         $this->name = $name;
         $this->description = $description;
-        $this->state = $state;
+        $this->active = $active;
         $this->id = $id;
     }
 
@@ -45,9 +45,9 @@ class District
         return $this->description;
     }
 
-    public function getState(): DistrictState
+    public function getActive(): DistrictState
     {
-        return $this->state;
+        return $this->active;
     }
     public function getId(): ?DistrictId
     {

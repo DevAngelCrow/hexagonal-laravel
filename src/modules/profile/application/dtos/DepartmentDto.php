@@ -11,6 +11,7 @@ class DepartmentDto
         public readonly string $name,
         public readonly string $description,
         public readonly int $id_country,
+        public readonly bool $active,
         public readonly ?int $id = null,
     ) {}
     public static function fromEntity(Department $department)
@@ -20,6 +21,7 @@ class DepartmentDto
             $department->getName()->value(),
             $department->getDescription()->value(),
             $department->getIdCountry()->value(),
+            $department->getActive()->value(),
             $department->getId()->value() ?: null,
         );
     }

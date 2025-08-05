@@ -25,7 +25,7 @@ class DocumentCreate {
             new DocumentDescription($documentDto->description),
             new DocumentIdPeople($documentDto->id_people),
             new DocumentIdTypeDocument($documentDto->id_type_document),
-            new DocumentState($documentDto->state)
+            new DocumentState($documentDto->active)
         );
 
         $this->documentRepository->create($document);

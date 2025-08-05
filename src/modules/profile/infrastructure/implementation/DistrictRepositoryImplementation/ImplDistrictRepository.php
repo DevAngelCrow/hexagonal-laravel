@@ -25,7 +25,7 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
             $districtModel->name = $district->getName()->value();
             $districtModel->description = $district->getDescription()->value();
             $districtModel->id_municipality = $district->getIdMunicipality()->value();
-            $districtModel->state = $district->getState()->value();
+            $districtModel->active = $district->getActive()->value();
 
             $districtModel->save();
         } catch (Exception $e) {
@@ -40,7 +40,7 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
             $districtModel->name = $district->getName()->value();
             $districtModel->description = $district->getDescription()->value();
             $districtModel->id_municipality = $district->getIdMunicipality()->value();
-            $districtModel->state = $district->getState()->value();
+            $districtModel->active = $district->getActive()->value();
 
             $districtModel->save();
             
@@ -89,7 +89,7 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
         try {
             $districtModel = DistrictModel::find($id->value());
 
-            $districtModel->state = false;
+            $districtModel->active = false;
             $districtModel->save();
             $districtModel->delete();
         } catch (Exception $e) {
@@ -104,7 +104,7 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
             new DistrictIdMunicipality($district->id_municipality),
             new DistrictName($district->name),
             new DistrictDescription($district->description),
-            new DistrictState($district->state),
+            new DistrictState($district->active),
             new districtId($district->id)
         );
 

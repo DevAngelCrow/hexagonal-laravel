@@ -13,20 +13,20 @@ class Country
     private readonly CountryName $name;
     private readonly CountryAbbreviation $abbreviation;
     private readonly CountryCode $code;
-    private readonly CountryState $state;
+    private readonly CountryState $active;
     private readonly ?CountryId $id;
 
     public function __construct(
         CountryName $name,
         CountryAbbreviation $abbreviation,
         CountryCode $code,
-        CountryState $state,
+        CountryState $active,
         ?CountryId $id = null
     ) {
         $this->name = $name;
         $this->abbreviation = $abbreviation;
         $this->code = $code;
-        $this->state = $state;
+        $this->active = $active;
         $this->id = $id;
     }
 
@@ -45,9 +45,9 @@ class Country
         return $this->code;
     }
 
-    public function getState(): CountryState
+    public function getActive(): CountryState
     {
-        return $this->state;
+        return $this->active;
     }
 
     public function getId(): ?CountryId

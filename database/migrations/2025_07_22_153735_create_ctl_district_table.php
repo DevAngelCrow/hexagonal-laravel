@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer("id_municipality");
             $table->string("name", length: 150);
             $table->string("description", length: 150);
-            $table->boolean("state");
+            $table->boolean("active");
             $table->timestamps();
             $table->softDeletes();
             $table->foreign("id_municipality")->references("id")->on("ctl_municipality");

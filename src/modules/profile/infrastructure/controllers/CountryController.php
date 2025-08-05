@@ -49,7 +49,7 @@ class CountryController extends Controller
             $request->name,
             $request->abbreviation,
             $request->code,
-            $request->state
+            $request->active
         );
 
         $this->countryCreate->run($country);
@@ -62,7 +62,7 @@ class CountryController extends Controller
             $request->name,
             $request->abbreviation,
             $request->code,
-            $request->state,
+            $request->active,
             (int) $request->id
         );
 

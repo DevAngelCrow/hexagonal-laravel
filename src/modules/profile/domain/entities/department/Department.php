@@ -2,6 +2,7 @@
 
 namespace Src\modules\profile\domain\entities\department;
 
+use Src\modules\profile\domain\value_objects\department_value_object\DepartmentActive;
 use Src\modules\profile\domain\value_objects\department_value_object\DepartmentDescription;
 use Src\modules\profile\domain\value_objects\department_value_object\DepartmentId;
 use Src\modules\profile\domain\value_objects\department_value_object\DepartmentIdCountry;
@@ -12,17 +13,20 @@ class Department
     private readonly DepartmentName $name;
     private readonly DepartmentDescription $description;
     private readonly DepartmentIdCountry $id_country;
+    private readonly DepartmentActive $active;
     private readonly ?DepartmentId $id;
 
     public function __construct(
         DepartmentName $name,
         DepartmentDescription $description,
         DepartmentIdCountry $id_country,
+        DepartmentActive $active,
         ?DepartmentId $id = null
     ) {
         $this->name = $name;
         $this->description = $description;
         $this->id_country = $id_country;
+        $this->active = $active;
         $this->id = $id;
     }
 
@@ -39,6 +43,10 @@ class Department
     public function getIdCountry(): DepartmentIdCountry
     {
         return $this->id_country;
+    }
+    public function getActive(): DepartmentActive
+    {
+        return $this->active;
     }
     public function getId(): ?DepartmentId
     {

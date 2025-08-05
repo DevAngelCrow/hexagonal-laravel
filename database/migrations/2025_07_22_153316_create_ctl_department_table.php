@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("name", length: 150);
             $table->string("description", length: 150);
             $table->integer("id_country");
+            $table->boolean("active");
             $table->timestamps();
             $table->softDeletes();
             $table->foreign("id_country")->references("id")->on("ctl_country");

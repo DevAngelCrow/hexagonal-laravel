@@ -43,7 +43,7 @@ class DocumentController extends Controller {
             (int) $request->id_people,
             $request->description,
             $request->document_number,
-            $request->state
+            $request->active
         );
         
         $this->documentCreate->run($document);
@@ -57,7 +57,7 @@ class DocumentController extends Controller {
             (int) $request->id_people,
             $request->description,
             $request->document_number,
-            $request->state,
+            $request->active,
             (int) $request->id
         );
 

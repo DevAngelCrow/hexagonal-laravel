@@ -18,7 +18,7 @@ class CtlCountry extends Model
         "name",
         "abbreviation",
         "code",
-        "state"
+        "active"
     ];
 
     public function country() : HasMany {

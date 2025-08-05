@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string("name", length: 150);
             $table->string("description", length: 150);
+            $table->integer("id_category_permissions");
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign("id_category_permissions")->references("id")->on("ctl_category_permissions");
         });
     }
 

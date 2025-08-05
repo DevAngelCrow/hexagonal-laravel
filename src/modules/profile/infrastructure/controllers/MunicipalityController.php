@@ -49,7 +49,8 @@ class MunicipalityController extends Controller
         $municipality = new MunicipalityDto(
             $request->name,
             $request->description,
-            (int) $request->id_department
+            (int) $request->id_department,
+            $request->active
         );
 
         $this->municipalityCreate->run($municipality);
@@ -62,6 +63,7 @@ class MunicipalityController extends Controller
             $request->name,
             $request->description,
             (int) $request->id_department,
+            $request->active,
             (int) $request->id
         );
 
@@ -73,7 +75,7 @@ class MunicipalityController extends Controller
     {
 
         $municipality = $this->municipalityGetOneById->run($request->id);
-        
+
         return $this->success(MunicipalityDtoHttp::fromEntity($municipality), "Success");
     }
     public function getAllMunicipality(GetAllMunicipalitiesRequest $request)

@@ -14,6 +14,7 @@ class CtlDepartment extends Model
         "name",
         "description",
         "id_country",
+        "active"
     ];
 
     public function municipality() : HasMany {

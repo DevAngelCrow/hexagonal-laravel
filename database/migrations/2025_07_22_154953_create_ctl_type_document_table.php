@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("name", length: 150);
             $table->string("description", length: 150);
+            $table->boolean("active");
             $table->timestamps();
             $table->softDeletes();
         });

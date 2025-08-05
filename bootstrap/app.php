@@ -118,25 +118,4 @@ return Application::configure(basePath: dirname(__DIR__))
             //}
             return back()->withErrors(["error" => $e->getMessage()])->withInput();
         });
-
-        // también puedes capturar Throwable si quieres un fallback general
-        // $exceptions->renderable(function (Throwable $e, Request $request) {
-        //     $responder = new class {
-        //         use HttpResponses;
-        //     };
-
-        //     $details = config('app.debug') ? [
-        //         'exception_type' => get_class($e),
-        //         'message' => $e->getMessage(),
-        //         'file' => $e->getFile(),
-        //         'line' => $e->getLine(),
-        //         'trace' => explode("\n", $e->getTraceAsString()),
-        //     ] : [];
-
-        //     return $responder->internalServerError(
-        //         config('app.debug') ? $e->getMessage() : 'Error inesperado.',
-        //         $details,
-        //         //"SERVER_ERROR"
-        //     );
-        // });
     })->create();

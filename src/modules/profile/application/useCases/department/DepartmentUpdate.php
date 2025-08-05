@@ -4,6 +4,7 @@ namespace Src\modules\profile\application\useCases\department;
 use Src\modules\profile\application\dtos\DepartmentDto;
 use Src\modules\profile\domain\entities\department\Department;
 use Src\modules\profile\domain\repositories\department\DepartmentRepositoryInterface;
+use Src\modules\profile\domain\value_objects\department_value_object\DepartmentActive;
 use Src\modules\profile\domain\value_objects\department_value_object\DepartmentDescription;
 use Src\modules\profile\domain\value_objects\department_value_object\DepartmentId;
 use Src\modules\profile\domain\value_objects\department_value_object\DepartmentIdCountry;
@@ -31,6 +32,7 @@ class DepartmentUpdate {
             new DepartmentName($departmentDto->name),
             new DepartmentDescription($departmentDto->description),
             new DepartmentIdCountry($departmentDto->id_country),
+            new DepartmentActive($departmentDto->active),
             new DepartmentId($departmentDto->id)
         );
 

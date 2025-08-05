@@ -13,7 +13,7 @@ class DocumentDtoHttp
         public readonly int $id_people,
         public readonly string $description,
         public readonly string $document_number,
-        public readonly bool $state
+        public readonly bool $actie
     ) {}
 
     public static function fromEntity(Document $document){
@@ -23,7 +23,7 @@ class DocumentDtoHttp
             $document->getIdPeople()->value(),
             $document->getDescription()->value(),
             $document->getNumberDocument()->value(),
-            $document->getState()->value()
+            $document->getActive()->value()
         );
     }
 }
