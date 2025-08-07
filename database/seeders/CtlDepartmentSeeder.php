@@ -19,7 +19,8 @@ class CtlDepartmentSeeder extends Seeder
         DB::table("ctl_department")->insert([
             "name" => "San Salvador",
             "id_country" => $idCountry->id,
-            "description" => "País soberano"
+            "description" => "País soberano",
+            "active" => true,
         ]);
     }
 }

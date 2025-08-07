@@ -14,15 +14,24 @@ class CtlStatusSeeder extends Seeder
     public function run(): void
     {
         DB::table('ctl_status')->insert([
-            ["table_header"=>"mnt_people",
-            "name"=> "Activo",
-            "description" => "Estado activo"],
-            ["table_header"=>"mnt_user",
-            "name"=> "Activo",
-            "description" => "Estado activo"],
-            ["table_header"=>"mnt_rol",
-            "name"=> "Activo",
-            "description" => "Estado activo"]
+            [
+                "table_header" => "mnt_people",
+                "name" => "Activo",
+                "description" => "Estado activo",
+                "state" => true
+            ],
+            [
+                "table_header" => "mnt_user",
+                "name" => "Activo",
+                "description" => "Estado activo",
+                "state" => true
+            ],
+            [
+                "table_header" => "mnt_rol",
+                "name" => "Activo",
+                "description" => "Estado activo",
+                "state" => true
+            ]
         ]);
     }
 }

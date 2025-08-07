@@ -15,7 +15,8 @@ class CtlTypeDocumentSeeder extends Seeder
     {
         DB::table('ctl_type_document')->insert([
             "name"=>"DUI",
-            "description"=> "Documento Único de Identidad"
+            "description"=> "Documento Único de Identidad",
+            "active" => true,
         ]);
     }
 }
