@@ -37,11 +37,12 @@ class MntUser extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(MntPeople::class, "id_people", "id");
     }
-    public function rol(): BelongsToMany
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(MntRol::class, "user_rol", "id_user", "id_rol");
     }
-    public function status() : BelongsTo {
+    public function status(): BelongsTo
+    {
         return $this->belongsTo(CtlStatus::class);
     }
 
@@ -81,7 +82,16 @@ class MntUser extends Authenticatable implements MustVerifyEmail
     // }
 
     public function routeNotificationForMail($notification)
-{
-    return $this->getEmailForVerification();
-}
+    {
+        return $this->getEmailForVerification();
+    }
+
+    //apartado de permisos y roles
+
+    public function permissions() {
+        return $this->roles()->with("permissions")->get()
+        ->pluck("permissions")
+        ->flatten()
+        ->unique("id");
+    }
 }
