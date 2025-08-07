@@ -18,7 +18,7 @@ class CtlCountrySeeder extends Seeder
             "name" => "El Salvador",
             "abbreviation" => "ES",
             "code" => "503",
-            "state" => true,
+            "active" => true,
         ]);
     }
 }

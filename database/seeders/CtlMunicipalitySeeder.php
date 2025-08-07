@@ -19,7 +19,8 @@ class CtlMunicipalitySeeder extends Seeder
         DB::table("ctl_municipality")->insert([
             "id_department"=>$idDepartment->id,
             "name"=>"San Salvador Este",
-            "description"=>"Municipio de San Salvador"
+            "description"=>"Municipio de San Salvador",
+            "active" => true,
         ]);
     }
 }
