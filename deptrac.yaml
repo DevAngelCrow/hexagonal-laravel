@@ -10,15 +10,25 @@ deptrac:
         - type: class
           value: ^Src\\Modules\\[A-Za-z0-9]+\\Domain\\
 
+        - type: class
+          value: ^Src\\Shared\\Domain\\
+
     - name: Application
       collectors:
         - type: class
           value: ^Src\\Modules\\[A-Za-z0-9]+\\Application\\
 
+        - type: class
+          value: ^Src\\Shared\\Application\\
+
     - name: Infrastructure
       collectors:
         - type: class
           value: ^Src\\Modules\\[A-Za-z0-9]+\\Infrastructure\\
+
+
+        - type: class
+          value: ^Src\\Shared\\Infrastructure\\
 
   ruleset:
     Domain: []
