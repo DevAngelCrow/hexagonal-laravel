@@ -20,7 +20,7 @@ class CtlMunicipalitySeeder extends Seeder
             "id_department"=>$idDepartment->id,
             "name"=>"San Salvador Este",
             "description"=>"Municipio de San Salvador",
-            "active"=>true
+            "active" => true,
         ]);
     }
 }

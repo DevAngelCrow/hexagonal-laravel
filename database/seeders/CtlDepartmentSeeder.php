@@ -20,7 +20,7 @@ class CtlDepartmentSeeder extends Seeder
             "name" => "San Salvador",
             "id_country" => $idCountry->id,
             "description" => "País soberano",
-            "active"=>true
+            "active" => true,
         ]);
     }
 }

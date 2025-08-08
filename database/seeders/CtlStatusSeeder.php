@@ -18,19 +18,19 @@ class CtlStatusSeeder extends Seeder
                 "table_header" => "mnt_people",
                 "name" => "Activo",
                 "description" => "Estado activo",
-                "state"=>true
+                "state" => true
             ],
             [
                 "table_header" => "mnt_user",
                 "name" => "Activo",
                 "description" => "Estado activo",
-                "state"=>true
+                "state" => true
             ],
             [
                 "table_header" => "mnt_rol",
                 "name" => "Activo",
                 "description" => "Estado activo",
-                "state"=>true
+                "state" => true
             ]
         ]);
     }
