@@ -15,16 +15,16 @@ use Src\modules\profile\domain\value_objects\address_value_object\AddressIdPeopl
 
 class Address
 {
-    readonly ?AddressId $id;
-    readonly AddressStreet $street;
-    readonly AddressStreetNumber $street_number;
-    readonly AddressNeighborhood $neighborhood;
-    readonly AddressIdDistrict $id_district;
-    readonly AddressHouseNumber $house_number;
-    readonly AddressBlock $block;
-    readonly AddressPathway $pathway;
-    readonly AddressCurrent $current;
-    readonly AddressIdPeople $id_people;
+    private readonly ?AddressId $id;
+    private readonly AddressStreet $street;
+    private readonly AddressStreetNumber $street_number;
+    private readonly AddressNeighborhood $neighborhood;
+    private readonly AddressIdDistrict $id_district;
+    private readonly AddressHouseNumber $house_number;
+    private readonly AddressBlock $block;
+    private readonly AddressPathway $pathway;
+    private readonly AddressCurrent $current;
+    private readonly AddressIdPeople $id_people;
 
     public function __construct(
         AddressStreet $street,
@@ -49,5 +49,55 @@ class Address
         $this->pathway = $pathway;
         $this->current = $current;
         $this->id_people = $id_people;
+    }
+
+    public function getId(): ?AddressId
+    {
+        return $this->id;
+    }
+
+    public function getStreet(): AddressStreet
+    {
+        return $this->street;
+    }
+
+    public function getStreetNumber(): AddressStreetNumber
+    {
+        return $this->street_number;
+    }
+
+    public function getNeighborhood(): AddressNeighborhood
+    {
+        return $this->neighborhood;
+    }
+
+    public function getIdDistrict(): AddressIdDistrict
+    {
+        return $this->id_district;
+    }
+
+    public function getHouseNumber(): AddressHouseNumber
+    {
+        return $this->house_number;
+    }
+
+    public function getBlock(): AddressBlock
+    {
+        return $this->block;
+    }
+
+    public function getPathway(): AddressPathway
+    {
+        return $this->pathway;
+    }
+
+    public function getCurrent(): AddressCurrent
+    {
+        return $this->current;
+    }
+
+    public function getIdPeople(): AddressIdPeople
+    {
+        return $this->id_people;
     }
 }

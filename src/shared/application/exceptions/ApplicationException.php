@@ -1,5 +1,5 @@
 <?php
-namespace Src\shared\domain;
+namespace Src\shared\application\exceptions;
 use Src\shared\domain\HttpStatusCode;
 
 use Exception;

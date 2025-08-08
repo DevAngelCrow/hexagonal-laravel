@@ -22,7 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         //Excepciones para el dominio;
         $exceptions->renderable(function (DomainException $e, $request) {
-            //echo $e;
+            
             $responder = new class {
             use HttpResponses; 
         };
@@ -36,8 +36,6 @@ return Application::configure(basePath: dirname(__DIR__))
                         "trace" => explode("\n", $e->getTraceAsString())
                     ];
                 }
-
-                //$errorCode = $e->getErrorCode();
                 $httpStatusCode = $e->getHttpStatusCode();
                 
                 switch ($httpStatusCode) {

@@ -3,7 +3,6 @@
 namespace Src\modules\profile\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Src\modules\profile\application\dtos\AddressDto;
 use Src\modules\profile\application\useCases\address\AddressGetAll;
 use Src\modules\profile\application\useCases\address\AddressCreate;

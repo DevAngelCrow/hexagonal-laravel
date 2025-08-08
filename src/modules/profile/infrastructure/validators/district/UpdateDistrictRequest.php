@@ -3,7 +3,7 @@ namespace Src\modules\profile\infrastructure\validators\district;
 
 use Src\shared\infrastructure\validators\BaseRequest;
 
-class UpdateDepartmentRequest extends BaseRequest {
+class UpdateDistrictRequest extends BaseRequest {
     protected function prepareForValidation()
     {
         $this->merge(["id"=> $this->route("id")]);
