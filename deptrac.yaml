@@ -1,0 +1,29 @@
+deptrac:
+  paths:
+    - ./src/modules
+    - ./src/shared
+  exclude_files:
+    - "#.*test.*#"
+  layers:
+    - name: Domain
+      collectors:
+        - type: class
+          value: ^Src\\Modules\\[A-Za-z0-9]+\\Domain\\
+
+    - name: Application
+      collectors:
+        - type: class
+          value: ^Src\\Modules\\[A-Za-z0-9]+\\Application\\
+
+    - name: Infrastructure
+      collectors:
+        - type: class
+          value: ^Src\\Modules\\[A-Za-z0-9]+\\Infrastructure\\
+
+  ruleset:
+    Domain: []
+    Application:
+      - Domain
+    Infrastructure:
+      - Domain
+      - Application
