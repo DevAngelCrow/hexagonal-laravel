@@ -1,1 +1,6 @@
+#!/bin/sh
 vendor/bin/deptrac analyse
+if [ $? -ne 0 ]; then
+  echo "❌ Arquitectura rota. Corrige antes de hacer commit."
+  exit 1
+fi
