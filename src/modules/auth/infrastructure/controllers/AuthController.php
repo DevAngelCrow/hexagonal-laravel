@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Src\shared\infrastructure\HttpResponses;
 use Src\modules\auth\application\useCases\auth\Register;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Src\modules\auth\application\useCases\dtos\RegisterDto;
 use Src\modules\auth\infrastructure\validators\auth\RegisterRequest;
 
 class AuthController extends Controller
@@ -26,71 +27,46 @@ class AuthController extends Controller
 
     public function singUp(RegisterRequest $request)
     {
-        //people data input
-        $first_name = $request->first_name;
-        $birthdate = new \DateTimeImmutable($request->birthdate);
-        $id_gender = $request->id_gender;
-        $email = $request->email;
-        $id_marital_status = $request->id_marital_status;
-        $phone = $request->phone;
-        $id_status = $request->id_status;
-        $middle_name = $request->middle_name;
-        $last_name = $request->last_name;
-        $img_path = $request->img_path;
-        $nationalities = $request->nationalities;
-
-        //user data input
-        $user_name = $request->user_name;
-        $password = $request->password;
-        $id_status_user = $request->id_status_user;
-        $last_access = new \DateTimeImmutable($request->last_access);
-        $is_validated = $request->is_validated;
-
-        //address data input
-        $street = $request->street;
-        $street_number = $request->street_number;
-        $neighborhood = $request->neighborhood;
-        $id_district = $request->id_district;
-        $house_number = $request->house_number;
-        $block = $request->block;
-        $pathway = $request->pathway;
-        $current = $request->current;
-
-        //document data input
-        $id_type_document = $request->id_type_document;
-        $document_number = $request->document_number;
-        $description = $request->description;
-        $state = $request->state;
+        $registerDto = new RegisterDto(
+            //person data input
+            $request->first_name,
+            $request->middle_name,
+            $request->last_name,
+            new \DateTimeImmutable($request->birthdate),
+            $request->email,
+            (int) $request->id_gender,
+            (int) $request->id_marital_status,
+            $request->phone,
+            $request->img_path,
+            (int) $request->id_status,
+            $request->nationalities,
+            null,
+            //user data input
+            $request->user_name,
+            $request->password,
+            (int) $request->id_status_user,
+            new \DateTimeImmutable($request->last_access),
+            $request->is_validated,
+            null,
+            //address data input
+            $request->street,
+            $request->street_number,
+            $request->neighborhood,
+            (int) $request->id_district,
+            $request->house_number,
+            $request->block,
+            $request->pathway,
+            $request->current,
+            null,
+            //document data input
+            (int) $request->id_type_document,
+            $request->document_number,
+            $request->description,
+            $request->active
+        );
 
         $user = $this->registerUser->run(
-            $first_name,
-            $middle_name,
-            $last_name,
-            $birthdate,
-            $id_gender,
-            $email,
-            $id_marital_status,
-            $img_path,
-            $phone,
-            $id_status,
-            $nationalities,
-            $user_name,
-            $password,
-            $id_status_user,
-            $last_access,
-            $is_validated,
-            $street,
-            $street_number,
-            $neighborhood,
-            $id_district,
-            $house_number,
-            $block,
-            $pathway,
-            $current,
-            $id_type_document,
-            $description,
-            $document_number,
-            $state
+            $registerDto
         );
 
 

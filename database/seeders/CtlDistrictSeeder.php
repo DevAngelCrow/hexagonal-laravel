@@ -20,7 +20,7 @@ class CtlDistrictSeeder extends Seeder
             "id_municipality" => $idMunicipality->id,
             "name" => "Soyapango",
             "description" => "Distrito de San Salvador Este",
-            "state" => true,
+            "active" => true,
         ]);
     }
 }

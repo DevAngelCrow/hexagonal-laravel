@@ -22,16 +22,16 @@ class AddressDtoHttp
     public static function fromEntity(Address $address){
         //dd($address);
         return new self(
-            $address->id->value(),
-            $address->street->value(),
-            $address->street_number->value(),
-            $address->neighborhood->value(),
-            $address->id_district->value(),
-            $address->house_number->value(),
-            $address->block->value(),
-            $address->pathway->value(),
-            $address->current->value(),
-            $address->id_people->value(),
+            $address->getId()->value(),
+            $address->getStreet()->value(),
+            $address->getStreetNumber()->value(),
+            $address->getNeighborhood()->value(),
+            $address->getIdDistrict()->value(),
+            $address->getHouseNumber()->value(),
+            $address->getBlock()->value(),
+            $address->getPathway()->value(),
+            $address->getCurrent()->value(),
+            $address->getIdPeople()->value(),
         );
     }
 }

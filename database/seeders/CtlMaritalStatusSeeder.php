@@ -15,7 +15,7 @@ class CtlMaritalStatusSeeder extends Seeder
     {
         DB::table('ctl_marital_status')->insert([
             "name"=>"soltero",
-            "description"=>"Sin relación marital"
+            "description"=>"Sin relación marital",
         ]);
     }
 }

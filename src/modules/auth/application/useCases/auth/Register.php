@@ -2,7 +2,7 @@
 
 namespace Src\modules\auth\application\useCases\auth;
 
-use DateTimeImmutable;
+use Src\modules\auth\application\useCases\dtos\RegisterDto;
 use Src\modules\auth\application\useCases\dtos\UserDto;
 use Src\modules\auth\application\useCases\user\UserCreate;
 use Src\modules\profile\application\dtos\AddressDto;
@@ -37,53 +37,22 @@ class Register
     }
 
     public function run(
-        //people elements
-        string $first_name,
-        string $middle_name,
-        string $last_name,
-        DateTimeImmutable $birthdate,
-        int $id_gender,
-        string $email,
-        int $id_marital_status,
-        string $img_path,
-        string $phone,
-        int $id_status,
-        array $nationalities,
-        //user elements
-        string $user_name,
-        string $password,
-        int $id_status_user,
-        DateTimeImmutable $last_access,
-        bool $is_validated,
-        //address elements
-        string $street,
-        string $street_number,
-        string $neighborhood,
-        int $id_district,
-        string $house_number,
-        string $block,
-        string $pathway,
-        bool $current,
-        //document elements
-        int $id_type_document,
-        string $description,
-        string $document_number,
-        bool $state
+        RegisterDto $registerDto
     ) {
         $this->transaction->beginTransaction();
 
         $peopleDto = new PeopleDto(
-            $first_name,
-            $middle_name,
-            $last_name,
-            $birthdate,
-            $email,
-            $id_gender,
-            $id_marital_status,
-            $phone,
-            $img_path,
-            $id_status,
-            $nationalities
+            $registerDto->first_name,
+            $registerDto->middle_name,
+            $registerDto->last_name,
+            $registerDto->birthdate,
+            $registerDto->email,
+            $registerDto->id_gender,
+            $registerDto->id_marital_status,
+            $registerDto->phone,
+            $registerDto->img_path,
+            $registerDto->id_status,
+            $registerDto->nationalities
         );
 
         $person = $this->peopleCreateService->createPersonForUser(
@@ -91,36 +60,36 @@ class Register
         );
 
         $addressDto = new AddressDto(
-            $street,
-            $street_number,
-            $neighborhood,
-            $id_district,
-            $house_number,
-            $block,
-            $pathway,
-            $current,
+            $registerDto->street,
+            $registerDto->street_number,
+            $registerDto->neighborhood,
+            $registerDto->id_district,
+            $registerDto->house_number,
+            $registerDto->block,
+            $registerDto->pathway,
+            $registerDto->current,
             $person->getId()->value()
         );
 
         $this->addressCreateService->createAddressForUser($addressDto);
 
         $documentDto = new DocumentDto(
-            $id_type_document,
+            $registerDto->id_type_document,
             $person->getId()->value(),
-            $description,
-            $document_number,
-            $state
+            $registerDto->description,
+            $registerDto->document_number,
+            $registerDto->active
         );
 
         $this->documentCreateService->createDocumentForUser($documentDto);
 
         $userDto = new UserDto(
             $person->getId()->value(),
-            $user_name,
-            $password,
-            $id_status_user,
-            $last_access,
-            $is_validated
+            $registerDto->user_name,
+            $registerDto->password,
+            $registerDto->id_status_user,
+            $registerDto->last_access,
+            $registerDto->is_validated
         );
         $this->userCreate->run($userDto);
 
