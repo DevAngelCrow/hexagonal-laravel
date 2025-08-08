@@ -29,15 +29,15 @@ class ImplAddressRepository implements AddressRepositoryInterface
     {
         try {
             $addressModel = new AddressModel;
-            $addressModel->id_people = $address->id_people->value();
-            $addressModel->street = $address->street->value();
-            $addressModel->street_number = $address->street_number->value();
-            $addressModel->neighborhood = $address->neighborhood->value();
-            $addressModel->id_district = $address->id_district->value();
-            $addressModel->house_number = $address->house_number->value();
-            $addressModel->block = $address->block->value();
-            $addressModel->pathway = $address->pathway->value();
-            $addressModel->current = $address->current->value();
+            $addressModel->id_people = $address->getIdPeople()->value();
+            $addressModel->street = $address->getStreet()->value();
+            $addressModel->street_number = $address->getStreetNumber()->value();
+            $addressModel->neighborhood = $address->getNeighborhood()->value();
+            $addressModel->id_district = $address->getIdDistrict()->value();
+            $addressModel->house_number = $address->getHouseNumber()->value();
+            $addressModel->block = $address->getBlock()->value();
+            $addressModel->pathway = $address->getPathway()->value();
+            $addressModel->current = $address->getCurrent()->value();
             $addressModel->save();
         } catch (ErrorException $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -47,16 +47,16 @@ class ImplAddressRepository implements AddressRepositoryInterface
     {
         try {
 
-            $addressModel = AddressModel::find($address->id->value());
-            $addressModel->id_people = $address->id_people->value();
-            $addressModel->street = $address->street->value();
-            $addressModel->street_number = $address->street_number->value();
-            $addressModel->neighborhood = $address->neighborhood->value();
-            $addressModel->id_district = $address->id_district->value();
-            $addressModel->house_number = $address->house_number->value();
-            $addressModel->block = $address->block->value();
-            $addressModel->pathway = $address->pathway->value();
-            $addressModel->current = $address->current->value();
+            $addressModel = AddressModel::find($address->getId()->value());
+            $addressModel->id_people = $address->getIdPeople()->value();
+            $addressModel->street = $address->getStreet()->value();
+            $addressModel->street_number = $address->getStreetNumber()->value();
+            $addressModel->neighborhood = $address->getNeighborhood()->value();
+            $addressModel->id_district = $address->getIdDistrict()->value();
+            $addressModel->house_number = $address->getHouseNumber()->value();
+            $addressModel->block = $address->getBlock()->value();
+            $addressModel->pathway = $address->getPathway()->value();
+            $addressModel->current = $address->getCurrent()->value();
 
             $addressModel->save();
         } catch (ErrorException $e) {
@@ -104,7 +104,16 @@ class ImplAddressRepository implements AddressRepositoryInterface
     }
     public function delete(AddressId $id): void
     {
-        throw new LogicException("El método aun no ha sido implementado");
+        try {
+            $addressDb = AddressModel::find($id->value());
+
+            $addressDb->current = false;
+            $addressDb->save();
+            $addressDb->delete();
+            
+        } catch (Exception $e) {
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     private function mapToDomain(AddressModel $address): Address
