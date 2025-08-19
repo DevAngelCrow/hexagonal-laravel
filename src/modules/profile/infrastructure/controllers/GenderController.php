@@ -57,7 +57,6 @@ class GenderController extends Controller
 
         $collection = array_map(fn($item) => GenderDtoHttp::fromEntity($item), $gendersCollection["data"]);
         $paginateData = PaginatedResponseDto::fromPaginatedResponse($collection, $gendersCollection['pagination']);
-        dd($gendersCollection);
 
         return $this->success($paginateData, "Success");
     }
