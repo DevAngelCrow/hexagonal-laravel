@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\module\profile\application\useCases\gender;
+namespace Src\modules\profile\application\useCases\gender;
 
 use Src\modules\profile\domain\repositories\gender\GenderRepositoryInterface;
 

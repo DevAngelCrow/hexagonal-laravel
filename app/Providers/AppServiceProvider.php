@@ -10,8 +10,10 @@ use Src\modules\profile\domain\repositories\country\CountryRepositoryInterface;
 use Src\modules\profile\domain\repositories\department\DepartmentRepositoryInterface;
 use Src\modules\profile\domain\repositories\district\DistrictRepositoryInterface;
 use Src\modules\profile\domain\repositories\documents\DocumentRepositoryInterface;
+use Src\modules\profile\domain\repositories\gender\GenderRepositoryInterface;
 use Src\modules\profile\domain\repositories\municipality\MunicipalityRepositoryInterface;
 use Src\modules\profile\domain\repositories\people\PeopleRepositoryInterface;
+use Src\modules\profile\infrastructure\implementation\GenderRepositoryImplementation\ImplGenderRepository;
 use Src\modules\profile\infrastructure\implementation\AddressRepositoryImplementation\ImplAddressRepository;
 use Src\modules\profile\infrastructure\implementation\CountryRepositoryImplementation\ImplCountryRepository;
 use Src\modules\profile\infrastructure\implementation\DepartmentRepositoryImplementation\ImplDepartmentRepository;
@@ -39,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DepartmentRepositoryInterface::class, ImplDepartmentRepository::class);
         $this->app->bind(MunicipalityRepositoryInterface::class, ImplMunicipalityRepository::class);
         $this->app->bind(DistrictRepositoryInterface::class, ImplDistrictRepository::class);
+        $this->app->bind(GenderRepositoryInterface::class, ImplGenderRepository::class);
     }
 
     /**
