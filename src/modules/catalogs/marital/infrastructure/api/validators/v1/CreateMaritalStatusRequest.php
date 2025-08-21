@@ -11,7 +11,7 @@ class CreateMaritalStatusRequest extends BaseRequest
     {
         return [
             "name" => ['required', 'string', 'min:2', 'max:100'],
-            "description" => ['nullable', 'string', 'min:2', 'max:1000']
+            "description" => ['required', 'string', 'min:4', 'max:100']
         ];
     }
 
