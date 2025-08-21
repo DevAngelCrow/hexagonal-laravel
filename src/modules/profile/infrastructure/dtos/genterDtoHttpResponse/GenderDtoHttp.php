@@ -8,8 +8,8 @@ use Src\modules\profile\domain\entities\gender\Gender;
 class GenderDtoHttp
 {
     public function __construct(
-        private readonly int $id,
-        private readonly string $name,
+        public readonly int $id,
+        public readonly string $name,
     ) {}
 
     public static function fromEntity(Gender $gender): self

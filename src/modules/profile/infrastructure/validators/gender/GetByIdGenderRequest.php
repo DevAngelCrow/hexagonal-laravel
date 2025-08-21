@@ -3,7 +3,7 @@
 namespace Src\modules\profile\infrastructure\validators\gender;
 use Src\shared\infrastructure\validators\BaseRequest;
 
-class GetByIGenderRequest extends BaseRequest {
+class GetByIdGenderRequest extends BaseRequest {
 
     protected function prepareForValidation()
     {
