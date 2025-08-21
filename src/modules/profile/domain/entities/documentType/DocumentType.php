@@ -5,11 +5,13 @@ namespace Src\modules\profile\domain\entities\documentType;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeActive;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeName;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeDescription;
+use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeId;
+
 
 
 class DocumentType
 {
-    private readonly ?int $id;
+    private readonly ?DocumentTypeId $id;
     private readonly DocumentTypeName $name;
     private readonly DocumentTypeDescription $description;
     private readonly DocumentTypeActive $active;
@@ -18,7 +20,7 @@ class DocumentType
         DocumentTypeName $name,
         DocumentTypeDescription $description,
         DocumentTypeActive $active,
-        ?int $id = null
+        ?DocumentTypeId $id = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -26,7 +28,7 @@ class DocumentType
         $this->active = $active;
     }
 
-    public function getId(): ?int
+    public function getId(): ?DocumentTypeId
     {
         return $this->id;
     }
@@ -41,7 +43,7 @@ class DocumentType
         return $this->description;
     }
 
-    public function isActive(): DocumentTypeActive
+    public function getActive(): DocumentTypeActive
     {
         return $this->active;
     }
