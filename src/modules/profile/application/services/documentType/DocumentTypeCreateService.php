@@ -3,25 +3,25 @@
 namespace Src\modules\profile\application\services\documentType;
 
 use Src\modules\profile\application\dtos\DocumentTypeDto;
-// use Src\modules\profile\application\useCases\address\AddressCreate;
+use Src\modules\profile\application\useCases\documentType\DocumentTypeCreate;
 
 class DocumentTypeCreateService
 {
-    private readonly DocumentType $addressCreate;
+    private readonly DocumentTypeCreate $documentTypeCreate;
 
-    public function __construct(AddressCreate $address_create)
+    public function __construct(DocumentTypeCreate $documentType_create)
     {
-        $this->addressCreate = $address_create;
+        $this->documentTypeCreate = $documentType_create;
     }
 
-    public function createAddressForUser(
-        AddressDto $addressDto
+    public function createDocumentTypeForUser(
+        DocumentTypeDto $documentTypeDto
     ) {
 
-        $address = $this->addressCreate->run(
-            $addressDto
+        $documentType = $this->documentTypeCreate->run(
+            $documentTypeDto
         );
 
-        return $address;
+        return $documentType;
     }
 }
