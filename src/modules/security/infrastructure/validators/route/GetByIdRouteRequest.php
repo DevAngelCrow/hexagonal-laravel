@@ -1,9 +1,9 @@
 <?php
-namespace Src\modules\security\infrastructure\validators\categoryPermissions;
+namespace Src\modules\security\infrastructure\validators\route;
 
 use Src\shared\infrastructure\validators\BaseRequest;
 
-class GetByIdCategoryPermissionsRequest extends BaseRequest {
+class GetByIdRouteRequest extends BaseRequest {
     protected function prepareForValidation()
     {
         $this->merge(["id"=> $this->route("id")]);

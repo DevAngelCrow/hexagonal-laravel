@@ -39,9 +39,6 @@ class PeopleController extends Controller
 
     public function createPeople(CreatePeopleRequest $request)
     {
-
-        //dd($request);
-
         $person = new PeopleDto(
             $request->first_name,
             $request->middle_name,
@@ -64,8 +61,6 @@ class PeopleController extends Controller
 
     public function getOneByIdPeople(GetByIdPeopleRequest $request)
     {
-        //dd($request);
-
         $person = $this->peopleGetOneById->run($request->id);
 
         return $this->success([

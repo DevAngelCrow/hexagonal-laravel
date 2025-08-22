@@ -1,11 +1,9 @@
 <?php
-
-namespace Src\modules\security\infrastructure\validators\categoryPermissions;
+namespace Src\modules\security\infrastructure\validators\rol;
 
 use Src\shared\infrastructure\validators\BaseRequest;
 
-class GetAllCategoryPermissionsRequest extends BaseRequest
-{
+class GetAllRolRequest extends BaseRequest {
     public function rules(): array
     {
         return [

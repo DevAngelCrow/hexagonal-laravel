@@ -1,11 +1,9 @@
 <?php
-
-namespace Src\modules\security\infrastructure\validators\categoryPermissions;
+namespace Src\modules\security\infrastructure\validators\route;
 
 use Src\shared\infrastructure\validators\BaseRequest;
 
-class GetAllCategoryPermissionsRequest extends BaseRequest
-{
+class GetAllRouteRequest extends BaseRequest {
     public function rules(): array
     {
         return [

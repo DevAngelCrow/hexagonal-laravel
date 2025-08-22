@@ -1,9 +1,9 @@
 <?php
-namespace Src\modules\security\infrastructure\validators\categoryPermissions;
+namespace Src\modules\security\infrastructure\validators\rol;
 
 use Src\shared\infrastructure\validators\BaseRequest;
 
-class UpdateCategoryPermissionsRequest extends BaseRequest {
+class UpdateRolRequest extends BaseRequest {
     protected function prepareForValidation()
     {
         $this->merge(["id"=> $this->route("id")]);
@@ -12,7 +12,8 @@ class UpdateCategoryPermissionsRequest extends BaseRequest {
         return [
             "id"=>"required|integer",
             "name" => "required|string",
-            "description" => "string"
+            "description" => "string",
+            "id_status" => "required|integer"
         ];
     }
 }

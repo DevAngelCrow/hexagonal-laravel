@@ -21,7 +21,14 @@ use Src\modules\profile\infrastructure\implementation\DocumentRepositoryImplemen
 use Src\modules\profile\infrastructure\implementation\MunicipalityRepositoryImplementation\ImplMunicipalityRepository;
 use Src\modules\profile\infrastructure\implementation\PeopleRepositoryImplementation\ImplPeopleRepository;
 use Src\modules\profile\infrastructure\implementation\DocumentTypeRepositoryImplementation\ImplDocumentTypeRepository;
-
+use Src\modules\security\domain\repositories\category_permissions\CategoryPermissionsRepositoryInterface;
+use Src\modules\security\domain\repositories\permissions\PermissionsRepositoryInterface;
+use Src\modules\security\domain\repositories\rol\RolRepositoryInterface;
+use Src\modules\security\domain\repositories\route\RouteRepositoryInterface;
+use Src\modules\security\infrastructure\implementation\CategoryPermissionsImplementation\ImplCategoryPermissionsRepository;
+use Src\modules\security\infrastructure\implementation\PermissionsImplementation\ImplPermissionsRepository;
+use Src\modules\security\infrastructure\implementation\RolImplementation\ImplRolRepository;
+use Src\modules\security\infrastructure\implementation\RouteImplementation\ImplRouteRepository;
 use Src\shared\domain\repositories\UnitOfWorkTransactionDbInterface;
 use Src\shared\infrastructure\implementations\EloquentUnitOfWork;
 
@@ -43,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(MunicipalityRepositoryInterface::class, ImplMunicipalityRepository::class);
         $this->app->bind(DistrictRepositoryInterface::class, ImplDistrictRepository::class);
         $this->app->bind(DocumentTypeRepositoryInterface::class, ImplDocumentTypeRepository::class);
+        $this->app->bind(CategoryPermissionsRepositoryInterface::class, ImplCategoryPermissionsRepository::class);
+        $this->app->bind(PermissionsRepositoryInterface::class, ImplPermissionsRepository::class);
+        $this->app->bind(RolRepositoryInterface::class, ImplRolRepository::class);
+        $this->app->bind(RouteRepositoryInterface::class, ImplRouteRepository::class);
     }
 
     /**
