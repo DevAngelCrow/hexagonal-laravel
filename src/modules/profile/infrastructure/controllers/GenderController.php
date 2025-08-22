@@ -45,7 +45,7 @@ class GenderController extends Controller
     {
         $genderDto = new GenderDto(
             $request->name,
-            (int) $request->id
+            (int) $request->id,
         );
         $this->genderUpdate->run($genderDto);
         return $this->success([], "Género actualizado satisfactoriamente");

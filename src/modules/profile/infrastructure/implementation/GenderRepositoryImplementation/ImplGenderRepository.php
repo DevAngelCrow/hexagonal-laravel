@@ -20,7 +20,7 @@ class ImplGenderRepository implements GenderRepositoryInterface
         try {
             $genderModel = new CtlGender;
             $genderModel->name = $gender->getName()->value();
-            $genderModel->current = true;
+            // $genderModel->current = true;
             $genderModel->save();
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -30,6 +30,8 @@ class ImplGenderRepository implements GenderRepositoryInterface
     public function update(Gender $gender):void 
     {
         try {
+
+
             $genderModel = CtlGender::find($gender->getId()->value());
             if (!$genderModel) {
                 throw new InfrastructureException("Genero no encontrado", Response::HTTP_NOT_FOUND);
