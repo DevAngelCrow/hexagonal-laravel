@@ -12,6 +12,7 @@ use Src\modules\profile\domain\repositories\district\DistrictRepositoryInterface
 use Src\modules\profile\domain\repositories\documents\DocumentRepositoryInterface;
 use Src\modules\profile\domain\repositories\municipality\MunicipalityRepositoryInterface;
 use Src\modules\profile\domain\repositories\people\PeopleRepositoryInterface;
+use Src\modules\profile\domain\repositories\documentType\DocumentTypeRepositoryInterface;
 use Src\modules\profile\infrastructure\implementation\AddressRepositoryImplementation\ImplAddressRepository;
 use Src\modules\profile\infrastructure\implementation\CountryRepositoryImplementation\ImplCountryRepository;
 use Src\modules\profile\infrastructure\implementation\DepartmentRepositoryImplementation\ImplDepartmentRepository;
@@ -19,6 +20,8 @@ use Src\modules\profile\infrastructure\implementation\DistrictRepositoryImplemen
 use Src\modules\profile\infrastructure\implementation\DocumentRepositoryImplementation\ImplDocumentRepository;
 use Src\modules\profile\infrastructure\implementation\MunicipalityRepositoryImplementation\ImplMunicipalityRepository;
 use Src\modules\profile\infrastructure\implementation\PeopleRepositoryImplementation\ImplPeopleRepository;
+use Src\modules\profile\infrastructure\implementation\DocumentTypeRepositoryImplementation\ImplDocumentTypeRepository;
+
 use Src\shared\domain\repositories\UnitOfWorkTransactionDbInterface;
 use Src\shared\infrastructure\implementations\EloquentUnitOfWork;
 
@@ -39,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DepartmentRepositoryInterface::class, ImplDepartmentRepository::class);
         $this->app->bind(MunicipalityRepositoryInterface::class, ImplMunicipalityRepository::class);
         $this->app->bind(DistrictRepositoryInterface::class, ImplDistrictRepository::class);
+        $this->app->bind(DocumentTypeRepositoryInterface::class, ImplDocumentTypeRepository::class);
     }
 
     /**
