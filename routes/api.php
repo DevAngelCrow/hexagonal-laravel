@@ -17,7 +17,8 @@ Route::prefix("profile")->group(function () {
     require base_path("src/modules/profile/infrastructure/routes/DepartmentRoutes.php");
     require base_path("src/modules/profile/infrastructure/routes/MunicipalityRoutes.php");
     require base_path("src/modules/profile/infrastructure/routes/DistrictRoutes.php");
-    require base_path("Src/modules/profile/infrastructure/routes/GenderRoutes.php");
+    require base_path("src/modules/profile/infrastructure/routes/DocumentTypeRoutes.php");
+    require base_path("src/modules/profile/infrastructure/routes/GenderRoutes.php");
 
 });
 Route::prefix("user")->group(base_path("src/modules/auth/infrastructure/routes/UserRoutes.php"));

@@ -3,7 +3,7 @@ namespace Src\modules\profile\application\useCases\address;
 
 use Src\modules\profile\domain\repositories\address\AddressRepositoryInterface;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressId;
-use Src\shared\domain\ApplicationException;
+use Src\shared\application\exceptions\ApplicationException;
 use Src\shared\domain\HttpStatusCode;
 
 class AddressDelete {
