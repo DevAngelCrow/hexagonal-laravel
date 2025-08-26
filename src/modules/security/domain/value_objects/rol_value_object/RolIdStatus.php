@@ -3,7 +3,7 @@ namespace Src\modules\security\domain\value_objects\rol_value_object;
 
 use DomainException;
 
-class RolId
+class RolIdStatus
 {
     private int $value;
     public function __construct(int $value)
