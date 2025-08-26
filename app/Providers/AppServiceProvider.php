@@ -12,8 +12,11 @@ use Src\modules\profile\domain\repositories\country\CountryRepositoryInterface;
 use Src\modules\profile\domain\repositories\department\DepartmentRepositoryInterface;
 use Src\modules\profile\domain\repositories\district\DistrictRepositoryInterface;
 use Src\modules\profile\domain\repositories\documents\DocumentRepositoryInterface;
+use Src\modules\profile\domain\repositories\gender\GenderRepositoryInterface;
 use Src\modules\profile\domain\repositories\municipality\MunicipalityRepositoryInterface;
 use Src\modules\profile\domain\repositories\people\PeopleRepositoryInterface;
+use Src\modules\profile\domain\repositories\documentType\DocumentTypeRepositoryInterface;
+use Src\modules\profile\infrastructure\implementation\GenderRepositoryImplementation\ImplGenderRepository;
 use Src\modules\profile\infrastructure\implementation\AddressRepositoryImplementation\ImplAddressRepository;
 use Src\modules\profile\infrastructure\implementation\CountryRepositoryImplementation\ImplCountryRepository;
 use Src\modules\profile\infrastructure\implementation\DepartmentRepositoryImplementation\ImplDepartmentRepository;
@@ -21,6 +24,15 @@ use Src\modules\profile\infrastructure\implementation\DistrictRepositoryImplemen
 use Src\modules\profile\infrastructure\implementation\DocumentRepositoryImplementation\ImplDocumentRepository;
 use Src\modules\profile\infrastructure\implementation\MunicipalityRepositoryImplementation\ImplMunicipalityRepository;
 use Src\modules\profile\infrastructure\implementation\PeopleRepositoryImplementation\ImplPeopleRepository;
+use Src\modules\profile\infrastructure\implementation\DocumentTypeRepositoryImplementation\ImplDocumentTypeRepository;
+use Src\modules\security\domain\repositories\category_permissions\CategoryPermissionsRepositoryInterface;
+use Src\modules\security\domain\repositories\permissions\PermissionsRepositoryInterface;
+use Src\modules\security\domain\repositories\rol\RolRepositoryInterface;
+use Src\modules\security\domain\repositories\route\RouteRepositoryInterface;
+use Src\modules\security\infrastructure\implementation\CategoryPermissionsImplementation\ImplCategoryPermissionsRepository;
+use Src\modules\security\infrastructure\implementation\PermissionsImplementation\ImplPermissionsRepository;
+use Src\modules\security\infrastructure\implementation\RolImplementation\ImplRolRepository;
+use Src\modules\security\infrastructure\implementation\RouteImplementation\ImplRouteRepository;
 use Src\shared\domain\repositories\UnitOfWorkTransactionDbInterface;
 use Src\shared\infrastructure\implementations\EloquentUnitOfWork;
 
@@ -41,6 +53,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DepartmentRepositoryInterface::class, ImplDepartmentRepository::class);
         $this->app->bind(MunicipalityRepositoryInterface::class, ImplMunicipalityRepository::class);
         $this->app->bind(DistrictRepositoryInterface::class, ImplDistrictRepository::class);
+        $this->app->bind(DocumentTypeRepositoryInterface::class, ImplDocumentTypeRepository::class);
+        $this->app->bind(CategoryPermissionsRepositoryInterface::class, ImplCategoryPermissionsRepository::class);
+        $this->app->bind(PermissionsRepositoryInterface::class, ImplPermissionsRepository::class);
+        $this->app->bind(RolRepositoryInterface::class, ImplRolRepository::class);
+        $this->app->bind(RouteRepositoryInterface::class, ImplRouteRepository::class);
+        $this->app->bind(GenderRepositoryInterface::class, ImplGenderRepository::class);
+
 
 
         /*--------------------------------------------------

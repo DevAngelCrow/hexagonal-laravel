@@ -14,7 +14,7 @@ use Src\modules\profile\domain\value_objects\address_value_object\AddressNeighbo
 use Src\modules\profile\domain\value_objects\address_value_object\AddressPathway;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressStreet;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressStreetNumber;
-use Src\shared\domain\ApplicationException;
+use Src\shared\application\exceptions\ApplicationException;
 use Src\shared\domain\HttpStatusCode;
 
 class AddressUpdate {

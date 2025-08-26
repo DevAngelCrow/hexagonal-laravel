@@ -7,7 +7,7 @@ use Src\shared\domain\HttpStatusCode;
 class CountryState
 {
     private bool $value;
-    
+
     public function __construct(bool $value)
     {
         $this->value = $value;
@@ -21,7 +21,7 @@ class CountryState
     //     }
     // }
 
-    public function value() : string {
+    public function value() : bool {
         return $this->value;
     }
 }

@@ -19,7 +19,10 @@ class CtlPermissions extends Model
     public function rol() : BelongsToMany {
         return $this->belongsToMany(MntRol::class, "rol_permissions", "id_permission", "id_rol");
     }
-    public function categoriPermissions(): BelongsTo{
+    public function categoriesPermissions(): BelongsTo{
         return $this->belongsTo(CtlCategoryPermissions::class, "id_category_permissions");
+    }
+    public function routes() : BelongsToMany {
+        return $this->belongsToMany(MntRoute::class, "mnt_route_permissions", "id_permission", "id_route");
     }
 }
