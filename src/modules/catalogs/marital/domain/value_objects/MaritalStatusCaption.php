@@ -16,7 +16,7 @@ class MaritalStatusCaption
         $validator = new Validator($this->caption, MaritalException::class);
 
         $validator->required('Marital status caption is required')
-            ->minLength(4, 'Marital status caption must be at least 2 characters long')
+            ->minLength(4, 'Marital status caption must be at least 4 characters long')
             ->maxLength(200, 'Marital status caption must be at most 100 characters long');
     }
 
