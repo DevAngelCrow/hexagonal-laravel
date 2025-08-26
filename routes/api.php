@@ -23,3 +23,8 @@ Route::prefix("profile")->group(function () {
 });
 Route::prefix("user")->group(base_path("src/modules/auth/infrastructure/routes/UserRoutes.php"));
 Route::prefix("auth")->group(base_path("src/modules/auth/infrastructure/routes/AuthRoutes.php"));
+
+
+Route::prefix('catalogs')->group(function () {
+    require base_path("src/modules/catalogs/marital/infrastructure/routes/MaritalRoutes.php");
+});

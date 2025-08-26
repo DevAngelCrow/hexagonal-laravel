@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Src\modules\auth\domain\repositories\user\UserRepositoryInterface;
 use Src\modules\auth\infrastructure\implementation\UserRepositoryImplementation\ImplUserRepository;
+use Src\modules\catalogs\marital\domain\repositories\IMaritalStatusRepository;
+use Src\modules\catalogs\marital\infrastructure\repositories\MaritalStatusRepositoryImpl;
 use Src\modules\profile\domain\repositories\address\AddressRepositoryInterface;
 use Src\modules\profile\domain\repositories\country\CountryRepositoryInterface;
 use Src\modules\profile\domain\repositories\department\DepartmentRepositoryInterface;
@@ -58,6 +60,19 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RouteRepositoryInterface::class, ImplRouteRepository::class);
         $this->app->bind(GenderRepositoryInterface::class, ImplGenderRepository::class);
 
+
+
+        /*--------------------------------------------------
+         |  CATALOGOS
+         -----------------------------------------------------
+        */
+
+        // [MARITAL STATUS (ESTADO CIVIL)]
+
+        $this->app->bind(
+            IMaritalStatusRepository::class,
+            MaritalStatusRepositoryImpl::class
+        );
     }
 
     /**
