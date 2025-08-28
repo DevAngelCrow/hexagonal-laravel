@@ -99,8 +99,9 @@ class ImplRolRepository implements RolRepositoryInterface
     {
         $rolMapped = new Rol(
             new RolName($rol->name),
-            new RolDescription($rol->id_categorr_permissions),
-            new RolIdStatus($rol->description),
+            new RolDescription($rol->description),
+            new RolIdStatus($rol->id_status),
+            new RolId($rol->id)
         );
 
         return $rolMapped;

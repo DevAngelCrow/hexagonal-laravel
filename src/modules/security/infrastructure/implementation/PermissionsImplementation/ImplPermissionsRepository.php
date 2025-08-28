@@ -94,7 +94,7 @@ class ImplPermissionsRepository implements PermissionsRepositoryInterface
     {
         $permissionsMapped = new Permissions(
             new PermissionsName($permissions->name),
-            new PermissionsIdCategoryPermissions($permissions->id_categorr_permissions),
+            new PermissionsIdCategoryPermissions($permissions->id_category_permissions),
             new PermissionsDescription($permissions->description),
             new PermissionsId($permissions->id)
         );

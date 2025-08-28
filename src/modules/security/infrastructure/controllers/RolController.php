@@ -56,7 +56,7 @@ class RolController extends Controller {
     public function getOneByIdRol(GetByIdRolRequest $request){
         $rol = $this->rolGetOneById->run($request->id);
 
-        return $this->success(["data"=> RolDtoHttp::fromEntity($rol), "Success"]);
+        return $this->success(["data"=> RolDtoHttp::fromEntity($rol)]);
     }
     public function getAllRol(GetAllRolRequest $request){
         $rolCollection = $this->rolGetAll->run($request->query('page'), $request->query('per_page'));

@@ -57,11 +57,11 @@ class PermissionsController extends Controller {
     public function getOneByIdPermissions(GetByIdPermissionsRequest $request){
         $permission = $this->permissionsGetOneById->run($request->id);
 
-        return $this->success(["data" => PermissionsDtoHttp::fromEntity($permission), "Success"]);
+        return $this->success(["data" => PermissionsDtoHttp::fromEntity($permission)]);
     }
     public function getAllPermissions(GetAllPermissionsRequest $request){
         $permissionsCollection = $this->permissionsGetAll->run($request->query('page'), $request->query('per_page'));
-        $collections = array_map(fn($item)=> PermissionsDtoHttp::fromEntity($item), $permissionsCollection);
+        $collections = array_map(fn($item)=> PermissionsDtoHttp::fromEntity($item), $permissionsCollection['data']);
         $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $permissionsCollection['pagination']);
         return $this->success($paginateData, "Success");
     }

@@ -75,12 +75,12 @@ class RouteController extends Controller
     public function getOneByIdRoute(GetByIdRouteRequest $request)
     {
         $route = $this->routeGetOneById->run($request->id);
-        return $this->success(["data" => RouteDtoHttp::fromEntity($route), "Success"]);
+        return $this->success(["data" => RouteDtoHttp::fromEntity($route)]);
     }
     public function getAllRoutes(GetAllRouteRequest $request)
     {
         $routesCollection = $this->routeGetAll->run($request->query("page"), $request->query("per_page"));
-        $collections = array_map(fn($item) => RouteDtoHttp::fromEntity($item), $routesCollection);
+        $collections = array_map(fn($item) => RouteDtoHttp::fromEntity($item), $routesCollection["data"]);
         $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $routesCollection["pagination"]);
         return $this->success($paginateData, "Success");
     }
