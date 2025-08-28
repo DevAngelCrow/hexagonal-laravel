@@ -27,7 +27,7 @@ class CategoryPermissionsUpdate {
         $categoryPermissionsUpdate = new CategoryPermissions(
             new CategoryPermissionsName($categoryPermissionDto->name),
             new CategoryPermissionsDescription($categoryPermissionDto->description),
-            new CategoryPermissionsId($categoryPermissionDto->description),
+            new CategoryPermissionsId($categoryPermissionDto->id),
         );
 
         $this->categoryPermissionsRepository->update($categoryPermissionsUpdate);

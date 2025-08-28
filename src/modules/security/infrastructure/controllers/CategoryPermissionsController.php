@@ -8,10 +8,12 @@ use Src\modules\security\application\useCases\category_permissions\CategoryPermi
 use Src\modules\security\application\useCases\category_permissions\CategoryPermissionsGetAll;
 use Src\modules\security\application\useCases\category_permissions\CategoryPermissionsGetOneById;
 use Src\modules\security\application\useCases\category_permissions\CategoryPermissionsUpdate;
+use Src\modules\security\infrastructure\dtos\categoryPermissionsDtoHttpResponse\CategoryPermissionDtoHttp;
 use Src\modules\security\infrastructure\validators\categoryPermissions\CreateCategoryPermissionsRequest;
 use Src\modules\security\infrastructure\validators\categoryPermissions\GetAllCategoryPermissionsRequest;
 use Src\modules\security\infrastructure\validators\categoryPermissions\GetByIdCategoryPermissionsRequest;
 use Src\modules\security\infrastructure\validators\categoryPermissions\UpdateCategoryPermissionsRequest;
+use Src\shared\infrastructure\generalDtos\PaginatedResponseDto;
 use Src\shared\infrastructure\HttpResponses;
 
 class CategoryPermissionsController extends Controller
@@ -43,7 +45,7 @@ class CategoryPermissionsController extends Controller
 
         $this->categoryPermissionsCreate->run($categoryPermission);
 
-        return $this->created([], "Category de permiso creado satisfactoriamente");
+        return $this->created([], "Categoría de permiso creado satisfactoriamente");
     }
     public function updateCategoryPermissions(UpdateCategoryPermissionsRequest $request) {
         $categoryPermissionUpdate = new CategoryPermissionsDto(
@@ -59,7 +61,15 @@ class CategoryPermissionsController extends Controller
     public function getOneByIdCategoryPermissions(GetByIdCategoryPermissionsRequest $request) {
         $categoryPermission = $this->categoryPermissionsGetOneById->run($request->id);
 
-        //return $this->success(["data" => CategoryPermissionsDtoH])
+        return $this->success(["data" => CategoryPermissionDtoHttp::fromEntity($categoryPermission)]);
     }
-    public function getAllCategoryPermissions(GetAllCategoryPermissionsRequest $request) {}
+    public function getAllCategoryPermissions(GetAllCategoryPermissionsRequest $request) {
+        $categoryPermissionsCollection = $this->categoryPermissionsGetAll->run($request->query('page'), $request->query('per_page'));
+
+        $collections = array_map(fn($item)=> CategoryPermissionDtoHttp::fromEntity($item), $categoryPermissionsCollection["data"]);
+
+        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $categoryPermissionsCollection['pagination']);
+
+        return $this->success($paginateData, "Success");
+    }
 }

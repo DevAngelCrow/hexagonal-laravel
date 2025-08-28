@@ -28,3 +28,10 @@ Route::prefix("auth")->group(base_path("src/modules/auth/infrastructure/routes/A
 Route::prefix('catalogs')->group(function () {
     require base_path("src/modules/catalogs/marital/infrastructure/routes/MaritalRoutes.php");
 });
+
+Route::prefix("security")->group(function () {
+    require base_path("src/modules/security/infrastructure/routes/CategoryPermissionsRoutes.php");
+    require base_path("src/modules/security/infrastructure/routes/PermissionsRoutes.php");
+    require base_path("src/modules/security/infrastructure/routes/RolRoutes.php");
+    require base_path("src/modules/security/infrastructure/routes/RouteRoutes.php");
+});
