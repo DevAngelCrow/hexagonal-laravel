@@ -39,7 +39,7 @@ class MntUser extends Authenticatable implements MustVerifyEmail
     }
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(MntRol::class, "user_rol", "id_user", "id_rol");
+        return $this->belongsToMany(MntRol::class, "mnt_user_rol", "id_user", "id_role");
     }
     public function status(): BelongsTo
     {

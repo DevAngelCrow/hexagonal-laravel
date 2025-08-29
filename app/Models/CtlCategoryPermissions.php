@@ -13,7 +13,7 @@ class CtlCategoryPermissions extends Model
 
     protected $table = "ctl_category_permissions";
     protected $fillable = [
-        "id", "name", "description"
+        "id", "name", "description", "active"
     ];
 
     public function permissions() : HasMany {

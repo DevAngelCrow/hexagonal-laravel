@@ -24,6 +24,7 @@ return new class extends Migration
             $table->boolean("current");
             $table->timestamps();
             $table->softDeletes();
+            $table->boolean("active")->default(true);
             $table->foreign("id_district")->references("id")->on("ctl_district");
             $table->foreign("id_people")->references("id")->on("mnt_people");
         });
