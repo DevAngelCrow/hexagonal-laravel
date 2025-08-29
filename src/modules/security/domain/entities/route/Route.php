@@ -12,7 +12,7 @@ use Src\modules\security\domain\value_objects\routes_value_object\RoutesShow;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesUri;
 
 class Route{
-    private readonly RoutesIdParent $id_parent;
+    private readonly ?RoutesIdParent $id_parent;
     private readonly RoutesName $name;
     private readonly RoutesDescription $description;
     private readonly RoutesIcon $icon;
@@ -22,8 +22,8 @@ class Route{
     private readonly RoutesOrder $order;
     private readonly ?RoutesId $id;
 
-    public function __construct(RoutesIdParent $id_parent, RoutesName $name, RoutesDescription $description, RoutesIcon $icon, RoutesUri $uri,
-    RoutesActive $active, RoutesShow $show, RoutesOrder $order, ?RoutesId $id = null)
+    public function __construct(RoutesName $name, RoutesDescription $description, RoutesIcon $icon, RoutesUri $uri,
+    RoutesActive $active, RoutesShow $show, RoutesOrder $order, ?RoutesIdParent $id_parent = null, ?RoutesId $id = null)
     {
         $this->id_parent = $id_parent;
         $this->name = $name;
@@ -36,7 +36,7 @@ class Route{
         $this->id = $id;
     }
 
-    public function getIdParent(): RoutesIdParent
+    public function getIdParent(): ?RoutesIdParent
     {
         return $this->id_parent;
     }

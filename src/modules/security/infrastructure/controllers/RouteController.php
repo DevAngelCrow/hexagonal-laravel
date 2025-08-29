@@ -38,26 +38,9 @@ class RouteController extends Controller
     }
 
     public function createRoute(CreateRouteRequest $request)
-    {
+    {        
+        
         $createRoute = new RouteDto(
-            $request->id_parent,
-            $request->name,
-            $request->description,
-            $request->icon,
-            $request->uri,
-            $request->active,
-            $request->show,
-            $request->order
-        );
-
-        $this->routeCreate->run($createRoute);
-
-        return $this->created([], "Ruta creada satisfactoriamente");
-    }
-    public function updateRoute(UpdateRouteRequest $request)
-    {
-        $updateRoute = new RouteDto(
-            $request->id_parent,
             $request->name,
             $request->description,
             $request->icon,
@@ -65,7 +48,25 @@ class RouteController extends Controller
             $request->active,
             $request->show,
             $request->order,
-            $request->id
+            $request->id_parent
+        );
+        $this->routeCreate->run($createRoute);
+
+        return $this->created([], "Ruta creada satisfactoriamente");
+    }
+    public function updateRoute(UpdateRouteRequest $request)
+    {
+        
+        $updateRoute = new RouteDto(
+            $request->name,
+            $request->description,
+            $request->icon,
+            $request->uri,
+            $request->active,
+            $request->show,
+            $request->order,
+            $request->id_parent,
+            $request->id,
         );
         $this->routeUpdate->run($updateRoute);
 

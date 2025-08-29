@@ -15,7 +15,6 @@ class CreateRouteRequest extends BaseRequest {
             "active"=>"bool",
             "show"=>"bool",
             "order"=>"integer",
-            "id_status"=>"required|integer"
         ];
     }
 }

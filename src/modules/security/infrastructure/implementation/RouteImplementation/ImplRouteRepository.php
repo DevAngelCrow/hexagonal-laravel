@@ -54,6 +54,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModel->active = $route->getActive()->value();
             $routeModel->show = $route->getShow()->value();
             $routeModel->order = $route->getOrder()->value();
+            $routeModel->id = $route->getId()->value();
 
             $routeModel->save();
         } catch (Exception $e) {
@@ -112,14 +113,15 @@ class ImplRouteRepository implements RouteRepositoryInterface
     private function mapToDomain(RouteModel $route): Route
     {
         $routeMapped = new Route(
-            new RoutesIdParent($route->id_parent),
             new RoutesName($route->name),
             new RoutesDescription($route->description),
             new RoutesIcon($route->icon),
             new RoutesUri($route->uri),
             new RoutesActive($route->active),
             new RoutesShow($route->show),
-            new RoutesOrder($route->order)
+            new RoutesOrder($route->order),
+            new RoutesIdParent($route->id_parent),
+            new RoutesId($route->id)
         );
 
         return $routeMapped;
