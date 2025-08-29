@@ -23,7 +23,6 @@ class RouteCreate {
 
     public function run(RouteDto $routeDto) : void {
         $route = new Route(
-            new RoutesIdParent($routeDto->id_parent),
             new RoutesName($routeDto->name),
             new RoutesDescription($routeDto->description),
             new RoutesIcon($routeDto->icon),
@@ -31,6 +30,7 @@ class RouteCreate {
             new RoutesActive($routeDto->active),
             new RoutesShow($routeDto->show),
             new RoutesOrder($routeDto->order),
+            new RoutesIdParent($routeDto->id_parent),
         );
 
         $this->routeRepository->create($route);

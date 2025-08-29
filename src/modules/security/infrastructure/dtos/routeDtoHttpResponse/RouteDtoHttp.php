@@ -5,7 +5,7 @@ use Src\modules\security\domain\entities\route\Route;
 
 class RouteDtoHttp {
     public function __construct(
-        public readonly int $id_parent,
+        
         public readonly string $name,
         public readonly string $description,
         public readonly string $icon,
@@ -13,6 +13,7 @@ class RouteDtoHttp {
         public readonly bool $active,
         public readonly bool $show,
         public readonly int $order,
+        public readonly ?int $id_parent = null,
         public readonly ?int $id = null
     )
     {
@@ -21,7 +22,6 @@ class RouteDtoHttp {
 
     public static function fromEntity(Route $route) : self {
         return new self(
-            $route->getIdParent()->value(),
             $route->getName()->value(),
             $route->getDescription()->value(),
             $route->getIcon()->value(),
@@ -29,6 +29,7 @@ class RouteDtoHttp {
             $route->getActive()->value(),
             $route->getShow()->value(),
             $route->getOrder()->value(),
+            $route->getIdParent()->value() ?: null,
             $route->getId()->value() ?: null
         );
     }

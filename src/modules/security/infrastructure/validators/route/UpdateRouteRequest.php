@@ -20,7 +20,6 @@ class UpdateRouteRequest extends BaseRequest {
             "active"=>"bool",
             "show"=>"bool",
             "order"=>"integer",
-            "id_status"=>"required|integer"
         ];
     }
 }

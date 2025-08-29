@@ -32,7 +32,6 @@ class RouteUpdate {
         }
 
         $routeUpdate = new Route(
-            new RoutesIdParent($routeDto->id_parent),
             new RoutesName($routeDto->name),
             new RoutesDescription($routeDto->description),
             new RoutesIcon($routeDto->icon),
@@ -40,6 +39,7 @@ class RouteUpdate {
             new RoutesActive($routeDto->active),
             new RoutesShow($routeDto->show),
             new RoutesOrder($routeDto->order),
+            new RoutesIdParent($routeDto->id_parent),
             new RoutesId($routeDto->id)
         );
 

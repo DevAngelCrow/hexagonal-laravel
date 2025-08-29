@@ -25,6 +25,7 @@ use Src\modules\profile\infrastructure\implementation\DocumentRepositoryImplemen
 use Src\modules\profile\infrastructure\implementation\MunicipalityRepositoryImplementation\ImplMunicipalityRepository;
 use Src\modules\profile\infrastructure\implementation\PeopleRepositoryImplementation\ImplPeopleRepository;
 use Src\modules\profile\infrastructure\implementation\DocumentTypeRepositoryImplementation\ImplDocumentTypeRepository;
+use Src\modules\security\domain\entities\category_permissions\CategoryPermissions;
 use Src\modules\security\domain\repositories\category_permissions\CategoryPermissionsRepositoryInterface;
 use Src\modules\security\domain\repositories\permissions\PermissionsRepositoryInterface;
 use Src\modules\security\domain\repositories\rol\RolRepositoryInterface;
@@ -59,7 +60,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RolRepositoryInterface::class, ImplRolRepository::class);
         $this->app->bind(RouteRepositoryInterface::class, ImplRouteRepository::class);
         $this->app->bind(GenderRepositoryInterface::class, ImplGenderRepository::class);
-
+        $this->app->bind(CategoryPermissionsRepositoryInterface::class, ImplCategoryPermissionsRepository::class);
+        $this->app->bind(PermissionsRepositoryInterface::class, ImplPermissionsRepository::class);
+        $this->app->bind(RolRepositoryInterface::class, ImplRolRepository::class);
+        $this->app->bind(RouteRepositoryInterface::class, ImplRouteRepository::class);
 
 
         /*--------------------------------------------------
