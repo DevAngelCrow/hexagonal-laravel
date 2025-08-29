@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer("id_category_permissions");
             $table->timestamps();
             $table->softDeletes();
+            $table->boolean("active")->default(true);
             $table->foreign("id_category_permissions")->references("id")->on("ctl_category_permissions");
         });
     }

@@ -21,7 +21,8 @@ class MntAddress extends Model
         "house_number",
         "block",
         "pathway",
-        "current"
+        "current",
+        "active"
     ];
 
     public function people() : BelongsTo {

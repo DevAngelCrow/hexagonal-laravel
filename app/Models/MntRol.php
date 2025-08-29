@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class MntRol extends Model
 {
-    protected $table = "mnt_rol";
+    protected $table = "mnt_role";
     protected $fillable = [
         "id",
         "name",
         "description",
         "id_status"
+        ,"active"
     ];
 
     public function user() : BelongsToMany {
@@ -23,6 +24,6 @@ class MntRol extends Model
         return $this->belongsTo(CtlStatus::class);
     }
     public function permissions() : BelongsToMany {
-        return $this->belongsToMany(CtlPermissions::class, "rol_permissions", "id_rol", "id_permission");
+        return $this->belongsToMany(CtlPermissions::class, "rol_permissions", "id_role", "id_permission");
     }
 }

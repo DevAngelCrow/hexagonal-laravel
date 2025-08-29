@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mnt_rol', function (Blueprint $table) {
+        Schema::create('mnt_role', function (Blueprint $table) {
             $table->id();
             $table->string("name", length: 150);
             $table->string("description", length: 150);
             $table->integer("id_status");
             $table->timestamps();
             $table->softDeletes();
+            $table->boolean("active")->default(true);
             $table->foreign("id_status")->references("id")->on("ctl_status");
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mnt_rol');
+        Schema::dropIfExists('mnt_role');
     }
 };
