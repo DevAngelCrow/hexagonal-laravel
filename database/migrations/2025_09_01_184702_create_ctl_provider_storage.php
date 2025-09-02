@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('ctl_provider_storage', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string("description");
+            $table->string("name", length: 150);
+            $table->string("code", length: 6);
+            $table->string("description", length: 150);
             $table->boolean("active");
             $table->softDeletes();
             $table->timestamps();

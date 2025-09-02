@@ -3,6 +3,7 @@
 namespace Src\modules\storage\domain\entities\providerStorage;
 
 use Src\modules\storage\domain\value_objects\provider_storage_value_object\ProviderStorageActive;
+use Src\modules\storage\domain\value_objects\provider_storage_value_object\ProviderStorageCode;
 use Src\modules\storage\domain\value_objects\provider_storage_value_object\ProviderStorageDescription;
 use Src\modules\storage\domain\value_objects\provider_storage_value_object\ProviderStorageId;
 use Src\modules\storage\domain\value_objects\provider_storage_value_object\ProviderStorageName;
@@ -13,9 +14,11 @@ class ProviderStorage
     private readonly ProviderStorageName $name;
     private readonly ProviderStorageDescription $description;
     private readonly ProviderStorageActive $active;
+    private readonly ProviderStorageCode $code;
 
     public function __construct(
         ProviderStorageName $name,
+        ProviderStorageCode $code,
         ProviderStorageDescription $description,
         ProviderStorageActive $active,
         ?ProviderStorageId $id = null
@@ -24,6 +27,7 @@ class ProviderStorage
         $this->description = $description;
         $this->active = $active;
         $this->id = $id;
+        $this->code = $code;
     }
     public function getId(): ?ProviderStorageId
     {
@@ -33,6 +37,11 @@ class ProviderStorage
     public function getName(): ProviderStorageName
     {
         return $this->name;
+    }
+
+    public function getCode(): ProviderStorageCode
+    {
+        return $this->code;
     }
 
     public function getDescription(): ProviderStorageDescription

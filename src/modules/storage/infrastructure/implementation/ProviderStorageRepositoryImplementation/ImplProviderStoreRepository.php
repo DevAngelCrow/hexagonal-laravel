@@ -8,6 +8,7 @@ use LogicException;
 use Src\modules\storage\domain\entities\providerStorage\ProviderStorage;
 use Src\modules\storage\domain\repositories\providerStorage\ProviderStorageRepositoryInterface;
 use Src\modules\storage\domain\value_objects\provider_storage_value_object\ProviderStorageActive;
+use Src\modules\storage\domain\value_objects\provider_storage_value_object\ProviderStorageCode;
 use Src\modules\storage\domain\value_objects\provider_storage_value_object\ProviderStorageDescription;
 use Src\modules\storage\domain\value_objects\provider_storage_value_object\ProviderStorageId;
 use Src\modules\storage\domain\value_objects\provider_storage_value_object\ProviderStorageName;
@@ -24,6 +25,7 @@ class ImplProviderStoreRepository implements ProviderStorageRepositoryInterface
             $providerStorageModel = new ProviderStorageModel();
 
             $providerStorageModel->name = $providerStorage->getName()->value();
+            $providerStorageModel->code = $providerStorage->getCode()->value();
             $providerStorageModel->description = $providerStorage->getDescription()->value();
             $providerStorageModel->active = $providerStorage->getActive()->value();
 
@@ -39,6 +41,7 @@ class ImplProviderStoreRepository implements ProviderStorageRepositoryInterface
             $providerStorageModel = ProviderStorageModel::find($providerStorage->getId()->value());
 
             $providerStorageModel->name = $providerStorage->getName()->value();
+            $providerStorageModel->code = $providerStorage->getCode()->value();
             $providerStorageModel->description = $providerStorage->getDescription()->value();
 
 
@@ -98,10 +101,29 @@ class ImplProviderStoreRepository implements ProviderStorageRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+    public function getOneByCode(ProviderStorageCode $code): ?ProviderStorage
+    {
+        try{
+            
+            $providerStorageModel = ProviderStorageModel::where('code', $code->value())->first();
+            
+            if (!$providerStorageModel) {
+                throw new InfrastructureException("Código de proveedor de almacenamiento no encontrado");
+            }
+
+            $providerStorage = $this->mapToDomain($providerStorageModel);
+
+            return $providerStorage;
+
+        }catch(Exception $e){
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
     private function mapToDomain(ProviderStorageModel $providerStorage): ProviderStorage
     {
         $providerStorageMapped = new ProviderStorage(
             new ProviderStorageName($providerStorage->name),
+            new ProviderStorageCode($providerStorage->code),
             new ProviderStorageDescription($providerStorage->description),
             new ProviderStorageActive($providerStorage->active),
             new ProviderStorageId($providerStorage->id)

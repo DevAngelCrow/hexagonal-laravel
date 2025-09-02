@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('mnt_storage_files', function (Blueprint $table) {
             $table->id();
-            $table->string("filename");
-            $table->string("path");
-            $table->integer("filename");
-            $table->integer("filename");
+            $table->string("filename", length: 150);
+            $table->string("path", length: 500);
             $table->integer("id_provider");
             $table->bigInteger("size");
-            $table->string("mime_type");
+            $table->string("mime_type", length: 150);
             $table->integer("id_user");
             $table->boolean("active");
             $table->softDeletes();

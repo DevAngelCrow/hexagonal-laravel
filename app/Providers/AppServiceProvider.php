@@ -34,6 +34,10 @@ use Src\modules\security\infrastructure\implementation\CategoryPermissionsImplem
 use Src\modules\security\infrastructure\implementation\PermissionsImplementation\ImplPermissionsRepository;
 use Src\modules\security\infrastructure\implementation\RolImplementation\ImplRolRepository;
 use Src\modules\security\infrastructure\implementation\RouteImplementation\ImplRouteRepository;
+use Src\modules\storage\domain\repositories\providerStorage\ProviderStorageRepositoryInterface;
+use Src\modules\storage\domain\repositories\storageFiles\StorageFilesRepositoryInterface;
+use Src\modules\storage\infrastructure\implementation\ProviderStorageRepositoryImplementation\ImplProviderStoreRepository;
+use Src\modules\storage\infrastructure\implementation\StorageFilesRepositoryImplementation\ImplStorageFilesRepository;
 use Src\shared\domain\repositories\UnitOfWorkTransactionDbInterface;
 use Src\shared\infrastructure\implementations\EloquentUnitOfWork;
 
@@ -64,7 +68,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PermissionsRepositoryInterface::class, ImplPermissionsRepository::class);
         $this->app->bind(RolRepositoryInterface::class, ImplRolRepository::class);
         $this->app->bind(RouteRepositoryInterface::class, ImplRouteRepository::class);
-
+        $this->app->bind(ProviderStorageRepositoryInterface::class, ImplProviderStoreRepository::class);
+        $this->app->bind(StorageFilesRepositoryInterface::class, ImplStorageFilesRepository::class);
 
         /*--------------------------------------------------
          |  CATALOGOS

@@ -10,6 +10,7 @@ use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageF
 use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageFilesMimeType;
 use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageFilesPath;
 use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageFilesSize;
+use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageFileContentFile;
 
 class StorageFiles
 {
@@ -21,6 +22,7 @@ class StorageFiles
     private readonly StorageFilesMimeType $mime_type;
     private readonly ?StorageFilesIdUser $id_user;
     private readonly StorageFilesActive $active;
+    private readonly StorageFileContentFile $content_files;
 
     public function __construct(
         StorageFilesFileName $filename,
@@ -28,6 +30,7 @@ class StorageFiles
         StorageFilesSize $size,
         StorageFilesMimeType $mime_type,
         StorageFilesActive $active,
+        StorageFileContentFile $content_files,
         ?StorageFilesPath $path = null,
         ?StorageFilesIdUser $id_user = null,
         ?StorageFilesId $id = null
@@ -40,6 +43,7 @@ class StorageFiles
         $this->mime_type = $mime_type;
         $this->active = $active;
         $this->id_user = $id_user;
+        $this->content_files = $content_files;
     }
     public function getId(): ?StorageFilesId
     {
@@ -79,5 +83,9 @@ class StorageFiles
     public function getActive(): StorageFilesActive
     {
         return $this->active;
+    }
+    public function getContentFile(): StorageFileContentFile
+    {
+        return $this->content_files;
     }
 }
