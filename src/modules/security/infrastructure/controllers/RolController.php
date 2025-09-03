@@ -31,11 +31,15 @@ class RolController extends Controller {
         $this->rolGetOneById = $rol_get_one_by_id;
     }
     public function createRol(CreateRolRequest $request){
+       
         $createRol = new RolDto(
             $request->name,
             $request->description,
             $request->id_status,
+            $request->permissions_id
         );
+
+        
 
         $this->rolCreate->run($createRol);
 

@@ -12,10 +12,11 @@ class RouteDto {
         public readonly bool $show,
         public readonly int $order,
         public readonly ?int $id_parent = null,
-        public readonly ?int $id = null
+        public readonly ?array $permissions_ids = null,
+        public readonly ?int $id = null,
     )
     {
-        
+
     }
 
     public static function fromEntity(Route $route) : self {
@@ -28,7 +29,9 @@ class RouteDto {
             $route->getShow()->value(),
             $route->getOrder()->value(),
             $route->getIdParent()->value() ?: null,
-            $route->getId()->value() ?: null
+            $route->getPermissionsId() ?: null,
+            $route->getId()->value() ?: null,
         );
+
     }
 }

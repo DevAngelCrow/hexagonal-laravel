@@ -38,8 +38,8 @@ class RouteController extends Controller
     }
 
     public function createRoute(CreateRouteRequest $request)
-    {        
-        
+    {   
+                
         $createRoute = new RouteDto(
             $request->name,
             $request->description,
@@ -48,7 +48,8 @@ class RouteController extends Controller
             $request->active,
             $request->show,
             $request->order,
-            $request->id_parent
+            $request->id_parent,
+            $request->permissions_id
         );
         $this->routeCreate->run($createRoute);
 

@@ -24,6 +24,6 @@ class MntRol extends Model
         return $this->belongsTo(CtlStatus::class);
     }
     public function permissions() : BelongsToMany {
-        return $this->belongsToMany(CtlPermissions::class, "rol_permissions", "id_role", "id_permission");
+        return $this->belongsToMany(CtlPermissions::class, "rol_permissions", "id_role", "id_permission")->withTimestamps();
     }
 }

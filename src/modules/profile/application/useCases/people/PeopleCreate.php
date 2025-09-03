@@ -28,7 +28,7 @@ class PeopleCreate
 
     public function run(PeopleDto $peopleDto): ?People
     {
-        $nationsId = array_map(fn($id_country) => new CountryId($id_country), $peopleDto->nationalities);
+        $nationsId = array_map(fn($id_country) => new CountryId($id_country), $peopleDto->nationalities ?? []);
         
         $person = new People(
             new PeopleFirstName($peopleDto->first_name),

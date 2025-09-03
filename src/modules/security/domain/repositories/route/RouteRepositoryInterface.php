@@ -5,7 +5,7 @@ use Src\modules\security\domain\entities\route\Route;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesId;
 
 interface RouteRepositoryInterface {
-    public function create(Route $route) : void;
+    public function create(Route $route) : ?Route;
     public function update(Route $route) : void;
     /**
      * @return Route[];
