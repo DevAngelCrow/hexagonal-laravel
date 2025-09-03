@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -93,5 +94,9 @@ class MntUser extends Authenticatable implements MustVerifyEmail
         ->pluck("permissions")
         ->flatten()
         ->unique("id");
+    }
+
+    public function storageFiles() : HasMany {
+        return $this->hasMany(MntStorageFiles::class, "id_user", "id");
     }
 }

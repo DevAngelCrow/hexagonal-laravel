@@ -11,6 +11,8 @@ use Src\modules\profile\application\dtos\PeopleDto;
 use Src\modules\profile\application\services\address\AddressCreateService;
 use Src\modules\profile\application\services\document\DocumentCreateService;
 use Src\modules\profile\application\services\people\PeopleCreateService;
+use Src\modules\storage\application\dtos\StorageFilesDto;
+use Src\modules\storage\application\services\storageFiles\StorageFilesUploadService;
 use Src\shared\domain\repositories\UnitOfWorkTransactionDbInterface;
 
 class Register
@@ -19,6 +21,7 @@ class Register
     private readonly PeopleCreateService $peopleCreateService;
     private readonly AddressCreateService $addressCreateService;
     private readonly DocumentCreateService $documentCreateService;
+    private readonly StorageFilesUploadService $storageFilesUploadService;
     private readonly UnitOfWorkTransactionDbInterface $transaction;
 
 
@@ -27,19 +30,27 @@ class Register
         PeopleCreateService $people_create_service,
         AddressCreateService $address_create_service,
         documentCreateService $document_create_service,
+        StorageFilesUploadService $storage_files_upload_service,
         UnitOfWorkTransactionDbInterface $transaction_db
     ) {
         $this->userCreate = $user_create;
         $this->peopleCreateService = $people_create_service;
         $this->addressCreateService = $address_create_service;
         $this->documentCreateService = $document_create_service;
+        $this->storageFilesUploadService = $storage_files_upload_service;
         $this->transaction = $transaction_db;
     }
 
     public function run(
-        RegisterDto $registerDto
+        RegisterDto $registerDto, string $providerStorageCode
     ) {
         $this->transaction->beginTransaction();
+
+        $storageFileDto = new StorageFilesDto(
+            $registerDto->fileImg,
+        );
+
+        $storageFiles = $this->storageFilesUploadService->createImgForUser($storageFileDto, $providerStorageCode);
 
         $peopleDto = new PeopleDto(
             $registerDto->first_name,
@@ -50,9 +61,9 @@ class Register
             $registerDto->id_gender,
             $registerDto->id_marital_status,
             $registerDto->phone,
-            $registerDto->img_path,
+            $storageFiles->getPath()->value(),
             $registerDto->id_status,
-            $registerDto->nationalities
+            $registerDto->nationalities,
         );
 
         $person = $this->peopleCreateService->createPersonForUser(
