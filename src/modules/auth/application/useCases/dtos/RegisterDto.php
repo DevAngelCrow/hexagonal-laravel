@@ -15,11 +15,11 @@ class RegisterDto
         public readonly int $id_gender,
         public readonly int $id_marital_status,
         public readonly string $phone,
-        public readonly string $img_path,
         public readonly int $id_status,
         public readonly ?array $nationalities = null,
+        public readonly mixed $fileImg,
         public readonly ?int $idPeople = null,
-
+        
         //user
         public readonly string $user_name,
         public readonly string $password,

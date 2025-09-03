@@ -37,9 +37,9 @@ class AuthController extends Controller
             (int) $request->id_gender,
             (int) $request->id_marital_status,
             $request->phone,
-            $request->img_path,
             (int) $request->id_status,
             $request->nationalities,
+            $request->fileImg,
             null,
             //user data input
             $request->user_name,
@@ -65,8 +65,9 @@ class AuthController extends Controller
             $request->active
         );
 
+        $provider = config('storage.provider_code');
         $user = $this->registerUser->run(
-            $registerDto
+            $registerDto, $provider
         );
 
 
