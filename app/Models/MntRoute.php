@@ -33,4 +33,8 @@ class MntRoute extends Model
     public function children() : HasMany {
         return $this->hasMany(MntRoute::class, "id_parent");
     }
+
+    public function RoutePermissions() : BelongsToMany {
+        return $this->belongsToMany(CtlPermissions::class, "mnt_route_permissions", "id_route", "id_permission")->withTimestamps();
+    }
 }

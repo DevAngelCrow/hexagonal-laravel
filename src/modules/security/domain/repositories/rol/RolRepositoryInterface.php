@@ -5,7 +5,7 @@ use Src\modules\security\domain\entities\rol\Rol;
 use Src\modules\security\domain\value_objects\rol_value_object\RolId;
 
 interface RolRepositoryInterface {
-    public function create(Rol $rol) : void;
+    public function create(Rol $rol) :?Rol;
     public function update(Rol $rol) : void;
     /**
      * @return Rol[];

@@ -9,7 +9,8 @@ class CreateRolRequest extends BaseRequest {
         return [
             "name"=>"required|string",
             "description"=>"string",
-            "id_status"=>"required|integer"
+            "id_status"=>"required|integer",
+            "permissions_id"=>"required|array"
         ];
     }
 }
