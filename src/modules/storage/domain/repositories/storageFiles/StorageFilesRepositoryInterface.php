@@ -8,7 +8,7 @@ use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageF
 
 interface StorageFilesRepositoryInterface {
     public function upload(StorageFileContentFile $storageFilesContent, int $providerStoreCode) : StorageFiles;
-    public function create(StorageFiles $storageFiles) : void;
+    public function create(StorageFiles $storageFiles) : StorageFiles;
     public function download(StorageFilesId $id) : StorageFiles;
     public function getDataStorageFile(StorageFilesId $id) : StorageFiles;
     public function delete(StorageFilesId $id) : void;

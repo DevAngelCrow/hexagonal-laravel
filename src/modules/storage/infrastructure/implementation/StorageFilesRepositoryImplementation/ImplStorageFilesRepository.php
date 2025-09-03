@@ -3,7 +3,6 @@ namespace Src\modules\storage\infrastructure\implementation\StorageFilesReposito
 
 use App\Models\MntStorageFiles as StorageFilesModel;
 use Exception;
-use Illuminate\Container\Attributes\Auth;
 use LogicException;
 use Src\modules\storage\domain\entities\storageFiles\StorageFiles;
 use Src\modules\storage\domain\repositories\storageFiles\StorageFilesRepositoryInterface;
@@ -14,7 +13,6 @@ use Illuminate\Support\Str;
 use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageFilesActive;
 use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageFilesFileName;
 use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageFilesIdProvider;
-use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageFilesIdUser;
 use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageFilesMimeType;
 use Src\modules\storage\domain\value_objects\storage_files_value_object\StorageFilesSize;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
@@ -29,8 +27,7 @@ class ImplStorageFilesRepository implements StorageFilesRepositoryInterface {
             $file = $storageFiles->value();
             $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs($this->basePath, $filename, $this->disk);
-
-            $user = auth()->user()->id;
+            
             $storageFilesEntity = new StorageFiles(
                 new StorageFilesFileName($filename),
                 new StorageFilesIdProvider($idProviderStorage),
@@ -39,7 +36,6 @@ class ImplStorageFilesRepository implements StorageFilesRepositoryInterface {
                 new StorageFilesActive(true),
                 new StorageFileContentFile(null),
                 new StorageFilesPath($path),
-                new StorageFilesIdUser($user)
             );
 
             return $storageFilesEntity;
@@ -52,7 +48,7 @@ class ImplStorageFilesRepository implements StorageFilesRepositoryInterface {
     {
         throw new LogicException("Método no implementado");
     }
-    public function create(StorageFiles $storageFiles): void
+    public function create(StorageFiles $storageFiles): StorageFiles
     {
         try{
             $storageFileModel = new StorageFilesModel();
@@ -62,10 +58,13 @@ class ImplStorageFilesRepository implements StorageFilesRepositoryInterface {
             $storageFileModel->id_provider = $storageFiles->getIdProvider()->value();
             $storageFileModel->size = $storageFiles->getSize()->value();
             $storageFileModel->mime_type = $storageFiles->getMimeType()->value();
-            $storageFileModel->id_user = $storageFiles->getIdUser()->value();
+            //$storageFileModel->id_user = $storageFiles->getIdUser() ? $storageFiles->getIdUser()->value() : null;
             $storageFileModel->active = $storageFiles->getActive()->value();
 
             $storageFileModel->save();
+
+            return $storageFiles;
+            
         }catch(Exception $e){
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }

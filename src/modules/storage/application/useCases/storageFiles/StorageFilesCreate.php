@@ -2,6 +2,7 @@
 namespace Src\modules\storage\application\useCases\storageFiles;
 
 use Src\modules\storage\application\dtos\StorageFilesDto;
+use Src\modules\storage\domain\entities\storageFiles\StorageFiles;
 use Src\modules\storage\domain\enums\StorageEnums;
 use Src\modules\storage\domain\repositories\providerStorage\ProviderStorageRepositoryInterface;
 use Src\modules\storage\domain\repositories\storageFiles\StorageFilesRepositoryInterface;
@@ -19,7 +20,7 @@ class StorageFilesCreate {
         $this->providerStorageRepository = $provider_storage_repository;
     }
 
-    public function run(StorageFilesDto $storageFilesDto, string $providerStorageCode) : void {
+    public function run(StorageFilesDto $storageFilesDto, string $providerStorageCode) : StorageFiles {
 
         if(!$providerStorageCode){
             $providerStorageCode = StorageEnums::LOCAL->value;
@@ -29,6 +30,6 @@ class StorageFilesCreate {
 
         $storageFileCreate = $this->storageFilesRepository->upload(new StorageFileContentFile($storageFilesDto->content_file), $providerStorage->getId()->value());
 
-        $this->storageFilesRepository->create($storageFileCreate);
+        return $this->storageFilesRepository->create($storageFileCreate);
     }
 }

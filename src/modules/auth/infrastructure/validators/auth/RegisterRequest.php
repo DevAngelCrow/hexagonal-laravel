@@ -16,7 +16,7 @@ class RegisterRequest extends BaseRequest
             "id_gender" => "required|integer",
             "email" => "required|email",
             "id_marital_status" => "required|integer",
-            "img_path" => "required|string",
+            "fileImg" => "file|mimes:jpg,jpeg,png|max:2048",
             "phone" => "required|string",
             "id_status" => "required|integer",
             "nationalities" => "required|array",

@@ -35,7 +35,7 @@ Route::prefix("security")->group(function () {
     require base_path("src/modules/security/infrastructure/routes/RouteRoutes.php");
 });
 
-Route::prefix("storage")->middleware('auth:api')->group(function (){
+Route::prefix("storage")->group(function (){
     require base_path("src/modules/storage/infrastructure/routes/ProviderStorageRoutes.php");
     require base_path("src/modules/storage/infrastructure/routes/StorageFilesRoutes.php");
 });
