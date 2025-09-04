@@ -1,6 +1,8 @@
 <?php
 namespace Src\modules\security\domain\entities\route;
 
+use Src\modules\security\domain\exceptions\RoutesException;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsId;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesActive;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesDescription;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesIcon;
@@ -12,7 +14,7 @@ use Src\modules\security\domain\value_objects\routes_value_object\RoutesShow;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesUri;
 
 class Route{
-    private readonly RoutesIdParent $id_parent;
+    private readonly ?RoutesIdParent $id_parent;
     private readonly RoutesName $name;
     private readonly RoutesDescription $description;
     private readonly RoutesIcon $icon;
@@ -20,10 +22,13 @@ class Route{
     private readonly RoutesActive $active;
     private readonly RoutesShow $show;
     private readonly RoutesOrder $order;
+    /** @var PermissionsId[] */
+    private readonly ?array $permissionsId;
     private readonly ?RoutesId $id;
 
-    public function __construct(RoutesIdParent $id_parent, RoutesName $name, RoutesDescription $description, RoutesIcon $icon, RoutesUri $uri,
-    RoutesActive $active, RoutesShow $show, RoutesOrder $order, ?RoutesId $id = null)
+    public function __construct(RoutesName $name, RoutesDescription $description, RoutesIcon $icon, RoutesUri $uri,
+    RoutesActive $active, RoutesShow $show, RoutesOrder $order, ?RoutesIdParent $id_parent = null,  ?array $permissionsId = null, ?RoutesId $id = null, 
+    )
     {
         $this->id_parent = $id_parent;
         $this->name = $name;
@@ -33,10 +38,20 @@ class Route{
         $this->active = $active;
         $this->show = $show;
         $this->order = $order;
+        $this->permissionsId = $permissionsId;
         $this->id = $id;
+
+
+        if(empty($this->permissionsId)){
+            foreach($this->permissionsId as $permissionId){
+                if(!$permissionId instanceof PermissionsId){
+                    throw new RoutesException("La instancia de cada elemento debe ser de tipo PermissionsId");
+                }
+            }
+        }
     }
 
-    public function getIdParent(): RoutesIdParent
+    public function getIdParent(): ?RoutesIdParent
     {
         return $this->id_parent;
     }
@@ -79,5 +94,10 @@ class Route{
     public function getId(): ?RoutesId
     {
         return $this->id;
+    }
+
+    public function getPermissionsId(): array
+    {
+        return $this->permissionsId;
     }
 }

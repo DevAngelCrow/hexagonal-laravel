@@ -27,7 +27,7 @@ class CtlStatusSeeder extends Seeder
                 "state" => true
             ],
             [
-                "table_header" => "mnt_rol",
+                "table_header" => "mnt_role",
                 "name" => "Activo",
                 "description" => "Estado activo",
                 "state" => true

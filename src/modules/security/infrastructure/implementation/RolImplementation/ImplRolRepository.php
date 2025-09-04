@@ -7,6 +7,7 @@ use Exception;
 use LogicException;
 use Src\modules\security\domain\entities\rol\Rol;
 use Src\modules\security\domain\repositories\rol\RolRepositoryInterface;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsId;
 use Src\modules\security\domain\value_objects\rol_value_object\RolDescription;
 use Src\modules\security\domain\value_objects\rol_value_object\RolId;
 use Src\modules\security\domain\value_objects\rol_value_object\RolIdStatus;
@@ -17,9 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 class ImplRolRepository implements RolRepositoryInterface
 {
     private $rolArray = [];
-    public function create(Rol $rol): void
+    public function create(Rol $rol): ?Rol
     {
         try {
+
             $rolModel = new RolModel();
 
             $rolModel->name = $rol->getName()->value();
@@ -27,6 +29,16 @@ class ImplRolRepository implements RolRepositoryInterface
             $rolModel->id_status = $rol->getIdStatus()->value();
 
             $rolModel->save();
+
+
+            $permissionIds = array_map(fn($id_permission) => $id_permission->value(), $rol->getPermissions());
+
+            $rolModel->permissions()->syncWithoutDetaching($permissionIds);
+
+            $mapeoDominio = $this->mapToDomain($rolModel);
+
+            return $mapeoDominio;
+
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -95,12 +107,25 @@ class ImplRolRepository implements RolRepositoryInterface
         }
         throw new LogicException("Método no implementado");
     }
+
     private function mapToDomain(RolModel $rol): Rol
     {
+
+        $permisssionIds = null;
+
+        if(!empty($rol->permissions->toArray())){
+            $permisssionIds = collect($rol->permissions)->map(
+                fn($permission) => new PermissionsId($permission->id)
+            )->toArray();
+        }
+
         $rolMapped = new Rol(
             new RolName($rol->name),
-            new RolDescription($rol->id_categorr_permissions),
-            new RolIdStatus($rol->description),
+            new RolDescription($rol->description),
+            new RolIdStatus($rol->id_status),
+            new RolId($rol->id),
+            $permisssionIds,
+
         );
 
         return $rolMapped;

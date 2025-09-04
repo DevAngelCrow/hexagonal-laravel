@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_rol', function (Blueprint $table) {
+        Schema::create('mnt_user_rol', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_rol");
+            $table->integer("id_role");
             $table->integer("id_user");
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign("id_rol")->references("id")->on("mnt_rol");
+            $table->foreign("id_role")->references("id")->on("mnt_role");
             $table->foreign("id_user")->references("id")->on("mnt_user");
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_rol');
+        Schema::dropIfExists('mnt_user_rol');
     }
 };

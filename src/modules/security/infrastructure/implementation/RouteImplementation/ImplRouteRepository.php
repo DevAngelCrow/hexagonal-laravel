@@ -7,6 +7,7 @@ use Exception;
 use LogicException;
 use Src\modules\security\domain\entities\route\Route;
 use Src\modules\security\domain\repositories\route\RouteRepositoryInterface;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsId;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesActive;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesDescription;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesIcon;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ImplRouteRepository implements RouteRepositoryInterface
 {
     private $routesArray = [];
-    public function create(Route $route): void
+    public function create(Route $route): ?Route
     {
         try {
             $routeModel = new RouteModel();
@@ -37,6 +38,14 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModel->order = $route->getOrder()->value();
 
             $routeModel->save();
+
+            $permissionIds = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissionsId());
+
+            $routeModel->RoutePermissions()->syncWithoutDetaching($permissionIds);
+
+            $mapeoDominio = $this->mapToDomain($routeModel);
+
+            return $mapeoDominio;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -54,6 +63,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModel->active = $route->getActive()->value();
             $routeModel->show = $route->getShow()->value();
             $routeModel->order = $route->getOrder()->value();
+            $routeModel->id = $route->getId()->value();
 
             $routeModel->save();
         } catch (Exception $e) {
@@ -111,15 +121,25 @@ class ImplRouteRepository implements RouteRepositoryInterface
     }
     private function mapToDomain(RouteModel $route): Route
     {
+        $permissionIds = null;
+
+        if(!empty($route->permissions)){
+            $permissionIds = collect($route->permissions->toArray())->map(
+                fn($permission) => new PermissionsId($permission['id'])
+            )->toArray();
+        }
+
         $routeMapped = new Route(
-            new RoutesIdParent($route->id_parent),
             new RoutesName($route->name),
             new RoutesDescription($route->description),
             new RoutesIcon($route->icon),
             new RoutesUri($route->uri),
             new RoutesActive($route->active),
             new RoutesShow($route->show),
-            new RoutesOrder($route->order)
+            new RoutesOrder($route->order),
+            new RoutesIdParent($route->id_parent),
+            $permissionIds,
+            new RoutesId($route->id),
         );
 
         return $routeMapped;

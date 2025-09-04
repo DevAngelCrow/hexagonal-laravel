@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('rol_permissions', function (Blueprint $table) {
             $table->id();
-            $table->integer("id_rol");
+            $table->integer("id_role");
             $table->integer("id_permission");
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign("id_rol")->references("id")->on("mnt_rol");
+            $table->foreign("id_role")->references("id")->on("mnt_role");
             $table->foreign("id_permission")->references("id")->on("ctl_permissions");
         });
     }

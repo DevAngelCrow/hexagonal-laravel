@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserRol extends Model
 {
-    protected $table = "user_rol";
+    protected $table = "mnt_user_rol";
     protected $fillable = [
         "id",
-        "id_rol",
+        "id_role",
         "id_user"
     ];
 }

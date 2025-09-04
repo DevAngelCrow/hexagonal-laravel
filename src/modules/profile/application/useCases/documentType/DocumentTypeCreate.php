@@ -25,7 +25,6 @@ class DocumentTypeCreate {
         DocumentTypeDto $documentType
     ): void {
         $documentType = new DocumentType(
-            id: new DocumentTypeId($documentType->id),
             name: new DocumentTypeName($documentType->name),
             description: new DocumentTypeDescription($documentType->description),
             active: new DocumentTypeActive($documentType->active)

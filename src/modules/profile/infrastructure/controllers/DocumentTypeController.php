@@ -45,7 +45,6 @@ class DocumentTypeController extends Controller
                 $request->name,
                 $request->description,
                 $request->active,
-                (int) $request->id,
             );
 
             $this->documentCreate->run($documentDto);
