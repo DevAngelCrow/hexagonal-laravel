@@ -25,11 +25,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        if (! $this->app->routesAreCached()) {
+            Passport::routes();
+        }
         // Configuración de Passport
         Passport::tokensExpireIn(now()->addDays(15));
         Passport::refreshTokensExpireIn(now()->addDays(30));
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
-        
+
         // Usar el modelo personalizado MntUser
         Passport::useUserModel(MntUser::class);
 
