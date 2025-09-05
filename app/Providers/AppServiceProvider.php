@@ -26,14 +26,17 @@ use Src\modules\profile\infrastructure\implementation\MunicipalityRepositoryImpl
 use Src\modules\profile\infrastructure\implementation\PeopleRepositoryImplementation\ImplPeopleRepository;
 use Src\modules\profile\infrastructure\implementation\DocumentTypeRepositoryImplementation\ImplDocumentTypeRepository;
 use Src\modules\security\domain\entities\category_permissions\CategoryPermissions;
+use Src\modules\security\domain\entities\user_role\UserRole;
 use Src\modules\security\domain\repositories\category_permissions\CategoryPermissionsRepositoryInterface;
 use Src\modules\security\domain\repositories\permissions\PermissionsRepositoryInterface;
 use Src\modules\security\domain\repositories\rol\RolRepositoryInterface;
 use Src\modules\security\domain\repositories\route\RouteRepositoryInterface;
+use Src\modules\security\domain\repositories\user_role\UserRoleRepositoryInterface;
 use Src\modules\security\infrastructure\implementation\CategoryPermissionsImplementation\ImplCategoryPermissionsRepository;
 use Src\modules\security\infrastructure\implementation\PermissionsImplementation\ImplPermissionsRepository;
 use Src\modules\security\infrastructure\implementation\RolImplementation\ImplRolRepository;
 use Src\modules\security\infrastructure\implementation\RouteImplementation\ImplRouteRepository;
+use Src\modules\security\infrastructure\implementation\UserRoleImplementation\ImplUserRoleRepository;
 use Src\modules\storage\domain\repositories\providerStorage\ProviderStorageRepositoryInterface;
 use Src\modules\storage\domain\repositories\storageFiles\StorageFilesRepositoryInterface;
 use Src\modules\storage\infrastructure\implementation\ProviderStorageRepositoryImplementation\ImplProviderStoreRepository;
@@ -70,6 +73,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RouteRepositoryInterface::class, ImplRouteRepository::class);
         $this->app->bind(ProviderStorageRepositoryInterface::class, ImplProviderStoreRepository::class);
         $this->app->bind(StorageFilesRepositoryInterface::class, ImplStorageFilesRepository::class);
+        $this->app->bind(UserRoleRepositoryInterface::class, ImplUserRoleRepository::class);
 
         /*--------------------------------------------------
          |  CATALOGOS

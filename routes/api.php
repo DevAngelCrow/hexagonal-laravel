@@ -33,6 +33,7 @@ Route::prefix("security")->group(function () {
     require base_path("src/modules/security/infrastructure/routes/PermissionsRoutes.php");
     require base_path("src/modules/security/infrastructure/routes/RolRoutes.php");
     require base_path("src/modules/security/infrastructure/routes/RouteRoutes.php");
+    require base_path("src/modules/security/infrastructure/routes/UserRolRoutes.php");
 });
 
 Route::prefix("storage")->group(function (){

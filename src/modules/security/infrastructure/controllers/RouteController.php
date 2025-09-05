@@ -67,6 +67,7 @@ class RouteController extends Controller
             $request->show,
             $request->order,
             $request->id_parent,
+            $request->permissions_id,
             $request->id,
         );
         $this->routeUpdate->run($updateRoute);

@@ -36,7 +36,6 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModel->active = $route->getActive()->value();
             $routeModel->show = $route->getShow()->value();
             $routeModel->order = $route->getOrder()->value();
-
             $routeModel->save();
 
             $permissionIds = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissionsId());
@@ -53,8 +52,8 @@ class ImplRouteRepository implements RouteRepositoryInterface
     public function update(Route $route): void
     {
         try {
-            $routeModel = RouteModel::find($route->getId()->value());
 
+            $routeModel = RouteModel::find($route->getId()->value());
             $routeModel->id_parent = $route->getIdParent()->value();
             $routeModel->name = $route->getName()->value();
             $routeModel->description = $route->getDescription()->value();
@@ -64,8 +63,11 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModel->show = $route->getShow()->value();
             $routeModel->order = $route->getOrder()->value();
             $routeModel->id = $route->getId()->value();
-
             $routeModel->save();
+
+            $newPermissions = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissionsId() ?? [] );
+
+            $routeModel->permissions()->sync($newPermissions);
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }

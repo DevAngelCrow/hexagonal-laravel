@@ -20,6 +20,7 @@ class RolCreate {
     public function run (RolDto $rolDto) : void {
 
         $permissionsId = array_map(fn($id_permission) => new PermissionsId($id_permission), $rolDto->permissions_ids ?? []);
+        
         $rol = new Rol(
             new RolName($rolDto->name),
             new RolDescription($rolDto->description),
