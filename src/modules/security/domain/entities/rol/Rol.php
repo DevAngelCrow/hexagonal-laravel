@@ -25,7 +25,6 @@ class Rol
         $this->id_status = $id_status;
         $this->permissionsId = $permissionsId;
         $this->id = $id;
-        
             if(!empty($permissionsId)){
             foreach($this->permissionsId as $permissionId){
             if(!$permissionId instanceof PermissionsId){
@@ -33,8 +32,6 @@ class Rol
             }
           }
         }
-
-
     }
 
     public function getName(): RolName

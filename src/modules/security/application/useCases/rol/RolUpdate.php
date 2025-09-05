@@ -4,6 +4,7 @@ namespace Src\modules\security\application\useCases\rol;
 use Src\modules\security\application\dtos\RolDto;
 use Src\modules\security\domain\entities\rol\Rol;
 use Src\modules\security\domain\repositories\rol\RolRepositoryInterface;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsId;
 use Src\modules\security\domain\value_objects\rol_value_object\RolDescription;
 use Src\modules\security\domain\value_objects\rol_value_object\RolId;
 use Src\modules\security\domain\value_objects\rol_value_object\RolIdStatus;
@@ -26,12 +27,18 @@ class RolUpdate {
             throw new ApplicationException("Identificador del rol no encontrado", HttpStatusCode::HTTP_BAD_REQUEST->value);
         }
 
+        $permissionsId = array_map(fn($id_permission) => new PermissionsId($id_permission), $rolDto->permissions_ids ?? []);
+
+
         $rolUpdate = new Rol(
             new RolName($rolDto->name),
             new RolDescription($rolDto->description),
             new RolIdStatus($rolDto->id_status),
-            new RolId($rolDto->id)
+            new RolId($rolDto->id),
+            $permissionsId 
+
         );
+
 
         $this->rolRepository->update($rolUpdate);
     }
