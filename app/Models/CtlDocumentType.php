@@ -22,7 +22,7 @@ class CtlDocumentType extends Model
     ];
 
     public function documentos() : HasOne {
-        return $this->hasOne(MntDocument::class);
+        return $this->hasOne(MntDocument::class, 'id_document_type', 'id');
     }
     
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\modules\security\infraestructure\validators\serRol;
+namespace Src\modules\security\infraestructure\validators\userRol;
 
 use Src\shared\infrastructure\validators\BaseRequest;
 

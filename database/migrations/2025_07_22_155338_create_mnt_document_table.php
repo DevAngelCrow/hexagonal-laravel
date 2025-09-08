@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('mnt_document', function (Blueprint $table) {
             $table->id();
             $table->string("document_number");
-            $table->integer("id_type_document");
+            $table->integer("id_document_type");
             $table->integer("id_people");
             $table->string("description", length: 150);
             $table->boolean("active");
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign("id_type_document")->references("id")->on("ctl_type_document");
+            $table->foreign("id_document_type")->references("id")->on("ctl_document_type");
             $table->foreign("id_people")->references("id")->on("mnt_people");
         });
     }
