@@ -25,9 +25,10 @@ class AuthController extends Controller
     }
 
 
-    public function singUp(RegisterRequest $request)
+    public function signUp(RegisterRequest $request)
     {
         $registerDto = new RegisterDto(
+            
             //person data input
             $request->first_name,
             $request->middle_name,
@@ -37,14 +38,14 @@ class AuthController extends Controller
             (int) $request->id_gender,
             (int) $request->id_marital_status,
             $request->phone,
-            (int) $request->id_status,
+            /*(int) $request->id_status ??*/ 1,
             $request->nationalities,
             $request->fileImg,
             null,
             //user data input
             $request->user_name,
             $request->password,
-            (int) $request->id_status_user,
+            /*(int) $request->id_status_user ??*/ 2,
             new \DateTimeImmutable($request->last_access),
             $request->is_validated,
             null,
