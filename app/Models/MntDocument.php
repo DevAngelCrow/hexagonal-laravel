@@ -12,7 +12,7 @@ class MntDocument extends Model
     protected $table = "mnt_document";
     protected $fillable = [
         "id",
-        "id_type_document",
+        "id_document_type",
         "id_people",
         "description",
         "state",
@@ -20,7 +20,7 @@ class MntDocument extends Model
     ];
 
     public function typeDocument() : BelongsTo {
-        return $this->belongsTo(CtlTypeDocument::class);
+        return $this->belongsTo(CtlDocumentType::class,'id_document_type', 'id');
     }
     public function people() : BelongsTo {
         return $this->belongsTo(MntPeople::class);
