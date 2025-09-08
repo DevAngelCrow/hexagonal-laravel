@@ -19,10 +19,10 @@ class GlobalStatusDto
     {
         return new self(
 
-            $globalStatus->getTableHeader()->value(),
-            $globalStatus->getName()->value(),
-            $globalStatus->getDescription()->value(),
-            $globalStatus->getId()->value() ?: null,
+            table_header: $globalStatus->getTableHeader()->value(),
+            name: $globalStatus->getName()->value(),
+            description: $globalStatus->getDescription()->value(),
+            id: $globalStatus->getId()->value() ?: null,
         );
     }
 }

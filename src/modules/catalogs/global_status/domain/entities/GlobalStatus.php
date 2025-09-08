@@ -14,18 +14,18 @@ class GlobalStatus
     private readonly ?GlobalStatusId $id;
     private readonly GlobalStatusName $name;
     private readonly GlobalStatusDescription $description;
-    private readonly GlobalStatusTableHeader $tableHeader;
+    private readonly GlobalStatusTableHeader $table_header;
 
     public function __construct(
         GlobalStatusName $name,
         GlobalStatusDescription $description,
-        GlobalStatusTableHeader $tableHeader,
+        GlobalStatusTableHeader $table_header,
         ?GlobalStatusId $id = null
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
-        $this->tableHeader = $tableHeader;
+        $this->table_header = $table_header;
     }
 
     public function getId(): ?GlobalStatusId
@@ -45,6 +45,6 @@ class GlobalStatus
 
     public function getTableHeader(): GlobalStatusTableHeader
     {
-        return $this->tableHeader;
+        return $this->table_header;
     }
 }
