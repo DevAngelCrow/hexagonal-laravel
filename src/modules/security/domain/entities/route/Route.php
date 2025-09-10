@@ -41,10 +41,9 @@ class Route{
         $this->permissionsId = $permissionsId;
         $this->id = $id;
 
-
-        if(empty($this->permissionsId)){
-            foreach($this->permissionsId as $permissionId){
-                if(!$permissionId instanceof PermissionsId){
+        if (!empty($this->permissionsId)) {
+            foreach ($this->permissionsId as $permissionId) {
+                if (!$permissionId instanceof PermissionsId) {
                     throw new RoutesException("La instancia de cada elemento debe ser de tipo PermissionsId");
                 }
             }

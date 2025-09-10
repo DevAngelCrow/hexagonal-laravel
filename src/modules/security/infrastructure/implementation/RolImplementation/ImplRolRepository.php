@@ -5,6 +5,7 @@ namespace Src\modules\security\infrastructure\implementation\RolImplementation;
 use App\Models\MntRol as RolModel;
 use Exception;
 use LogicException;
+use Src\modules\security\domain\entities\permissions\Permissions;
 use Src\modules\security\domain\entities\rol\Rol;
 use Src\modules\security\domain\repositories\rol\RolRepositoryInterface;
 use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsId;
@@ -47,17 +48,21 @@ class ImplRolRepository implements RolRepositoryInterface
     public function update(Rol $rol): void
     {
         try {
-            $rolModel = RolModel::find($rol->getId()->value());
 
+            $rolModel = RolModel::find($rol->getId()->value());
             $rolModel->name = $rol->getName()->value();
             $rolModel->description = $rol->getDescription()->value();
             $rolModel->id_status = $rol->getIdStatus()->value();
-
             $rolModel->save();
+
+
+            $newPermissions = array_map(fn($id_permission) => $id_permission->value(), $rol->getPermissions() ?? [] ); ;
+
+
+            $rolModel->permissions()->sync($newPermissions);
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        
     }
     public function getAll(int $page, int $per_page): array
     {

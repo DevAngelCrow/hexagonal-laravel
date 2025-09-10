@@ -38,9 +38,6 @@ class RolController extends Controller {
             $request->id_status,
             $request->permissions_id
         );
-
-        
-
         $this->rolCreate->run($createRol);
 
         return $this->created([], "Rol creado satisfactoriamente");
@@ -50,6 +47,7 @@ class RolController extends Controller {
             $request->name,
             $request->description,
             $request->id_status,
+            $request->permissions_id,
             $request->id
         );
 
