@@ -1,5 +1,5 @@
 <?php
-namespace Src\modules\profile\application\useCases\documentType;
+namespace Src\modules\catalogs\global_status\application\useCases;
 use Src\modules\profile\domain\repositories\documentType\DocumentTypeRepositoryInterface;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeId;
 use Src\shared\domain\ApplicationException;

@@ -65,7 +65,7 @@ class GlobalStatusController extends Controller
 
             return $this->success([], "Global Status actualizado con éxito");
     }
-    public function getAllDocumentType(GetAllGlobalStatusRequest $request){
+    public function getAllGlobalStatus(GetAllGlobalStatusRequest $request){
 
 
         $globalStatusCollection = $this->globalStatusGetAll->run($request->query('page'), $request->query('per_page'));
@@ -77,18 +77,18 @@ class GlobalStatusController extends Controller
         return $this->success($paginateData, "Success");
     }
 
-    public function getOneByIdDocumentType(GetByIdDocumentTypeRequest $request){
+    public function getOneByIdGlobalStatus(GetByIdGlobalStatusRequest $request){
 
 
         $document = $this->globalStatusGetOneById->run($request->id);
 
 
-        return $this->success(DocumentTypeDtoHttp::fromEntity($document), "Success");
+        return $this->success(GlobalStatusDtoHttp::fromEntity($document), "Success");
     }
-    public function deleteDocumentType(DeleteDocumentTypeRequest $request)
+    public function deleteGlobalStatus(DeleteGlobalStatusRequest $request)
     {
         $this->globalStatusDelete->run($request->id);
 
-        return $this->success([], "Registro de tipo de documento borrado exitosamente");
+        return $this->success([], "Registro de global status borrado exitosamente");
     }
 }

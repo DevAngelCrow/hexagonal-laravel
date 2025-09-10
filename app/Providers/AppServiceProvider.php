@@ -16,6 +16,8 @@ use Src\modules\profile\domain\repositories\gender\GenderRepositoryInterface;
 use Src\modules\profile\domain\repositories\municipality\MunicipalityRepositoryInterface;
 use Src\modules\profile\domain\repositories\people\PeopleRepositoryInterface;
 use Src\modules\profile\domain\repositories\documentType\DocumentTypeRepositoryInterface;
+use Src\modules\catalogs\global_status\domain\repositories\GlobalStatusRepositoryInterface;
+
 use Src\modules\profile\infrastructure\implementation\GenderRepositoryImplementation\ImplGenderRepository;
 use Src\modules\profile\infrastructure\implementation\AddressRepositoryImplementation\ImplAddressRepository;
 use Src\modules\profile\infrastructure\implementation\CountryRepositoryImplementation\ImplCountryRepository;
@@ -25,6 +27,7 @@ use Src\modules\profile\infrastructure\implementation\DocumentRepositoryImplemen
 use Src\modules\profile\infrastructure\implementation\MunicipalityRepositoryImplementation\ImplMunicipalityRepository;
 use Src\modules\profile\infrastructure\implementation\PeopleRepositoryImplementation\ImplPeopleRepository;
 use Src\modules\profile\infrastructure\implementation\DocumentTypeRepositoryImplementation\ImplDocumentTypeRepository;
+use Src\modules\catalogs\global_status\infraestructure\implementation\ImplGlobalStatusRepository;
 use Src\modules\security\domain\entities\category_permissions\CategoryPermissions;
 use Src\modules\security\domain\repositories\category_permissions\CategoryPermissionsRepositoryInterface;
 use Src\modules\security\domain\repositories\permissions\PermissionsRepositoryInterface;
@@ -70,6 +73,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RouteRepositoryInterface::class, ImplRouteRepository::class);
         $this->app->bind(ProviderStorageRepositoryInterface::class, ImplProviderStoreRepository::class);
         $this->app->bind(StorageFilesRepositoryInterface::class, ImplStorageFilesRepository::class);
+        $this->app->bind(GlobalStatusRepositoryInterface::class, ImplGlobalStatusRepository::class);
+
 
         /*--------------------------------------------------
          |  CATALOGOS
