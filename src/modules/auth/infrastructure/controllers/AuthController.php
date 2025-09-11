@@ -5,6 +5,7 @@ namespace Src\modules\auth\infrastructure\controllers;
 use App\Http\Controllers\Controller;
 use App\Models\MntUser;
 use DateTimeImmutable;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Src\shared\infrastructure\HttpResponses;
@@ -25,9 +26,10 @@ class AuthController extends Controller
     }
 
 
-    public function singUp(RegisterRequest $request)
+    public function signUp(RegisterRequest $request)
     {
         $registerDto = new RegisterDto(
+            
             //person data input
             $request->first_name,
             $request->middle_name,
@@ -37,14 +39,14 @@ class AuthController extends Controller
             (int) $request->id_gender,
             (int) $request->id_marital_status,
             $request->phone,
-            (int) $request->id_status,
+            /*(int) $request->id_status ??*/ 1,
             $request->nationalities,
             $request->fileImg,
             null,
             //user data input
             $request->user_name,
             $request->password,
-            (int) $request->id_status_user,
+            /*(int) $request->id_status_user ??*/ 2,
             new \DateTimeImmutable($request->last_access),
             $request->is_validated,
             null,
@@ -82,17 +84,23 @@ class AuthController extends Controller
         ]);
 
         if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return $this->unauthorized("No autorizado");
+            //return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $user = MntUser::where('user_name', $request->user_name)->first();
+
+        if(!$user->hasVerifiedEmail()){
+            return $this->forbiden("Por favor verifica tu correo antes de iniciar sesión");
+        }
+
         $token = $user->createToken('authToken')->accessToken;
 
-        return response()->json([
+        return $this->success([
             'access_token' => $token,
             'token_type' => 'Bearer',
             'user' => $user
-        ]);
+        ], "Success");
     }
 
     public function verifyEmail(Request $request)
@@ -106,9 +114,22 @@ class AuthController extends Controller
         return $this->success([], "Correo de verificación enviado");
     }
 
-    public function receptionToValidate(EmailVerificationRequest $request)
+    public function receptionToValidate(Request $request, $id, $hash)
     {
-        $request->fulfill();
+        $user = MntUser::findOrFail($id);
+
+        if(!hash_equals(sha1($user->getEmailForVerification()), $hash)){
+            return $this->forbiden("Link invalido o expirado");
+        }
+
+        if($user->hasVerifiedEmail()){
+            return $this->success([], "Correo ya verificado");
+        }
+
+        //$request->fulfill();
+
+        $user->markEmailAsVerified();
+        event(new Verified($user));
 
         return $this->success([], "Correo verificado exitosamente");
     }

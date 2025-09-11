@@ -24,7 +24,7 @@ class ImplDocumentRepository implements DocumentRepositoryInterface
 
             $documentModel = new DocumentModel;
 
-            $documentModel->id_type_document = $document->getIdTypeDocument()->value();
+            $documentModel->id_document_type = $document->getIdTypeDocument()->value();
             $documentModel->id_people = $document->getIdPeople()->value();
             $documentModel->description = $document->getDescription()->value();
             $documentModel->active = $document->getActive()->value();

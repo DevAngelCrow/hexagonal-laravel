@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\ServiceProvider;
 use Src\modules\auth\domain\repositories\user\UserRepositoryInterface;
 use Src\modules\auth\infrastructure\implementation\UserRepositoryImplementation\ImplUserRepository;
@@ -99,5 +101,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        VerifyEmail::toMailUsing(function (object $notifiable, string $url){
+            $frontendUrl = 'http://localhost:8080/verify-email?url='. urlencode($url);
+            return (new MailMessage)
+            ->subject('Verificar direccion de correo electronico')
+            ->line('Por favor haz clic en el botón de abajo para verificar tu dirección de correo electrónico.')
+            ->action('Verificar correo', $frontendUrl);
+        });
     }
 }

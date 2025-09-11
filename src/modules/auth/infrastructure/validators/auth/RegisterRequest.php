@@ -18,13 +18,13 @@ class RegisterRequest extends BaseRequest
             "id_marital_status" => "required|integer",
             "fileImg" => "file|mimes:jpg,jpeg,png|max:2048",
             "phone" => "required|string",
-            "id_status" => "required|integer",
+            "id_status" => "integer",
             "nationalities" => "required|array",
 
             //user data input
             "user_name" => "required|string",
             "password" => "required|string",
-            "id_status_user" => "required|integer",
+            "id_status_user" => "integer",
             "last_access" => "required|date",
             "is_validated" => "boolean",
 
@@ -41,7 +41,7 @@ class RegisterRequest extends BaseRequest
             //document data input
             "id_type_document" => "required|integer",
             "document_number" => "required|string",
-            "description" => "required|string",
+            "description" => "string",
             "state" => "boolean"
         ];
     }
