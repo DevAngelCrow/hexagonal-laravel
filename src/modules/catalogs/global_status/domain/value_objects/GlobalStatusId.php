@@ -1,10 +1,10 @@
 <?php
 
-namespace Src\modules\profile\domain\value_objects\documentType_value_object;
+namespace Src\modules\catalogs\global_status\domain\value_objects;
 
-use Src\modules\profile\domain\exceptions\DocumentTypeException;
+use Src\modules\catalogs\global_status\domain\exceptions\GlobalStatusException;
 
-class DocumentTypeId
+class GlobalStatusId
 {
     private int $value;
     public function __construct(int $value)
@@ -17,13 +17,13 @@ class DocumentTypeId
     private function required()
     {
         if (!$this->value) {
-            throw new DocumentTypeException("El campo id es obligatorio");
+            throw new GlobalStatusException("El campo id es obligatorio");
         }
     }
 
     private function isNumber(){
         if($this->value <= 0 || !is_int($this->value)){
-            throw new DocumentTypeException("El campo id debe ser de tipo entero");
+            throw new GlobalStatusException("El campo id debe ser de tipo entero");
         }
     }
     public function value() : int {
