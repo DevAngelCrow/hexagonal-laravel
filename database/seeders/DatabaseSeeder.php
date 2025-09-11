@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             CtlGenderSeeder::class,
             CtlDocumentTypeSeeder::class,
             MntPeopleSeeder::class,
+            CtlProviderStorageSeeder::class
         ]);
     }
 }
