@@ -8,12 +8,19 @@ use Src\modules\auth\domain\entities\user\User;
 use Src\modules\auth\domain\repositories\user\UserRepositoryInterface;
 use Src\modules\auth\domain\value_objects\user_value_objects\UserId;
 use App\Models\MntUser as UserModel;
+use DateTimeImmutable;
 use Illuminate\Support\Facades\Hash;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Src\modules\auth\application\useCases\auth\Register;
+use Src\modules\auth\domain\value_objects\user_value_objects\UserIdPeople;
+use Src\modules\auth\domain\value_objects\user_value_objects\UserIdStatus;
+use Src\modules\auth\domain\value_objects\user_value_objects\UserIsValidated;
+use Src\modules\auth\domain\value_objects\user_value_objects\UserLastAccess;
+use Src\modules\auth\domain\value_objects\user_value_objects\UserName;
+use Src\modules\auth\domain\value_objects\user_value_objects\UserPassword;
 
 class ImplUserRepository implements UserRepositoryInterface
 {
@@ -52,8 +59,35 @@ class ImplUserRepository implements UserRepositoryInterface
         throw new LogicException("El método aun no ha sido implementado");
     }
 
+    public function getByUserName(UserName $user_name): ?User
+    {
+     try {
+            $userModel = UserModel::where('user_name', $user_name->value())->first();
+            if (!$userModel) {
+                throw new InfrastructureException("Usuario no encontrado");
+            }
+            $user = $this->mapToDomain($userModel);
+            return $user;
+        } catch (Exception $e) {
+            throw new InfrastructureException($e);
+        }   
+    }
+
     public function delete(UserId $id): void
     {
         throw new LogicException("El método aun no ha sido implementado");
+    }
+    public function mapToDomain(UserModel $userModel): User
+    {
+        $last_access =  new \DateTimeImmutable($userModel->last_access);
+        return new User(
+            new UserIdPeople($userModel->id_people),
+            new UserName($userModel->user_name),
+            new UserPassword("_"),
+            new UserIdStatus($userModel->id_status),
+            new UserLastAccess($last_access),
+            new UserIsValidated($userModel->is_validated),
+            new UserId($userModel->id)
+        );
     }
 }

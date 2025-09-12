@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Src\shared\infrastructure\HttpResponses;
 use Src\modules\auth\application\useCases\auth\Register;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Src\modules\auth\application\services\auth\TokenGenerator;
+use Src\modules\auth\application\useCases\auth\Login;
 use Src\modules\auth\application\useCases\dtos\RegisterDto;
+use Src\modules\auth\infrastructure\validators\auth\LoginRequest;
 use Src\modules\auth\infrastructure\validators\auth\RegisterRequest;
 
 class AuthController extends Controller
@@ -19,6 +22,8 @@ class AuthController extends Controller
     use HttpResponses;
 
     protected Register $registerUser;
+    protected Login $loginUser;
+    protected TokenGenerator $tokenGenerator;
 
     public function __construct(Register $register_user)
     {
@@ -76,17 +81,13 @@ class AuthController extends Controller
         return $this->created([], "Registro de usuario exitoso");
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'user_name' => 'required|string',
-            'password' => 'required|string',
-        ]);
 
-        if (!Auth::attempt($credentials)) {
-            return $this->unauthorized("No autorizado");
-            //return response()->json(['message' => 'Unauthorized'], 401);
-        }
+        // if (!Auth::attempt($credentials)) {
+        //     return $this->unauthorized("No autorizado");
+        //     //return response()->json(['message' => 'Unauthorized'], 401);
+        // }
 
         $user = MntUser::where('user_name', $request->user_name)->first();
 
@@ -125,8 +126,6 @@ class AuthController extends Controller
         if($user->hasVerifiedEmail()){
             return $this->success([], "Correo ya verificado");
         }
-
-        //$request->fulfill();
 
         $user->markEmailAsVerified();
         event(new Verified($user));
