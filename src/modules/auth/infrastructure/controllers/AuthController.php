@@ -7,11 +7,8 @@ use App\Models\MntUser;
 use DateTimeImmutable;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Src\shared\infrastructure\HttpResponses;
 use Src\modules\auth\application\useCases\auth\Register;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Src\modules\auth\application\services\auth\TokenGenerator;
 use Src\modules\auth\application\useCases\auth\Login;
 use Src\modules\auth\application\useCases\dtos\RegisterDto;
 use Src\modules\auth\infrastructure\validators\auth\LoginRequest;
@@ -23,11 +20,11 @@ class AuthController extends Controller
 
     protected Register $registerUser;
     protected Login $loginUser;
-    protected TokenGenerator $tokenGenerator;
 
-    public function __construct(Register $register_user)
+    public function __construct(Register $register_user, Login $login_user)
     {
         $this->registerUser = $register_user;
+        $this->loginUser = $login_user;
     }
 
 
@@ -84,23 +81,15 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
 
-        // if (!Auth::attempt($credentials)) {
-        //     return $this->unauthorized("No autorizado");
-        //     //return response()->json(['message' => 'Unauthorized'], 401);
-        // }
-
-        $user = MntUser::where('user_name', $request->user_name)->first();
-
-        if(!$user->hasVerifiedEmail()){
-            return $this->forbiden("Por favor verifica tu correo antes de iniciar sesión");
-        }
-
-        $token = $user->createToken('authToken')->accessToken;
+        $data = $this->loginUser->run(
+            $request->user_name,
+            $request->password
+        );
 
         return $this->success([
-            'access_token' => $token,
+            'access_token' => $data['access_token'],
             'token_type' => 'Bearer',
-            'user' => $user
+            'user' => $data['user']
         ], "Success");
     }
 

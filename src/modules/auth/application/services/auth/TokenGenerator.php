@@ -1,16 +1,17 @@
 <?php
 namespace Src\modules\auth\application\services\auth;
 
-use Src\modules\auth\domain\ports\TokenGeneratorInterface;
+use Src\modules\auth\domain\ports\TokenGeneratorPortInterface;
+use Src\modules\auth\domain\value_objects\user_value_objects\UserName;
 
 class TokenGenerator {
-    protected readonly TokenGeneratorInterface $tokenGenerator;
-    public function __construct(TokenGeneratorInterface $token_generator) {
+    protected readonly TokenGeneratorPortInterface $tokenGenerator;
+    public function __construct(TokenGeneratorPortInterface $token_generator) {
         $this->tokenGenerator = $token_generator;
         
     }
 
-    public function run(mixed $userModel): string {
-        return $this->tokenGenerator->generate($userModel);
+    public function run(string $user_name): array {
+        return $this->tokenGenerator->generate(new UserName($user_name));
     }
 }

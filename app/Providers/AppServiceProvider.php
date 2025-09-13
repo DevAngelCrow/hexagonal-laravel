@@ -5,7 +5,13 @@ namespace App\Providers;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\ServiceProvider;
+use Src\modules\auth\domain\ports\CredentialValidatorPortInterface;
+use Src\modules\auth\domain\ports\HasVerifiedEmailPortInterface;
+use Src\modules\auth\domain\ports\TokenGeneratorPortInterface;
 use Src\modules\auth\domain\repositories\user\UserRepositoryInterface;
+use Src\modules\auth\infrastructure\implementation\AuthPortImplementation\ImplCredentialValidatorPortInterface;
+use Src\modules\auth\infrastructure\implementation\AuthPortImplementation\ImplHasVerifiedEmailPortInterface;
+use Src\modules\auth\infrastructure\implementation\AuthPortImplementation\ImplTokenGeneratorPortInterface;
 use Src\modules\auth\infrastructure\implementation\UserRepositoryImplementation\ImplUserRepository;
 use Src\modules\catalogs\marital\domain\repositories\IMaritalStatusRepository;
 use Src\modules\catalogs\marital\infrastructure\repositories\MaritalStatusRepositoryImpl;
@@ -80,7 +86,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(StorageFilesRepositoryInterface::class, ImplStorageFilesRepository::class);
         $this->app->bind(UserRoleRepositoryInterface::class, ImplUserRoleRepository::class);
         $this->app->bind(GlobalStatusRepositoryInterface::class, ImplGlobalStatusRepository::class);
-
+        $this->app->bind(CredentialValidatorPortInterface::class, ImplCredentialValidatorPortInterface::class);
+        $this->app->bind(HasVerifiedEmailPortInterface::class, ImplHasVerifiedEmailPortInterface::class);
+        $this->app->bind(TokenGeneratorPortInterface::class, ImplTokenGeneratorPortInterface::class);
 
         /*--------------------------------------------------
          |  CATALOGOS
