@@ -5,12 +5,13 @@ namespace Src\modules\auth\infrastructure\controllers;
 use App\Http\Controllers\Controller;
 use App\Models\MntUser;
 use DateTimeImmutable;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Src\shared\infrastructure\HttpResponses;
 use Src\modules\auth\application\useCases\auth\Register;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Src\modules\auth\application\useCases\auth\Login;
 use Src\modules\auth\application\useCases\dtos\RegisterDto;
+use Src\modules\auth\infrastructure\validators\auth\LoginRequest;
 use Src\modules\auth\infrastructure\validators\auth\RegisterRequest;
 
 class AuthController extends Controller
@@ -18,16 +19,19 @@ class AuthController extends Controller
     use HttpResponses;
 
     protected Register $registerUser;
+    protected Login $loginUser;
 
-    public function __construct(Register $register_user)
+    public function __construct(Register $register_user, Login $login_user)
     {
         $this->registerUser = $register_user;
+        $this->loginUser = $login_user;
     }
 
 
-    public function singUp(RegisterRequest $request)
+    public function signUp(RegisterRequest $request)
     {
         $registerDto = new RegisterDto(
+            
             //person data input
             $request->first_name,
             $request->middle_name,
@@ -37,14 +41,14 @@ class AuthController extends Controller
             (int) $request->id_gender,
             (int) $request->id_marital_status,
             $request->phone,
-            (int) $request->id_status,
+            /*(int) $request->id_status ??*/ 1,
             $request->nationalities,
             $request->fileImg,
             null,
             //user data input
             $request->user_name,
             $request->password,
-            (int) $request->id_status_user,
+            /*(int) $request->id_status_user ??*/ 2,
             new \DateTimeImmutable($request->last_access),
             $request->is_validated,
             null,
@@ -74,25 +78,19 @@ class AuthController extends Controller
         return $this->created([], "Registro de usuario exitoso");
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'user_name' => 'required|string',
-            'password' => 'required|string',
-        ]);
 
-        if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
+        $data = $this->loginUser->run(
+            $request->user_name,
+            $request->password
+        );
 
-        $user = MntUser::where('user_name', $request->user_name)->first();
-        $token = $user->createToken('authToken')->accessToken;
-
-        return response()->json([
-            'access_token' => $token,
+        return $this->success([
+            'access_token' => $data['access_token'],
             'token_type' => 'Bearer',
-            'user' => $user
-        ]);
+            'user' => $data['user']
+        ], "Success");
     }
 
     public function verifyEmail(Request $request)
@@ -106,9 +104,20 @@ class AuthController extends Controller
         return $this->success([], "Correo de verificación enviado");
     }
 
-    public function receptionToValidate(EmailVerificationRequest $request)
+    public function receptionToValidate(Request $request, $id, $hash)
     {
-        $request->fulfill();
+        $user = MntUser::findOrFail($id);
+
+        if(!hash_equals(sha1($user->getEmailForVerification()), $hash)){
+            return $this->forbiden("Link invalido o expirado");
+        }
+
+        if($user->hasVerifiedEmail()){
+            return $this->success([], "Correo ya verificado");
+        }
+
+        $user->markEmailAsVerified();
+        event(new Verified($user));
 
         return $this->success([], "Correo verificado exitosamente");
     }

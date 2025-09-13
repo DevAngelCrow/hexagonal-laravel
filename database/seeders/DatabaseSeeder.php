@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\CtlDocumentType;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -28,8 +27,9 @@ class DatabaseSeeder extends Seeder
             CtlDistrictSeeder::class,
             CtlMaritalStatusSeeder::class,
             CtlGenderSeeder::class,
-            CtlDocumentType::class,
+            CtlDocumentTypeSeeder::class,
             MntPeopleSeeder::class,
+            CtlProviderStorageSeeder::class
         ]);
     }
 }

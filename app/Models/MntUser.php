@@ -73,7 +73,7 @@ class MntUser extends Authenticatable implements MustVerifyEmail
 
     public function markEmailAsVerified(): bool
     {
-        return $this->forceFill(["is_validated" => true,])->save();
+        return $this->forceFill(["is_validated" => true, "email_verified_at" => now()])->save();
     }
 
     // public function sendEmailVerificationNotification()
