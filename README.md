@@ -1,61 +1,142 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel + PHP 8.1 + MySQL + Arquitectura Hexagonal Template
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Esta plantilla backend cuenta con Laravel implementando Arquitectura Hexagonal (Ports & Adapters), diseñada para proporcionar una base sólida y escalable con separación clara de responsabilidades entre las capas de dominio, aplicación e infraestructura.
 
-## About Laravel
+## Configuración inicial de la plantilla
+### Requisitos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP versión >= 8.1
+- Composer versión >= 2.0
+- Node.js versión >= 18.0 (para assets)
+- PostgreSQL >= 13.0
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Instalación
+1 - Clonar el repositorio.
+```
+git clone https://github.com/DevAngelCrow/hexagonal-laravel.git
+cd hexagonal-laravel
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2 - Configurar el .env
+```
+cp .env.example .env.local
+```
 
-## Learning Laravel
+Configura las variables de entorno del archivo .env de acuerdo a tu necesidad.
+Inicialmente cuenta con las variables principales:
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=hexagonal_laravel
+DB_USERNAME=postgres
+DB_PASSWORD=
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3 - Procedemos a instalar dependencias, ejecutamos en consola dentro del directorio del repositorio el comando siguiente
+composer install
+4 - Generar clave de aplicación
+php artisan key:generate
+5 - Procedemos a ejecutar las migraciones y seeders para configurar la base de datos:
+php artisan migrate --seed
+6 - Ejecutamos el comando siguiente para iniciar la ejecución del proyecto en modo desarrollo
+php artisan serve
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# Estructura general del directorio de carpetas y archivos del proyecto
+hexagonal-laravel/
+├── .husky/                  # Git hooks para pre-commit
+├── app/                     # Código fuente de la aplicación
+├── bootstrap/               # Archivos de bootstrap de Laravel
+├── config/                  # Archivos de configuración
+├── database/                # Migraciones, seeders y factories
+├── public/                  # Punto de entrada público y assets
+├── resources/               # Vistas, assets sin compilar y localizaciones
+├── routes/                  # Definición de rutas
+├── src/                     # Código fuente de la aplicación (hexagonal)
+├── storage/                 # Logs, cache y archivos generados
+├── tests/                   # Pruebas automatizadas
+├── vendor/                  # Dependencias de Composer
+├── .editorconfig            # Configuración del editor
+├── .env                     # Variables de entorno (copia de .env.example)
+├── .env.example             # Plantilla de variables de entorno
+├── .gitattributes           # Configuración de Git
+├── .gitignore               # Archivos ignorados por Git
+├── artisan                  # CLI de Laravel
+├── composer.json            # Dependencias de PHP y autoload
+├── composer.lock            # Versiones exactas de dependencias
+├── deptrac.yaml             # Configuración de análisis de dependencias
+├── package.json             # Dependencias de Node.js
+├── package-lock.json        # Versiones exactas de dependencias JS
+├── phpunit.xml              # Configuración de PHPUnit
+├── README.md                # Documentación principal
+└── vite.config.js           # Configuración de Vite para assets
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Descripcion de carpetas y archivos de los directorios.
 
-## Laravel Sponsors
+Carpeta app
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+📂 Models/: Contiene los modelos Eloquent que representan las entidades de la base de datos.
+📂 Http/Controllers/: Contiene los controladores HTTP que manejan las peticiones web y API.
+📂 Http/Requests/: Define las reglas de validación para las peticiones HTTP entrantes.
+📂 Http/Resources/: Transforma los modelos y colecciones para las respuestas API.
+📂 Http/Middleware/: Contiene middleware personalizado para filtrar peticiones HTTP.
 
-### Premium Partners
+Carpeta src --- Modules (Arquitectura Hexagonal)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+📂 Auth/: Módulo de autenticación y gestión de usuarios (mnt_user).
+📂 Catalogs/: Módulo de catálogos globales del sistema (ctl_global_status).
+📂 Profile/: Módulo de gestión de perfiles de personas (mnt_people).
+📂 Security/: Módulo de roles, permisos y seguridad (mnt_rol).
+📂 Storage/: Módulo de gestión de archivos y almacenamiento.
 
-## Contributing
+Estructura de cada módulo (Hexagonal Architecture)
+Application/
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+📂 UseCases/: Contiene los casos de uso que definen la lógica de aplicación.
+📂 DTOs/: Data Transfer Objects para transferir datos entre capas.
+📂 Services/: Servicios de aplicación que coordinan los casos de uso.
 
-## Code of Conduct
+Domain/
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+📂 Entities/: Entidades del dominio con reglas de negocio.
+📂 Repositories/: Interfaces de repositorios (contratos).
+📂 ValueObjects/: Objetos de valor inmutables.
+📂 Events/: Eventos del dominio.
 
-## Security Vulnerabilities
+Infrastructure/
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+📂 Controllers/: Controladores específicos del módulo.
+📂 Repositories/: Implementaciones concretas de repositorios.
+📂 Persistence/: Entidades de persistencia (Eloquent).
+📂 Routes/: Rutas específicas del módulo.
 
-## License
+Carpeta database
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+📂 migrations/: Contiene las migraciones para crear y modificar la estructura de la base de datos.
+📂 seeders/: Contiene los seeders para poblar la base de datos con datos iniciales.
+📂 factories/: Define factories para generar datos de prueba.
+
+Carpeta routes
+
+📄 api.php: Define las rutas de la API RESTful.
+📄 web.php: Define las rutas web de la aplicación.
+📄 console.php: Define comandos personalizados de Artisan.
+
+
+Archivos del directorio raíz
+
+📄 artisan: Archivo ejecutable que proporciona la interfaz de línea de comandos de Laravel.
+📄 composer.json: Archivo que define las dependencias PHP del proyecto y configuraciones de Composer.
+📄 .env.example: Archivo de ejemplo para definir variables de entorno necesarias para el proyecto.
+📄 .gitignore: Archivo que contiene las extensiones y carpetas que se omiten al momento de realizar commit.
+📄 package.json: Archivo que define las dependencias de Node.js para compilación de assets.
+
+Scripts y comandos disponibles
+Comandos de desarrollo
+bash# Iniciar servidor de desarrollo
+php artisan serve
+
+# Limpiar todos los caches
+php artisan optimize:clear
+
+# Refrescar base de datos con seeders
+php artisan migrate:refresh --seed
+Comandos de base de datos
