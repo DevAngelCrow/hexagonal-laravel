@@ -11,15 +11,16 @@ class DocumentTypeDtoHttp
         public readonly string $name,
         public readonly string $description,
         public readonly bool $active,
+        public readonly string $mask
     ) {}
 
     public static function fromEntity(DocumentType $documentType){
-        //dd($address);
         return new self(
             $documentType->getId()->value(),
             $documentType->getName()->value(),
             $documentType->getDescription()->value(),
             $documentType->getActive()->value(),
+            $documentType->getMask()->value()
         );
     }
 }

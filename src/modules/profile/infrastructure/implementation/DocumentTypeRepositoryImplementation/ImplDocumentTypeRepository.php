@@ -12,7 +12,7 @@ use Exception;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeName;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeDescription;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeActive;
-
+use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeMask;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,6 +28,7 @@ class ImplDocumentTypeRepository implements DocumentTypeRepositoryInterface
             $documentTypeModel->name = $documentType->getName()->value();
             $documentTypeModel->description = $documentType->getDescription()->value();
             $documentTypeModel->active = $documentType->getActive()->value();
+            $documentTypeModel->mask = $documentType->getMask()->value();
             $documentTypeModel->save();
         } catch (ErrorException $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -42,6 +43,7 @@ class ImplDocumentTypeRepository implements DocumentTypeRepositoryInterface
             $documentTypeModel->name = $documentType->getName()->value();
             $documentTypeModel->description = $documentType->getDescription()->value();
             $documentTypeModel->active = $documentType->getActive()->value();
+            $documentTypeModel->mask = $documentType->getMask()->value();
             $documentTypeModel->save();
         } catch (ErrorException $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -106,6 +108,7 @@ class ImplDocumentTypeRepository implements DocumentTypeRepositoryInterface
             new DocumentTypeName($document->name),
             new DocumentTypeDescription($document->description),
             new DocumentTypeActive($document->active),
+            new DocumentTypeMask($document->mask),
             new DocumentTypeId($document->id),
         );
     }

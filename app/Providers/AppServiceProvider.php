@@ -109,12 +109,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        VerifyEmail::toMailUsing(function (object $notifiable, string $url){
-            $frontendUrl = config('app.frontend_url').'?url='. urlencode($url);
-            return (new MailMessage)
-            ->subject('Verificar direccion de correo electronico')
-            ->line('Por favor haz clic en el botón de abajo para verificar tu dirección de correo electrónico.')
-            ->action('Verificar correo', $frontendUrl);
-        });
+        // VerifyEmail::toMailUsing(function (object $notifiable, string $url){
+        //     $frontendUrl = config('app.frontend_url').'?url='. urlencode($url);
+        //     return (new MailMessage)
+        //     ->subject('Verificar direccion de correo electronico')
+        //     ->line('Por favor haz clic en el botón de abajo para verificar tu dirección de correo electrónico.')
+        //     ->action('Verificar correo', $frontendUrl);
+        // });
     }
 }

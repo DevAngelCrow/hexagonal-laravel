@@ -8,10 +8,8 @@ use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentT
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeName;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeDescription;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeActive;
-
-
-
-use Src\shared\domain\ApplicationException;
+use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeMask;
+use Src\shared\application\exceptions\ApplicationException;
 use Src\shared\domain\HttpStatusCode;
 
 class DocumentTypeUpdate {
@@ -36,6 +34,7 @@ class DocumentTypeUpdate {
             name: new DocumentTypeName($documentType->name),
             description: new DocumentTypeDescription($documentType->description),
             active: new DocumentTypeActive($documentType->active),
+            mask: new DocumentTypeMask($documentType->mask),
             id: new DocumentTypeId($documentType->id)
         );
 
