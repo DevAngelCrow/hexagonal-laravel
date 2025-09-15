@@ -80,8 +80,6 @@ class MntUser extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify((new VerifyEmailQueued));
-        // Log::info('Enviando verificación a: ' . $this->getEmailForVerification());
-        // parent::sendEmailVerificationNotification();
     }
 
     public function routeNotificationForMail($notification)

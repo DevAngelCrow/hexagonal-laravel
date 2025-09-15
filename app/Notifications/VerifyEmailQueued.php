@@ -5,6 +5,7 @@ namespace App\Notifications;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class VerifyEmailQueued extends VerifyEmail implements ShouldQueue
 {
@@ -14,10 +15,12 @@ class VerifyEmailQueued extends VerifyEmail implements ShouldQueue
     {
         $frontendUrl = config('app.frontend_url') . '?url=' . urlencode($this->verificationUrl($notifiable));
 
-        return (new \Illuminate\Notifications\Messages\MailMessage)
-            ->subject('xd')
-            ->line('Lolo')
-            ->action('Verificar ', $frontendUrl);
+        return (new MailMessage)
+            ->subject('Verifica tu correo electrónico de tu cuenta de facturación electrónica')
+            ->view('emails.verify-email', [
+                'url' => $frontendUrl,
+                'user' => $notifiable
+            ]);
     }
 
     // public function via($notifiable)

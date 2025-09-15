@@ -5,7 +5,19 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-@theme {
+/* @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+} */
+
+@font-face {
+            font-family: 'Museo Sans' !important;
+            src: url('/public/fonts/MuseoSans.woff') format('woff') !important;
+            font-weight: normal !important;
+            font-style: normal !important;
+        }
+
+body {
+  font-family: 'MuseoSans', sans-serif;
+  color: #082f49 !important;
 }
