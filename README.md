@@ -1,4 +1,4 @@
-# Laravel + PHP 8.1 + MySQL + Arquitectura Hexagonal Template
+# Laravel + PHP 8.1 + PostgreSQL + Arquitectura Hexagonal Template
 
 Esta plantilla backend cuenta con Laravel implementando Arquitectura Hexagonal (Ports & Adapters), diseñada para proporcionar una base sólida y escalable con separación clara de responsabilidades entre las capas de dominio, aplicación e infraestructura.
 
