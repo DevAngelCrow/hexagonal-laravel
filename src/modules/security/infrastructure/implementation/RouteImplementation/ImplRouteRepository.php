@@ -76,6 +76,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
     {
         try {
             $routeModels = RouteModel::orderBy("id")->paginate($per_page);
+          
             $data = array_map(fn($item) => $this->mapToDomain($item), $routeModels->items());
 
             $this->routesArray = [
@@ -87,7 +88,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
                     "total" => $routeModels->total()
                 ]
             ];
-
+            
             return $this->routesArray;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -124,13 +125,14 @@ class ImplRouteRepository implements RouteRepositoryInterface
     private function mapToDomain(RouteModel $route): Route
     {
         $permissionIds = null;
-
         if(!empty($route->permissions)){
             $permissionIds = collect($route->permissions->toArray())->map(
                 fn($permission) => new PermissionsId($permission['id'])
             )->toArray();
         }
 
+        $parentRoute = $route->parent ? $this->mapToDomain($route->parent) : null;
+        //dump($parentRoute);
         $routeMapped = new Route(
             new RoutesName($route->name),
             new RoutesDescription($route->description),
@@ -142,8 +144,10 @@ class ImplRouteRepository implements RouteRepositoryInterface
             new RoutesIdParent($route->id_parent),
             $permissionIds,
             new RoutesId($route->id),
+            $parentRoute
         );
 
+       
         return $routeMapped;
     }
 }

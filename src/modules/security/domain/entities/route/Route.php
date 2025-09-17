@@ -25,9 +25,11 @@ class Route{
     /** @var PermissionsId[] */
     private readonly ?array $permissionsId;
     private readonly ?RoutesId $id;
+    private readonly ?Route $parent;
 
     public function __construct(RoutesName $name, RoutesDescription $description, RoutesIcon $icon, RoutesUri $uri,
-    RoutesActive $active, RoutesShow $show, RoutesOrder $order, ?RoutesIdParent $id_parent = null,  ?array $permissionsId = null, ?RoutesId $id = null, 
+    RoutesActive $active, RoutesShow $show, RoutesOrder $order, ?RoutesIdParent $id_parent = null,  ?array $permissionsId = null, ?RoutesId $id = null,
+    ?Route $parent = null 
     )
     {
         $this->id_parent = $id_parent;
@@ -40,6 +42,9 @@ class Route{
         $this->order = $order;
         $this->permissionsId = $permissionsId;
         $this->id = $id;
+        $this->parent = $parent;
+
+         // Validar que cada elemento del array sea una instancia de PermissionsId
 
         if (!empty($this->permissionsId)) {
             foreach ($this->permissionsId as $permissionId) {
@@ -98,5 +103,9 @@ class Route{
     public function getPermissionsId(): array
     {
         return $this->permissionsId;
+    }
+    public function getParent(): ?Route
+    {
+        return $this->parent;
     }
 }
