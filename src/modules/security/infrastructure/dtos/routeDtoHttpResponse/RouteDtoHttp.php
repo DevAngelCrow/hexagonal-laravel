@@ -22,9 +22,6 @@ class RouteDtoHttp {
     }
 
     public static function fromEntity(Route $route) : self {
-
-        $parentDto = $route->getParent() ? self::fromEntity($route->getParent()) : null;
-
         return new self(
             $route->getName()->value(),
             $route->getDescription()->value(),
@@ -35,7 +32,6 @@ class RouteDtoHttp {
             $route->getOrder()->value(),
             $route->getIdParent()->value() ?: null,
             $route->getId()->value() ?: null,
-            $parentDto
         );
     }
 }
