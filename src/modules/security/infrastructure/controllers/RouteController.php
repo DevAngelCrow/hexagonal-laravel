@@ -95,7 +95,7 @@ class RouteController extends Controller
     public function getAllRoutesWithParent(GetAllRouteRequest $request) {
         $routesCollection = $this->routeGetAllRoutesWithParent->run($request->query("page"), $request->query("per_page"));
         
-        $collections = array_map(fn($item) => RouteAggregateDtoHttp::fromEntity($item), $routesCollection["data"]);
+        $collections = array_map(fn($item) => RouteAggregateDtoHttp::fromEntity($item)->toArray(), $routesCollection["data"]);
         
         $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $routesCollection["pagination"]);
         
