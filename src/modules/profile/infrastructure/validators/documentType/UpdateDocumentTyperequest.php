@@ -14,6 +14,7 @@ class UpdateDocumentTypeRequest extends BaseRequest {
             "name" => "required",
             "description" => "string",
             "active" => "boolean",
+            "mask"=>"string"
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace Src\modules\security\infrastructure\implementation\RouteImplementation
 use App\Models\MntRoute as RouteModel;
 use Exception;
 use LogicException;
+use Src\modules\security\domain\aggregate\routes\RouteWithChild;
 use Src\modules\security\domain\entities\route\Route;
 use Src\modules\security\domain\repositories\route\RouteRepositoryInterface;
 use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsId;
@@ -65,7 +66,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModel->id = $route->getId()->value();
             $routeModel->save();
 
-            $newPermissions = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissionsId() ?? [] );
+            $newPermissions = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissionsId() ?? []);
 
             $routeModel->permissions()->sync($newPermissions);
         } catch (Exception $e) {
@@ -76,6 +77,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
     {
         try {
             $routeModels = RouteModel::orderBy("id")->paginate($per_page);
+
             $data = array_map(fn($item) => $this->mapToDomain($item), $routeModels->items());
 
             $this->routesArray = [
@@ -121,16 +123,39 @@ class ImplRouteRepository implements RouteRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+    public function getAllRoutesWithParentData(int $page, int $per_page): array
+    {
+        try {
+            $routeModels = RouteModel::orderBy("id")->paginate($per_page);
+
+            $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $routeModels->items());
+            
+            $this->routesArray = [
+                "data" => $data,
+                "pagination" => [
+                    "current_page" => $routeModels->currentPage(),
+                    "last_page" => $routeModels->lastPage(),
+                    "per_page" => $routeModels->perPage(),
+                    "total" => $routeModels->total()
+                ]
+            ];
+
+            return $this->routesArray;
+        } catch (Exception $e) {
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
     private function mapToDomain(RouteModel $route): Route
     {
         $permissionIds = null;
-
-        if(!empty($route->permissions)){
+        if (!empty($route->permissions)) {
             $permissionIds = collect($route->permissions->toArray())->map(
                 fn($permission) => new PermissionsId($permission['id'])
             )->toArray();
         }
 
+        //$parentRoute = $route->parent ? $this->mapToDomain($route->parent) : null;
+        //dump($parentRoute);
         $routeMapped = new Route(
             new RoutesName($route->name),
             new RoutesDescription($route->description),
@@ -142,8 +167,37 @@ class ImplRouteRepository implements RouteRepositoryInterface
             new RoutesIdParent($route->id_parent),
             $permissionIds,
             new RoutesId($route->id),
+            //$parentRoute
         );
 
+
+        return $routeMapped;
+    }
+    private function mapToAggregateDomain(RouteModel $route): RouteWithChild
+    {
+        $parentRoute = $route->parent ? $this->mapToDomain($route->parent) : null;
+        $permissionIds = null;
+        if (!empty($route->permissions)) {
+            $permissionIds = collect($route->permissions->toArray())->map(
+                fn($permission) => new PermissionsId($permission['id'])
+            )->toArray();
+        }
+        $routeMapped = new RouteWithChild(
+            new Route(
+                new RoutesName($route->name),
+                new RoutesDescription($route->description),
+                new RoutesIcon($route->icon),
+                new RoutesUri($route->uri),
+                new RoutesActive($route->active),
+                new RoutesShow($route->show),
+                new RoutesOrder($route->order),
+                null,
+                $permissionIds,
+                new RoutesId($route->id),
+            ),
+            $parentRoute
+        );
+        
         return $routeMapped;
     }
 }

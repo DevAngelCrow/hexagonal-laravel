@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Src\modules\security\application\dtos\RouteDto;
 use Src\modules\security\application\useCases\route\RouteCreate;
 use Src\modules\security\application\useCases\route\RouteGetAll;
+use Src\modules\security\application\useCases\route\RouteGetAllRoutesWithParent;
 use Src\modules\security\application\useCases\route\RouteGetOneById;
 use Src\modules\security\application\useCases\route\RouteUpdate;
+use Src\modules\security\infrastructure\dtos\routeDtoHttpResponse\RouteAggregateDtoHttp;
 use Src\modules\security\infrastructure\dtos\routeDtoHttpResponse\RouteDtoHttp;
 use Src\modules\security\infrastructure\validators\route\CreateRouteRequest;
 use Src\modules\security\infrastructure\validators\route\GetAllRouteRequest;
@@ -24,17 +26,20 @@ class RouteController extends Controller
     protected RouteUpdate $routeUpdate;
     protected RouteGetAll $routeGetAll;
     protected RouteGetOneById $routeGetOneById;
+    protected RouteGetAllRoutesWithParent $routeGetAllRoutesWithParent;
 
     public function __construct(
         RouteCreate $route_create,
         RouteUpdate $route_update,
         RouteGetAll $route_get_all,
-        RouteGetOneById $route_get_one_by_id
+        RouteGetOneById $route_get_one_by_id,
+        RouteGetAllRoutesWithParent $route_get_all_routes_with_parent
     ) {
         $this->routeCreate = $route_create;
         $this->routeUpdate = $route_update;
         $this->routeGetAll = $route_get_all;
         $this->routeGetOneById = $route_get_one_by_id;
+        $this->routeGetAllRoutesWithParent = $route_get_all_routes_with_parent;
     }
 
     public function createRoute(CreateRouteRequest $request)
@@ -85,6 +90,15 @@ class RouteController extends Controller
         $routesCollection = $this->routeGetAll->run($request->query("page"), $request->query("per_page"));
         $collections = array_map(fn($item) => RouteDtoHttp::fromEntity($item), $routesCollection["data"]);
         $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $routesCollection["pagination"]);
+        return $this->success($paginateData, "Success");
+    }
+    public function getAllRoutesWithParent(GetAllRouteRequest $request) {
+        $routesCollection = $this->routeGetAllRoutesWithParent->run($request->query("page"), $request->query("per_page"));
+        
+        $collections = array_map(fn($item) => RouteAggregateDtoHttp::fromEntity($item), $routesCollection["data"]);
+        
+        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $routesCollection["pagination"]);
+        
         return $this->success($paginateData, "Success");
     }
 }

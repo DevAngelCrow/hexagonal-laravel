@@ -27,11 +27,11 @@ class MntRoute extends Model
     }
 
     public function parent() : BelongsTo {
-        return $this->belongsTo(MntRoute::class, "id");
+        return $this->belongsTo(MntRoute::class, "id_parent", "id");
     }
 
     public function children() : HasMany {
-        return $this->hasMany(MntRoute::class, "id_parent");
+        return $this->hasMany(MntRoute::class, "id_parent","id");
     }
 
     public function RoutePermissions() : BelongsToMany {
