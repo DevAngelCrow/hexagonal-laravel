@@ -81,13 +81,14 @@ class Register
             $registerDto->block,
             $registerDto->pathway,
             $registerDto->current,
-            $person->getId()->value()
+            $person->getId()->value(),
+            $registerDto->activeAddress
         );
 
         $this->addressCreateService->createAddressForUser($addressDto);
 
         $documentDto = new DocumentDto(
-            $registerDto->id_type_document,
+            (int)$registerDto->id_type_document,
             $person->getId()->value(),
             $registerDto->description,
             $registerDto->document_number,

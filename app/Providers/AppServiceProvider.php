@@ -38,11 +38,13 @@ use Src\modules\profile\infrastructure\implementation\PeopleRepositoryImplementa
 use Src\modules\profile\infrastructure\implementation\DocumentTypeRepositoryImplementation\ImplDocumentTypeRepository;
 use Src\modules\security\domain\entities\category_permissions\CategoryPermissions;
 use Src\modules\security\domain\entities\user_role\UserRole;
+use Src\modules\security\domain\ports\SecurityAuthorizationPortInterface;
 use Src\modules\security\domain\repositories\category_permissions\CategoryPermissionsRepositoryInterface;
 use Src\modules\security\domain\repositories\permissions\PermissionsRepositoryInterface;
 use Src\modules\security\domain\repositories\rol\RolRepositoryInterface;
 use Src\modules\security\domain\repositories\route\RouteRepositoryInterface;
 use Src\modules\security\domain\repositories\user_role\UserRoleRepositoryInterface;
+use Src\modules\security\infrastructure\implementation\AuthorizationPortImplementation\ImplAuthorizationPort;
 use Src\modules\security\infrastructure\implementation\CategoryPermissionsImplementation\ImplCategoryPermissionsRepository;
 use Src\modules\security\infrastructure\implementation\PermissionsImplementation\ImplPermissionsRepository;
 use Src\modules\security\infrastructure\implementation\RolImplementation\ImplRolRepository;
@@ -88,6 +90,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CredentialValidatorPortInterface::class, ImplCredentialValidatorPortInterface::class);
         $this->app->bind(HasVerifiedEmailPortInterface::class, ImplHasVerifiedEmailPortInterface::class);
         $this->app->bind(TokenGeneratorPortInterface::class, ImplTokenGeneratorPortInterface::class);
+        $this->app->bind(SecurityAuthorizationPortInterface::class, ImplAuthorizationPort::class);
 
         /*--------------------------------------------------
          |  CATALOGOS

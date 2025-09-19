@@ -37,9 +37,9 @@ class Login
 
         $is_verified = $this->hasVerifiedEmail->run($user_name);
 
-        if (!$is_verified) {
-            throw new ApplicationException("Por favor verifica tu correo antes de iniciar sesión", 403);
-        }
+        // if (!$is_verified) {
+        //     throw new ApplicationException("Por favor verifica tu correo antes de iniciar sesión", 403);
+        // }
 
        return $this->tokenGenerator->run($user_name);
 

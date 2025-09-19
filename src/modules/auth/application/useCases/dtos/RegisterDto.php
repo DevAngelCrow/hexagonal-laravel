@@ -38,6 +38,7 @@ class RegisterDto
         public readonly string $pathway,
         public readonly bool $current,
         public readonly ?int $idAddress = null,
+        public readonly bool $activeAddress,
 
         //document
         public readonly int $id_type_document,
