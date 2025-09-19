@@ -25,7 +25,8 @@ Route::prefix("auth")->group(base_path("src/modules/auth/infrastructure/routes/A
 
 
 Route::prefix('catalogs')->group(function () {
-    require base_path("src/modules/catalogs/marital/infrastructure/routes/MaritalRoutes.php");
+    require base_path("src/modules/catalogs/infrastructure/routes/MaritalRoutes.php");
+    require base_path("src/modules/catalogs/infrastructure/routes/GlobalStatusRoutes.php");
 });
 
 Route::prefix("security")->group(function () {

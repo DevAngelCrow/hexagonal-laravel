@@ -10,7 +10,12 @@ interface RouteRepositoryInterface {
     /**
      * @return Route[];
      */
-    public function getAll(int $page, int $per_page) : array;
+    public function getAll(?int $page, ?int $per_page) : array;
     public function getOneById(RoutesId $id): ?Route;
     public function delete(RoutesId $id) : void;
+
+    /**
+     * @return RouteWithChild[];
+     */
+    public function getAllRoutesWithParentData(int $page, int $per_page) : array;
 }

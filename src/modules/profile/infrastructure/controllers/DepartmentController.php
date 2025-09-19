@@ -8,8 +8,10 @@ use Src\modules\profile\application\dtos\DepartmentDto;
 use Src\modules\profile\application\useCases\department\DepartmentCreate;
 use Src\modules\profile\application\useCases\department\DepartmentDelete;
 use Src\modules\profile\application\useCases\department\DepartmentGetAll;
+use Src\modules\profile\application\useCases\department\DepartmentGetAllWithCountry;
 use Src\modules\profile\application\useCases\department\DepartmentGetOneById;
 use Src\modules\profile\application\useCases\department\DepartmentUpdate;
+use Src\modules\profile\infrastructure\dtos\departmentDtoHttpResponse\DepartmentAggregateDtoHttp;
 use Src\modules\profile\infrastructure\dtos\departmentDtoHttpResponse\DepartmentDtoHttp;
 use Src\modules\profile\infrastructure\validators\department\CreateDepartmentRequest;
 use Src\modules\profile\infrastructure\validators\department\DeleteDepartmentRequest;
@@ -26,6 +28,7 @@ class DepartmentController extends Controller
     protected DepartmentGetAll $departmentGetAll;
     protected DepartmentGetOneById $departmentGetOneById;
     protected DepartmentDelete $departmentDelete;
+    protected DepartmentGetAllWithCountry $departmentGetAllWithCountry;
 
     use HttpResponses;
 
@@ -35,12 +38,14 @@ class DepartmentController extends Controller
         DepartmentGetAll $department_get_all,
         DepartmentGetOneById $department_get_one_by_id,
         DepartmentDelete $department_delete,
+        DepartmentGetAllWithCountry $department_get_all_with_country
     ) {
         $this->departmentCreate = $department_create;
         $this->departmentUpdate = $department_update;
         $this->departmentGetAll = $department_get_all;
         $this->departmentGetOneById = $department_get_one_by_id;
         $this->departmentDelete = $department_delete;
+        $this->departmentGetAllWithCountry = $department_get_all_with_country;
     }
 
     public function createDepartment(CreateDepartmentRequest $request)
@@ -74,26 +79,38 @@ class DepartmentController extends Controller
     {
 
         $department = $this->departmentGetOneById->run($request->id);
-        
+
         return $this->success(DepartmentDtoHttp::fromEntity($department), "Success");
     }
     public function getAllDepartment(GetAllDepartmentRequest $request)
     {
-        $page = $request->query("page");
-        $per_page = $request->query("per_page");
+        $departmentCollection = $this->departmentGetAll->run($request->query("page"), $request->query("per_page"));
+        if($request->query("page") && $request->query("per_page")){
+            $collections = array_map(fn($item) => DepartmentDtoHttp::fromEntity($item), $departmentCollection["data"]);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $departmentCollection["pagination"]);
+            return $this->success($paginateData, "Success");
+        }
 
-        $departmentsCollection = $this->departmentGetAll->run($page, $per_page);
+        $data = array_map(fn($item) => DepartmentDtoHttp::fromEntity($item), $departmentCollection);
 
-        $collections = array_map(fn($item) => DepartmentDtoHttp::fromEntity($item), $departmentsCollection["data"]);
-
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $departmentsCollection["pagination"]);
-
-        return $this->success($paginateData, "Success");
+        return $this->success($data, "Success");
     }
     public function deleteDepartment(DeleteDepartmentRequest $request)
     {
         $this->departmentDelete->run($request->id);
 
         return $this->success([], "Registro de departamento borrado exitosamente");
+    }
+    public function getAllDepartmentWithCountry(GetAllDepartmentRequest $request) {
+        $page = $request->query("page");
+        $per_page = $request->query("per_page");
+
+        $districtsCollection = $this->departmentGetAllWithCountry->run($page, $per_page);
+
+        $collections = array_map(fn($item) => DepartmentAggregateDtoHttp::fromAggregate($item)->toArray(), $districtsCollection["data"]);
+
+        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
+
+        return $this->success($paginateData, "Success");
     }
 }

@@ -10,7 +10,8 @@ interface MunicipalityRepositoryInterface {
     /**
      * @return Municipality[];
      */
-    public function getAll(int $page, int $per_page) : array;
+    public function getAll(?int $page, ?int $per_page) : array;
     public function getOneById(MunicipalityId $id): ?Municipality;
-    public function delete(MunicipalityId $id) : void; 
+    public function delete(MunicipalityId $id) : void;
+    public function getAllWithDepartment(int $page, int $per_page) : array;
 }

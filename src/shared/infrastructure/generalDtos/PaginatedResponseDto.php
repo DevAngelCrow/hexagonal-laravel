@@ -11,6 +11,7 @@ class PaginatedResponseDto {
     }
 
     public static function fromPaginatedResponse(mixed $data,mixed $pagination){
+        
         return new self(
             $data,
             $pagination

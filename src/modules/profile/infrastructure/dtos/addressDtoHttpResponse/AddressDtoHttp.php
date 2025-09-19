@@ -16,7 +16,8 @@ class AddressDtoHttp
         public readonly string $block,
         public readonly string $pathway,
         public readonly bool $current,
-        public readonly int $id_people
+        public readonly int $id_people,
+        public readonly bool $active
     ) {}
 
     public static function fromEntity(Address $address){
@@ -32,6 +33,7 @@ class AddressDtoHttp
             $address->getPathway()->value(),
             $address->getCurrent()->value(),
             $address->getIdPeople()->value(),
+            $address->getActive()->value()
         );
     }
 }

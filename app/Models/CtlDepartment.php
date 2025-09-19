@@ -21,6 +21,6 @@ class CtlDepartment extends Model
         return $this->hasMany(CtlMunicipality::class);
     }
     public function country() : BelongsTo {
-        return $this->belongsTo(CtlCountry::class);
+        return $this->belongsTo(CtlCountry::class, 'id_country', 'id');
     }
 }

@@ -64,20 +64,32 @@ class ImplCountryRepository implements CountryRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(int $page, int $per_page): array
+    public function getAll(?int $page, ?int $per_page): array
     {
         try {
-            $countriesModels = CountryModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToDomain($item), $countriesModels->items());
-            $this->countriesArray = [
-                "data" => $data,
-                "pagination" => [
-                    'current_page' => $countriesModels->currentPage(),
-                    'last_page' => $countriesModels->lastPage(),
-                    'per_page' => $countriesModels->perPage(),
-                    'total' => $countriesModels->total(),
-                ]
-            ];
+            $query = CountryModel::select('id', 'name', 'abbreviation', 'code', 'active')->orderBy('id');
+
+            if ($page !== null && $per_page !== null) {
+
+                $countriesModels = $query->paginate($per_page);
+
+                $data = array_map(fn($item) => $this->mapToDomain($item), $countriesModels->items());
+
+                $this->countriesArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        'current_page' => $countriesModels->currentPage(),
+                        'last_page' => $countriesModels->lastPage(),
+                        'per_page' => $countriesModels->perPage(),
+                        'total' => $countriesModels->total(),
+                    ]
+                ];
+
+                return $this->countriesArray;
+            }
+
+            $countriesModels = $query->get();
+            $this->countriesArray = array_map(fn($item) => $this->mapToDomain($item), $countriesModels->all());
 
             return $this->countriesArray;
         } catch (Exception $e) {

@@ -2,6 +2,7 @@
 
 namespace Src\modules\profile\domain\entities\address;
 
+use Src\modules\profile\domain\value_objects\address_value_object\AddressActive;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressBlock;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressHouseNumber;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressId;
@@ -25,6 +26,7 @@ class Address
     private readonly AddressPathway $pathway;
     private readonly AddressCurrent $current;
     private readonly AddressIdPeople $id_people;
+    private readonly AddressActive $active;
 
     public function __construct(
         AddressStreet $street,
@@ -36,6 +38,7 @@ class Address
         AddressPathway $pathway,
         AddressCurrent $current,
         AddressIdPeople $id_people,
+        AddressActive $active,
         ?AddressId $id = null,
     ) {
 
@@ -49,6 +52,7 @@ class Address
         $this->pathway = $pathway;
         $this->current = $current;
         $this->id_people = $id_people;
+        $this->active = $active;
     }
 
     public function getId(): ?AddressId
@@ -99,5 +103,9 @@ class Address
     public function getIdPeople(): AddressIdPeople
     {
         return $this->id_people;
+    }
+
+    public function getActive() : AddressActive {
+        return $this->active;
     }
 }

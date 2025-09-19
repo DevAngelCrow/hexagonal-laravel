@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-
+use App\Notifications\VerifyEmailQueued;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,6 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 
 class MntUser extends Authenticatable implements MustVerifyEmail
@@ -62,7 +63,7 @@ class MntUser extends Authenticatable implements MustVerifyEmail
         if (!$this->relationLoaded('people')) {
             $this->load('people');
         }
-        Log::info($this->people->email);
+        //Log::info($this->people->email);
         return $this->people->email;
     }
 
@@ -76,11 +77,10 @@ class MntUser extends Authenticatable implements MustVerifyEmail
         return $this->forceFill(["is_validated" => true, "email_verified_at" => now()])->save();
     }
 
-    // public function sendEmailVerificationNotification()
-    // {
-    //     Log::info('Enviando verificación a: ' . $this->getEmailForVerification());
-    //     parent::sendEmailVerificationNotification();
-    // }
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify((new VerifyEmailQueued));
+    }
 
     public function routeNotificationForMail($notification)
     {

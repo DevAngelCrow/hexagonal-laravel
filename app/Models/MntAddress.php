@@ -29,6 +29,6 @@ class MntAddress extends Model
         return $this->belongsTo(MntPeople::class);
     }
     public function district() : BelongsTo{
-        return $this->belongsTo(CtlDistrict::class);
+        return $this->belongsTo(CtlDistrict::class, 'id_district', 'id');
     }
 }

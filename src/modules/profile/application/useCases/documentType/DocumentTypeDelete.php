@@ -2,7 +2,7 @@
 namespace Src\modules\profile\application\useCases\documentType;
 use Src\modules\profile\domain\repositories\documentType\DocumentTypeRepositoryInterface;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeId;
-use Src\shared\domain\ApplicationException;
+use Src\shared\application\exceptions\ApplicationException;
 use Src\shared\domain\HttpStatusCode;
 
 class DocumentTypeDelete {

@@ -9,6 +9,9 @@ use Src\modules\profile\domain\value_objects\address_value_object\AddressId;
 use App\Models\MntAddress as AddressModel;
 use ErrorException;
 use Exception;
+use Src\modules\profile\domain\aggregate\address\AddressWithDistrict;
+use Src\modules\profile\domain\entities\district\District;
+use Src\modules\profile\domain\value_objects\address_value_object\AddressActive;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressBlock;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressCurrent;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressHouseNumber;
@@ -18,6 +21,11 @@ use Src\modules\profile\domain\value_objects\address_value_object\AddressNeighbo
 use Src\modules\profile\domain\value_objects\address_value_object\AddressPathway;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressStreet;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressStreetNumber;
+use Src\modules\profile\domain\value_objects\district_value_object\DistrictDescription;
+use Src\modules\profile\domain\value_objects\district_value_object\DistrictId;
+use Src\modules\profile\domain\value_objects\district_value_object\DistrictIdMunicipality;
+use Src\modules\profile\domain\value_objects\district_value_object\DistrictName;
+use Src\modules\profile\domain\value_objects\district_value_object\DistrictState;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,6 +46,7 @@ class ImplAddressRepository implements AddressRepositoryInterface
             $addressModel->block = $address->getBlock()->value();
             $addressModel->pathway = $address->getPathway()->value();
             $addressModel->current = $address->getCurrent()->value();
+            $addressModel->active = $address->getActive()->value();
             $addressModel->save();
         } catch (ErrorException $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -57,6 +66,7 @@ class ImplAddressRepository implements AddressRepositoryInterface
             $addressModel->block = $address->getBlock()->value();
             $addressModel->pathway = $address->getPathway()->value();
             $addressModel->current = $address->getCurrent()->value();
+            $addressModel->active = $address->getActive()->value();
 
             $addressModel->save();
         } catch (ErrorException $e) {
@@ -68,7 +78,7 @@ class ImplAddressRepository implements AddressRepositoryInterface
         try {
             $addressModels =  AddressModel::orderBy("id")->paginate($per_page);
             $data = array_map(fn($item) => $this->mapToDomain($item), $addressModels->items());
-            
+
             $this->addressArray = [
                 "data" => $data,
                 "pagination" => [
@@ -86,19 +96,18 @@ class ImplAddressRepository implements AddressRepositoryInterface
     }
     public function getOneById(AddressId $id): ?Address
     {
-        try{
+        try {
 
             $addressDb = AddressModel::where("id", $id->value())->first();
 
-            if(!$addressDb){
+            if (!$addressDb) {
                 throw new InfrastructureException("identificador de dirección no encontrada", Response::HTTP_NOT_FOUND);
             }
 
             $address = $this->mapToDomain($addressDb);
 
             return $address;
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -110,12 +119,31 @@ class ImplAddressRepository implements AddressRepositoryInterface
             $addressDb->current = false;
             $addressDb->save();
             $addressDb->delete();
-            
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    public function getAllWithDistrict(int $page, int $per_page): array
+    {
+        try {
+            $addressModels =  AddressModel::orderBy("id")->paginate($per_page);
+            $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $addressModels->items());
+
+            $this->addressArray = [
+                "data" => $data,
+                "pagination" => [
+                    'current_page' => $addressModels->currentPage(),
+                    'last_page' => $addressModels->lastPage(),
+                    'per_page' => $addressModels->perPage(),
+                    'total' => $addressModels->total(),
+                ]
+            ];
+            return $this->addressArray;
+        } catch (Exception $e) {
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
     private function mapToDomain(AddressModel $address): Address
     {
         return new Address(
@@ -128,7 +156,44 @@ class ImplAddressRepository implements AddressRepositoryInterface
             new AddressPathway($address->pathway),
             new AddressCurrent($address->current),
             new AddressIdPeople($address->id_people),
+            new AddressActive($address->active),
             new AddressId($address->id)
         );
+    }
+    private function mapToAggregateDomain(AddressModel $address): AddressWithDistrict
+    {
+        $district = $this->mapToDomainDistrict($address);
+        $addressMapped = new AddressWithDistrict(
+            new Address(
+                new AddressStreet($address->street),
+                new AddressStreetNumber($address->street_number),
+                new AddressNeighborhood($address->neighborhood),
+                new AddressIdDistrict($address->id_district),
+                new AddressHouseNumber($address->house_number),
+                new AddressBlock($address->block),
+                new AddressPathway($address->pathway),
+                new AddressCurrent($address->current),
+                new AddressIdPeople($address->id_people),
+                new AddressActive($address->active),
+                new AddressId($address->id)
+            ),
+            $district
+        );
+
+        return $addressMapped;
+    }
+    private function mapToDomainDistrict(AddressModel $address): District
+    {
+        //dd($address);
+        $district = $address->district;
+        
+        $districtMapped = new District(
+            new DistrictIdMunicipality($district->id_municipality),
+            new DistrictName($district->name),
+            new DistrictDescription($district->description),
+            new DistrictState($district->active),
+            new DistrictId($district->id)
+        );
+        return $districtMapped;
     }
 }

@@ -13,8 +13,10 @@ use Src\modules\auth\infrastructure\implementation\AuthPortImplementation\ImplCr
 use Src\modules\auth\infrastructure\implementation\AuthPortImplementation\ImplHasVerifiedEmailPortInterface;
 use Src\modules\auth\infrastructure\implementation\AuthPortImplementation\ImplTokenGeneratorPortInterface;
 use Src\modules\auth\infrastructure\implementation\UserRepositoryImplementation\ImplUserRepository;
-use Src\modules\catalogs\marital\domain\repositories\IMaritalStatusRepository;
-use Src\modules\catalogs\marital\infrastructure\repositories\MaritalStatusRepositoryImpl;
+use Src\modules\catalogs\domain\repositories\GlobalStatusRepositoryInterface;
+use Src\modules\catalogs\domain\repositories\IMaritalStatusRepository;
+use Src\modules\catalogs\infrastructure\implementation\GlobalRepositoryImplementation\ImplGlobalStatusRepository;
+use Src\modules\catalogs\infrastructure\implementation\MaritalStatusRepositoryImplementation\MaritalStatusRepositoryImpl;
 use Src\modules\profile\domain\repositories\address\AddressRepositoryInterface;
 use Src\modules\profile\domain\repositories\country\CountryRepositoryInterface;
 use Src\modules\profile\domain\repositories\department\DepartmentRepositoryInterface;
@@ -24,7 +26,6 @@ use Src\modules\profile\domain\repositories\gender\GenderRepositoryInterface;
 use Src\modules\profile\domain\repositories\municipality\MunicipalityRepositoryInterface;
 use Src\modules\profile\domain\repositories\people\PeopleRepositoryInterface;
 use Src\modules\profile\domain\repositories\documentType\DocumentTypeRepositoryInterface;
-use Src\modules\catalogs\global_status\domain\repositories\GlobalStatusRepositoryInterface;
 
 use Src\modules\profile\infrastructure\implementation\GenderRepositoryImplementation\ImplGenderRepository;
 use Src\modules\profile\infrastructure\implementation\AddressRepositoryImplementation\ImplAddressRepository;
@@ -35,7 +36,6 @@ use Src\modules\profile\infrastructure\implementation\DocumentRepositoryImplemen
 use Src\modules\profile\infrastructure\implementation\MunicipalityRepositoryImplementation\ImplMunicipalityRepository;
 use Src\modules\profile\infrastructure\implementation\PeopleRepositoryImplementation\ImplPeopleRepository;
 use Src\modules\profile\infrastructure\implementation\DocumentTypeRepositoryImplementation\ImplDocumentTypeRepository;
-use Src\modules\catalogs\global_status\infraestructure\implementation\ImplGlobalStatusRepository;
 use Src\modules\security\domain\entities\category_permissions\CategoryPermissions;
 use Src\modules\security\domain\entities\user_role\UserRole;
 use Src\modules\security\domain\repositories\category_permissions\CategoryPermissionsRepositoryInterface;
@@ -85,7 +85,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProviderStorageRepositoryInterface::class, ImplProviderStoreRepository::class);
         $this->app->bind(StorageFilesRepositoryInterface::class, ImplStorageFilesRepository::class);
         $this->app->bind(UserRoleRepositoryInterface::class, ImplUserRoleRepository::class);
-        $this->app->bind(GlobalStatusRepositoryInterface::class, ImplGlobalStatusRepository::class);
         $this->app->bind(CredentialValidatorPortInterface::class, ImplCredentialValidatorPortInterface::class);
         $this->app->bind(HasVerifiedEmailPortInterface::class, ImplHasVerifiedEmailPortInterface::class);
         $this->app->bind(TokenGeneratorPortInterface::class, ImplTokenGeneratorPortInterface::class);
@@ -101,6 +100,10 @@ class AppServiceProvider extends ServiceProvider
             IMaritalStatusRepository::class,
             MaritalStatusRepositoryImpl::class
         );
+        $this->app->bind(
+            GlobalStatusRepositoryInterface::class,
+            ImplGlobalStatusRepository::class
+        );
     }
 
     /**
@@ -109,12 +112,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        VerifyEmail::toMailUsing(function (object $notifiable, string $url){
-            $frontendUrl = config('app.frontend_url').'?url='. urlencode($url);
-            return (new MailMessage)
-            ->subject('Verificar direccion de correo electronico')
-            ->line('Por favor haz clic en el botón de abajo para verificar tu dirección de correo electrónico.')
-            ->action('Verificar correo', $frontendUrl);
-        });
+        // VerifyEmail::toMailUsing(function (object $notifiable, string $url){
+        //     $frontendUrl = config('app.frontend_url').'?url='. urlencode($url);
+        //     return (new MailMessage)
+        //     ->subject('Verificar direccion de correo electronico')
+        //     ->line('Por favor haz clic en el botón de abajo para verificar tu dirección de correo electrónico.')
+        //     ->action('Verificar correo', $frontendUrl);
+        // });
     }
 }

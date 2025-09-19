@@ -12,7 +12,7 @@ use Exception;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeName;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeDescription;
 use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeActive;
-
+use Src\modules\profile\domain\value_objects\documentType_value_object\DocumentTypeMask;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,6 +28,7 @@ class ImplDocumentTypeRepository implements DocumentTypeRepositoryInterface
             $documentTypeModel->name = $documentType->getName()->value();
             $documentTypeModel->description = $documentType->getDescription()->value();
             $documentTypeModel->active = $documentType->getActive()->value();
+            $documentTypeModel->mask = $documentType->getMask()->value();
             $documentTypeModel->save();
         } catch (ErrorException $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -42,26 +43,40 @@ class ImplDocumentTypeRepository implements DocumentTypeRepositoryInterface
             $documentTypeModel->name = $documentType->getName()->value();
             $documentTypeModel->description = $documentType->getDescription()->value();
             $documentTypeModel->active = $documentType->getActive()->value();
+            $documentTypeModel->mask = $documentType->getMask()->value();
             $documentTypeModel->save();
         } catch (ErrorException $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(?int $page = 1, ?int $per_page = 10): array
+    public function getAll(?int $page, ?int $per_page): array
     {
         try {
-            $documentTypeModels =  DocumentTypeModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToDomain($item), $documentTypeModels->items());
 
-            $this->documentTypeArray = [
-                "data" => $data,
-                "pagination" => [
-                    'current_page' => $documentTypeModels->currentPage(),
-                    'last_page' => $documentTypeModels->lastPage(),
-                    'per_page' => $documentTypeModels->perPage(),
-                    'total' => $documentTypeModels->total(),
-                ]
-            ];
+            $query = DocumentTypeModel::select('id', 'name', 'description', 'active', 'mask')->orderBy('id');
+
+            if ($page !== null && $per_page !== null) {
+
+                $documentTypeModels = $query->paginate($per_page);
+
+                $data = array_map(fn($item) => $this->mapToDomain($item), $documentTypeModels->items());
+
+                $this->documentTypeArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        'current_page' => $documentTypeModels->currentPage(),
+                        'last_page' => $documentTypeModels->lastPage(),
+                        'per_page' => $documentTypeModels->perPage(),
+                        'total' => $documentTypeModels->total(),
+                    ]
+                ];
+
+                return $this->documentTypeArray;
+            }
+
+            $documentTypeModels = $query->get();
+            $this->documentTypeArray = array_map(fn($item) => $this->mapToDomain($item), $documentTypeModels->all());
+
             return $this->documentTypeArray;
         } catch (Exception $e) {
 
@@ -70,19 +85,18 @@ class ImplDocumentTypeRepository implements DocumentTypeRepositoryInterface
     }
     public function getOneById(DocumentTypeId $id): ?DocumentType
     {
-        try{
+        try {
 
             $documentTypeDb = DocumentTypeModel::where("id", $id->value())->first();
 
-            if(!$documentTypeDb){
+            if (!$documentTypeDb) {
                 throw new InfrastructureException("identificador de documentType no encontrada", Response::HTTP_NOT_FOUND);
             }
 
             $document = $this->mapToDomain($documentTypeDb);
 
             return $document;
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -94,7 +108,6 @@ class ImplDocumentTypeRepository implements DocumentTypeRepositoryInterface
             $documentTypeDb->current = false;
             $documentTypeDb->save();
             $documentTypeDb->delete();
-
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -106,6 +119,7 @@ class ImplDocumentTypeRepository implements DocumentTypeRepositoryInterface
             new DocumentTypeName($document->name),
             new DocumentTypeDescription($document->description),
             new DocumentTypeActive($document->active),
+            new DocumentTypeMask($document->mask),
             new DocumentTypeId($document->id),
         );
     }

@@ -15,6 +15,7 @@ class AddressDto {
         public readonly string $pathway,
         public readonly bool $current,
         public readonly int $id_people,
+        public readonly bool $active,
         public readonly ?int $id = null){     
     }
 

@@ -10,7 +10,7 @@ interface DocumentTypeRepositoryInterface{
     /**
      * @return DocumentType[];
      */
-    public function getAll(int $page, int $per_page) : array;
+    public function getAll(?int $page, ?int $per_page) : array;
     public function getOneById(DocumentTypeId $id): ?DocumentType;
     public function delete(DocumentTypeId $id) : void;
 }

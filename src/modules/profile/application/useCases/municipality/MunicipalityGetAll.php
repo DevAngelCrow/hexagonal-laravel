@@ -11,7 +11,7 @@ class MunicipalityGetAll {
         $this->municipalityRepository = $municipality_repository;
     }
 
-    public function run(int $page, int $per_page) : array {
+    public function run(?int $page, ?int $per_page) : array {
         return $this->municipalityRepository->getAll($page, $per_page);
     }
 }

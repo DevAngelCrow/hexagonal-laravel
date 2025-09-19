@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CtlGlobalStatus extends Model
 {
-    protected $table = "ctl_global_status";
+    protected $table = "ctl_status";
     protected $fillable = [
         "name",
         "description",

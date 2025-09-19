@@ -14,7 +14,8 @@ class RouteDtoHttp {
         public readonly bool $show,
         public readonly int $order,
         public readonly ?int $id_parent = null,
-        public readonly ?int $id = null
+        public readonly ?int $id = null,
+        public readonly mixed $parent = null
     )
     {
         
@@ -30,7 +31,7 @@ class RouteDtoHttp {
             $route->getShow()->value(),
             $route->getOrder()->value(),
             $route->getIdParent()->value() ?: null,
-            $route->getId()->value() ?: null
+            $route->getId()->value() ?: null,
         );
     }
 }

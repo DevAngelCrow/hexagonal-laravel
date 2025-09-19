@@ -11,7 +11,7 @@ class DepartmentGetAll {
         $this->departmentRepository = $department_repository;
     }
 
-    public function run(int $page, int $per_page) : array {
+    public function run(?int $page, ?int $per_page) : array {
         return $this->departmentRepository->getAll($page, $per_page);
     }
 }

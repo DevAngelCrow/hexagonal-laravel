@@ -30,9 +30,12 @@ class DocumentTypeController extends Controller
 
     protected DocumentTypeDelete $documentTypeDelete;
 
-    public function __construct(DocumentTypeCreate $document_create, DocumentTypeGetAll $document_get_all,
-    DocumentTypeGetOneById $document_get_one_by_id, DocumentTypeUpdate $document_update)
-    {
+    public function __construct(
+        DocumentTypeCreate $document_create,
+        DocumentTypeGetAll $document_get_all,
+        DocumentTypeGetOneById $document_get_one_by_id,
+        DocumentTypeUpdate $document_update
+    ) {
         $this->documentCreate = $document_create;
         $this->documentGetAll = $document_get_all;
         $this->documentGetOneById = $document_get_one_by_id;
@@ -41,42 +44,49 @@ class DocumentTypeController extends Controller
 
     public function createDocumentType(CreateDocumentTypeRequest $request)
     {
-            $documentDto = new DocumentTypeDto(
-                $request->name,
-                $request->description,
-                $request->active,
-            );
+        $documentDto = new DocumentTypeDto(
+            $request->name,
+            $request->description,
+            $request->active,
+            $request->mask,
+        );
 
-            $this->documentCreate->run($documentDto);
-            return $this->created([], "Tipo de Documento creado satisfactoriamente");
-
+        $this->documentCreate->run($documentDto);
+        return $this->created([], "Tipo de Documento creado satisfactoriamente");
     }
 
-    public function updateDocumentType(UpdateDocumentTypeRequest $request){
+    public function updateDocumentType(UpdateDocumentTypeRequest $request)
+    {
 
-            $documentDto = new DocumentTypeDto(
-                $request->name,
-                $request->description,
-                $request->active,
-                (int) $request->id,
-            );
-            $this->documentUpdate->run($documentDto);
+        $documentDto = new DocumentTypeDto(
+            $request->name,
+            $request->description,
+            $request->active,
+            $request->mask,
+            (int) $request->id,
+        );
+        $this->documentUpdate->run($documentDto);
 
-            return $this->success([], "Tipo de Documento actualizado con éxito");
+        return $this->success([], "Tipo de Documento actualizado con éxito");
     }
-    public function getAllDocumentType(GetAllDocumentTypeRequest $request){
+    public function getAllDocumentType(GetAllDocumentTypeRequest $request)
+    {
 
 
         $documentCollection = $this->documentGetAll->run($request->query('page'), $request->query('per_page'));
+        //dd($documentCollection);
+        if ($request->query("page") !== null &&  $request->query("per_page") !== null ) {
+            $collections = array_map(fn($item) => DocumentTypeDtoHttp::fromEntity($item), $documentCollection["data"]);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $documentCollection["pagination"]);
+            return $this->success($paginateData, "Success");
+        }
 
-        $collections = array_map(fn($item) => DocumentTypeDtoHttp::fromEntity($item), $documentCollection["data"]);
-
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $documentCollection['pagination']);
-
-        return $this->success($paginateData, "Success");
+        $data = array_map(fn($item) => DocumentTypeDtoHttp::fromEntity($item), $documentCollection);
+        return $this->success($data, "Success");
     }
 
-    public function getOneByIdDocumentType(GetByIdDocumentTypeRequest $request){
+    public function getOneByIdDocumentType(GetByIdDocumentTypeRequest $request)
+    {
 
 
         $document = $this->documentGetOneById->run($request->id);

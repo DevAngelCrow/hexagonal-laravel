@@ -13,6 +13,7 @@ use Src\modules\profile\application\services\document\DocumentCreateService;
 use Src\modules\profile\application\services\people\PeopleCreateService;
 use Src\modules\storage\application\dtos\StorageFilesDto;
 use Src\modules\storage\application\services\storageFiles\StorageFilesUploadService;
+use Src\shared\application\exceptions\ApplicationException;
 use Src\shared\domain\repositories\UnitOfWorkTransactionDbInterface;
 
 class Register
@@ -44,7 +45,8 @@ class Register
     public function run(
         RegisterDto $registerDto, string $providerStorageCode
     ) {
-        $this->transaction->beginTransaction();
+        try{
+            $this->transaction->beginTransaction();
 
         $storageFileDto = new StorageFilesDto(
             $registerDto->fileImg,
@@ -106,5 +108,9 @@ class Register
 
 
         $this->transaction->commit();
+        }catch(ApplicationException $error){
+            $this->transaction->rollback();
+        }
+        
     }
 }

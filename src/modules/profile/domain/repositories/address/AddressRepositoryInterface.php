@@ -12,4 +12,5 @@ interface AddressRepositoryInterface{
     public function getAll(int $page, int $per_page) : array;
     public function getOneById(AddressId $id): ?Address;
     public function delete(AddressId $id) : void;
+    public function getAllWithDistrict(int $page, int $per_page) : array;
 }

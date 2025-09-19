@@ -9,6 +9,7 @@ class CreateDocumentTypeRequest extends BaseRequest {
             "name"=>"required|string",
             "description"=>"string",
             "active"=>"boolean",
+            "mask"=>"string"
         ];
     }
 }
