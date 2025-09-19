@@ -73,24 +73,37 @@ class ImplRouteRepository implements RouteRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(int $page, int $per_page): array
+    public function getAll(?int $page, ?int $per_page): array
     {
         try {
-            $routeModels = RouteModel::orderBy("id")->paginate($per_page);
 
-            $data = array_map(fn($item) => $this->mapToDomain($item), $routeModels->items());
+            $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order')->orderBy('id');
+            //$routeModels = RouteModel::orderBy("id")->paginate($per_page);
+            //dump($page, $per_page);
+            if ($page !== null && $per_page !== null) {
+                
+                $routeModels = $query->paginate($per_page);
 
-            $this->routesArray = [
-                "data" => $data,
-                "pagination" => [
-                    "current_page" => $routeModels->currentPage(),
-                    "last_page" => $routeModels->lastPage(),
-                    "per_page" => $routeModels->perPage(),
-                    "total" => $routeModels->total()
-                ]
-            ];
+                $data = array_map(fn($item) => $this->mapToDomain($item), $routeModels->items());
 
+                return $this->routesArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        "current_page" => $routeModels->currentPage(),
+                        "last_page" => $routeModels->lastPage(),
+                        "per_page" => $routeModels->perPage(),
+                        "total" => $routeModels->total()
+                    ]
+                ];
+            }
+
+            $routeModels = $query->get();
+
+
+            $this->routesArray = array_map(fn($item) => $this->mapToDomain($item), $routeModels->all());
+            
             return $this->routesArray;
+
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -129,7 +142,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModels = RouteModel::orderBy("id")->paginate($per_page);
 
             $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $routeModels->items());
-            
+
             $this->routesArray = [
                 "data" => $data,
                 "pagination" => [
@@ -197,7 +210,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
             ),
             $parentRoute
         );
-        
+
         return $routeMapped;
     }
 }
