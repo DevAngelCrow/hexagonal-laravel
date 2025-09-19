@@ -6,8 +6,8 @@ use Src\modules\profile\domain\exceptions\DocumentTypeException;
 
 class DocumentTypeMask
 {
-    private string $value;
-    public function __construct(string $value)
+    private ?string $value;
+    public function __construct(?string $value = null)
     {
         $this->value = $value;
         //$this->required();
@@ -21,7 +21,7 @@ class DocumentTypeMask
     // }
 
 
-    public function value() : string {
+    public function value() : ?string {
         return $this->value;
     }
 }

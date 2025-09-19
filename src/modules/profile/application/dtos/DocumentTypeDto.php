@@ -9,7 +9,7 @@ class DocumentTypeDto {
         public readonly string $name,
         public readonly string $description,
         public readonly bool $active,
-        public readonly string $mask,
+        public readonly ?string $mask,
         public readonly ?int $id = null){
     }
 

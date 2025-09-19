@@ -11,7 +11,7 @@ class DocumentTypeDtoHttp
         public readonly string $name,
         public readonly string $description,
         public readonly bool $active,
-        public readonly string $mask
+        public readonly ?string $mask = null
     ) {}
 
     public static function fromEntity(DocumentType $documentType){

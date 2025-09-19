@@ -74,7 +74,7 @@ class CountryController extends Controller
     {
 
         $country = $this->countryGetOneById->run($request->id);
-        
+
         return $this->success(CountryDtoHttp::fromEntity($country), "Success");
     }
     public function getAllCountry(GetAllCountriesRequest $request)
@@ -83,12 +83,17 @@ class CountryController extends Controller
         $per_page = $request->query("per_page");
 
         $countriesCollection = $this->countryGetAll->run($page, $per_page);
+        if ($page !== null && $per_page !== null) {
+            
+            $collections = array_map(fn($item) => CountryDtoHttp::fromEntity($item), $countriesCollection["data"]);
 
-        $collections = array_map(fn($item) => CountryDtoHttp::fromEntity($item), $countriesCollection["data"]);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $countriesCollection["pagination"]);
 
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $countriesCollection["pagination"]);
+            return $this->success($paginateData, "Success");
+        }
 
-        return $this->success($paginateData, "Success");
+        $data = array_map(fn($item) => CountryDtoHttp::fromEntity($item), $countriesCollection);
+        return $this->success($data, "Success");
     }
     public function deleteCountry(DeleteCountryRequest $request)
     {

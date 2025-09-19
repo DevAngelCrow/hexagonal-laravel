@@ -11,7 +11,7 @@ class CountryGetAll {
         $this->countryRepository = $country_repository;
     }
 
-    public function run(int $page, int $per_page) : array {
+    public function run(?int $page, ?int $per_page) : array {
         return $this->countryRepository->getAll($page, $per_page);
     }
 }
