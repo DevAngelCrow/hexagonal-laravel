@@ -4,6 +4,7 @@ namespace Src\modules\profile\application\useCases\address;
 use Src\modules\profile\application\dtos\AddressDto;
 use Src\modules\profile\domain\entities\address\Address;
 use Src\modules\profile\domain\repositories\address\AddressRepositoryInterface;
+use Src\modules\profile\domain\value_objects\address_value_object\AddressActive;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressBlock;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressCurrent;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressHouseNumber;
@@ -45,6 +46,7 @@ class AddressUpdate {
             new AddressPathway($address->pathway),
             new AddressCurrent($address->current),
             new AddressIdPeople($address->id_people),
+            new AddressActive($address->active),
             new AddressId($address->id)
         );
 

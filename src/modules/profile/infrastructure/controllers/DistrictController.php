@@ -8,13 +8,14 @@ use Src\modules\profile\application\dtos\DistrictDto;
 use Src\modules\profile\application\useCases\district\DistrictCreate;
 use Src\modules\profile\application\useCases\district\DistrictDelete;
 use Src\modules\profile\application\useCases\district\DistrictGetAll;
+use Src\modules\profile\application\useCases\district\DistrictGetAllDistrictWithMunicipality;
 use Src\modules\profile\application\useCases\district\DistrictGetOneById;
 use Src\modules\profile\application\useCases\district\DistrictUpdate;
+use Src\modules\profile\infrastructure\dtos\districtDtoHttpResponse\DistrictAggregateDtoHttp;
 use Src\modules\profile\infrastructure\dtos\districtDtoHttpResponse\DistrictDtoHttp;
-use Src\modules\profile\infrastructure\validators\address\GetAllAddressRequest;
 use Src\modules\profile\infrastructure\validators\district\CreateDistrictRequest;
 use Src\modules\profile\infrastructure\validators\district\DeleteDistrictRequest;
-use Src\modules\profile\infrastructure\validators\district\GetAllDistrict;
+use Src\modules\profile\infrastructure\validators\district\GetAllDistrictRequest;
 use Src\modules\profile\infrastructure\validators\district\GetByIdDistrictRequest;
 use Src\shared\infrastructure\generalDtos\PaginatedResponseDto;
 use Src\shared\infrastructure\HttpResponses;
@@ -26,6 +27,7 @@ class DistrictController extends Controller
     protected DistrictGetAll $districtGetAll;
     protected DistrictGetOneById $districtGetOneById;
     protected DistrictDelete $districtDelete;
+    protected DistrictGetAllDistrictWithMunicipality $districtGetAllDistrictWithMunicipality;
 
     use HttpResponses;
 
@@ -35,12 +37,14 @@ class DistrictController extends Controller
         DistrictGetAll $district_get_all,
         DistrictGetOneById $district_get_one_by_id,
         DistrictDelete $district_delete,
+        DistrictGetAllDistrictWithMunicipality $district_get_all_district_with_municipality
     ) {
         $this->districtCreate = $district_create;
         $this->districtUpdate = $district_update;
         $this->districtGetAll = $district_get_all;
         $this->districtGetOneById = $district_get_one_by_id;
         $this->districtDelete = $district_delete;
+        $this->districtGetAllDistrictWithMunicipality = $district_get_all_district_with_municipality;
     }
 
     public function createDistrict(CreateDistrictRequest $request)
@@ -77,7 +81,7 @@ class DistrictController extends Controller
         
         return $this->success(DistrictDtoHttp::fromEntity($district), "Success");
     }
-    public function getAllDistrict(GetAllAddressRequest $request)
+    public function getAllDistrict(GetAllDistrictRequest $request)
     {
         $page = $request->query("page");
         $per_page = $request->query("per_page");
@@ -95,5 +99,17 @@ class DistrictController extends Controller
         $this->districtDelete->run($request->id);
 
         return $this->success([], "Registro de distrito borrado exitosamente");
+    }
+    public function getAllDistrictWithMunicipality(GetAllDistrictRequest $request) {
+        $page = $request->query("page");
+        $per_page = $request->query("per_page");
+
+        $districtsCollection = $this->districtGetAllDistrictWithMunicipality->run($page, $per_page);
+
+        $collections = array_map(fn($item) => DistrictAggregateDtoHttp::fromAggregate($item)->toArray(), $districtsCollection["data"]);
+
+        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
+
+        return $this->success($paginateData, "Success");
     }
 }

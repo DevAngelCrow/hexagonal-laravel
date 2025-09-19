@@ -4,13 +4,20 @@ namespace Src\modules\profile\infrastructure\implementation\DistrictRepositoryIm
 
 use App\Models\CtlDistrict as DistrictModel;
 use Exception;
+use Src\modules\profile\domain\aggregate\district\DistrictWithMunicipality;
 use Src\modules\profile\domain\entities\district\District;
+use Src\modules\profile\domain\entities\municipality\Municipality;
 use Src\modules\profile\domain\repositories\district\DistrictRepositoryInterface;
 use Src\modules\profile\domain\value_objects\district_value_object\DistrictDescription;
 use Src\modules\profile\domain\value_objects\district_value_object\DistrictId;
 use Src\modules\profile\domain\value_objects\district_value_object\DistrictIdMunicipality;
 use Src\modules\profile\domain\value_objects\district_value_object\DistrictName;
 use Src\modules\profile\domain\value_objects\district_value_object\DistrictState;
+use Src\modules\profile\domain\value_objects\municipality_value_object\MunicipalityActive;
+use Src\modules\profile\domain\value_objects\municipality_value_object\MunicipalityDescription;
+use Src\modules\profile\domain\value_objects\municipality_value_object\MunicipalityId;
+use Src\modules\profile\domain\value_objects\municipality_value_object\MunicipalityIdDepartment;
+use Src\modules\profile\domain\value_objects\municipality_value_object\MunicipalityName;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -43,7 +50,6 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
             $districtModel->active = $district->getActive()->value();
 
             $districtModel->save();
-            
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -96,6 +102,26 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+    public function getAllDistrictWithMunicipality(int $page, int $per_page): array
+    {
+        try {
+            $districtModels =  DistrictModel::orderBy("id")->paginate($per_page);
+            $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $districtModels->items());
+
+            $this->districtsArray = [
+                "data" => $data,
+                "pagination" => [
+                    'current_page' => $districtModels->currentPage(),
+                    'last_page' => $districtModels->lastPage(),
+                    'per_page' => $districtModels->perPage(),
+                    'total' => $districtModels->total(),
+                ]
+            ];
+            return $this->districtsArray;
+        } catch (Exception $e) {
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 
     private function mapToDomain(districtModel $district)
     {
@@ -109,5 +135,34 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
         );
 
         return $districtMapped;
+    }
+    private function mapToAggregateDomain(DistrictModel $district): DistrictWithMunicipality
+    {
+        $municipality = $this->mapToDomainDistrict($district);
+        $municipalityMapped = new DistrictWithMunicipality(
+            $municipality,
+            new District(
+                new DistrictIdMunicipality($district->id_municipality),
+                new DistrictName($district->name),
+                new DistrictDescription($district->description),
+                new DistrictState($district->active),
+                new DistrictId($district->id)
+            ),
+        );
+
+        return $municipalityMapped;
+    }
+    private function mapToDomainDistrict(DistrictModel $district): Municipality
+    {
+        
+        $municipality = $district->municipality;
+        $municipalityMapped = new Municipality(
+            new MunicipalityName($municipality->name),
+            new MunicipalityDescription($municipality->description),
+            new MunicipalityIdDepartment($municipality->id_department),
+            new MunicipalityActive($municipality->active),
+            new MunicipalityId($municipality->id)
+        );
+        return $municipalityMapped;
     }
 }

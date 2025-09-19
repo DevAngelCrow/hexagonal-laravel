@@ -21,6 +21,6 @@ class CtlMunicipality extends Model
         return $this->hasMany(CtlDistrict::class);
     }
     public function department() : BelongsTo {
-        return $this->belongsTo(CtlDepartment::class);
+        return $this->belongsTo(CtlDepartment::class, 'id_department', 'id');
     }
 }
