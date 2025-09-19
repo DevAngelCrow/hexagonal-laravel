@@ -13,7 +13,8 @@ class CreateAddressRequest extends BaseRequest {
             "house_number" => "required",
             "block" => "required",
             "pathway" => "required",
-            "id_people" => "required|integer"
+            "id_people" => "required|integer",
+            "active"=> "bool"
         ];
     }
 }

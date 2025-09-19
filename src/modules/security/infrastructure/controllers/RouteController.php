@@ -43,8 +43,8 @@ class RouteController extends Controller
     }
 
     public function createRoute(CreateRouteRequest $request)
-    {   
-                
+    {
+
         $createRoute = new RouteDto(
             $request->name,
             $request->description,
@@ -62,7 +62,7 @@ class RouteController extends Controller
     }
     public function updateRoute(UpdateRouteRequest $request)
     {
-        
+
         $updateRoute = new RouteDto(
             $request->name,
             $request->description,
@@ -88,17 +88,22 @@ class RouteController extends Controller
     public function getAllRoutes(GetAllRouteRequest $request)
     {
         $routesCollection = $this->routeGetAll->run($request->query("page"), $request->query("per_page"));
-        $collections = array_map(fn($item) => RouteDtoHttp::fromEntity($item), $routesCollection["data"]);
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $routesCollection["pagination"]);
-        return $this->success($paginateData, "Success");
+        if ($request->query("page") && $request->query("per_page")) {
+            $collections = array_map(fn($item) => RouteDtoHttp::fromEntity($item), $routesCollection["data"]);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $routesCollection["pagination"]);
+            return $this->success($paginateData, "Success");
+        }
+        $data = array_map(fn($item) => RouteDtoHttp::fromEntity($item), $routesCollection);
+        return $this->success($data, "Success");
     }
-    public function getAllRoutesWithParent(GetAllRouteRequest $request) {
+    public function getAllRoutesWithParent(GetAllRouteRequest $request)
+    {
         $routesCollection = $this->routeGetAllRoutesWithParent->run($request->query("page"), $request->query("per_page"));
-        
-        $collections = array_map(fn($item) => RouteAggregateDtoHttp::fromEntity($item), $routesCollection["data"]);
-        
+
+        $collections = array_map(fn($item) => RouteAggregateDtoHttp::fromEntity($item)->toArray(), $routesCollection["data"]);
+
         $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $routesCollection["pagination"]);
-        
+
         return $this->success($paginateData, "Success");
     }
 }

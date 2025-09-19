@@ -15,6 +15,6 @@ class CtlDistrict extends Model
         return $this->hasOne(MntAddress::class);
     }
     public function municipality() : BelongsTo {
-        return $this->belongsTo(CtlMunicipality::class);
+        return $this->belongsTo(CtlMunicipality::class, "id_municipality", "id");
     }
 }

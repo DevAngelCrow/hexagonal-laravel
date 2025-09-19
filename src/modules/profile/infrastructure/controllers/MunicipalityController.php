@@ -8,8 +8,10 @@ use Src\modules\profile\application\dtos\MunicipalityDto;
 use Src\modules\profile\application\useCases\municipality\MunicipalityCreate;
 use Src\modules\profile\application\useCases\municipality\MunicipalityDelete;
 use Src\modules\profile\application\useCases\municipality\MunicipalityGetAll;
+use Src\modules\profile\application\useCases\municipality\MunicipalityGetAllWithDepartment;
 use Src\modules\profile\application\useCases\municipality\MunicipalityGetOneById;
 use Src\modules\profile\application\useCases\municipality\MunicipalityUpdate;
+use Src\modules\profile\infrastructure\dtos\municipalityDtoHttpResponse\MunicipalityAggregateDtoHttp;
 use Src\modules\profile\infrastructure\dtos\municipalityDtoHttpResponse\MunicipalityDtoHttp;
 use Src\modules\profile\infrastructure\validators\municipality\CreateMunicipalityRequest;
 use Src\modules\profile\infrastructure\validators\municipality\DeleteMunicipalityRequest;
@@ -26,6 +28,7 @@ class MunicipalityController extends Controller
     protected MunicipalityGetAll $municipalityGetAll;
     protected MunicipalityGetOneById $municipalityGetOneById;
     protected MunicipalityDelete $municipalityDelete;
+    protected MunicipalityGetAllWithDepartment $municipalityGetAllWithDepartment;
 
     use HttpResponses;
 
@@ -35,12 +38,14 @@ class MunicipalityController extends Controller
         MunicipalityGetAll $municipality_get_all,
         MunicipalityGetOneById $municipality_get_one_by_id,
         MunicipalityDelete $municipality_delete,
+        MunicipalityGetAllWithDepartment $municipality_get_all_with_department
     ) {
         $this->municipalityCreate = $municipality_create;
         $this->municipalityUpdate = $municipality_update;
         $this->municipalityGetAll = $municipality_get_all;
         $this->municipalityGetOneById = $municipality_get_one_by_id;
         $this->municipalityDelete = $municipality_delete;
+        $this->municipalityGetAllWithDepartment = $municipality_get_all_with_department;
     }
 
     public function createMunicipality(CreateMunicipalityRequest $request)
@@ -96,5 +101,17 @@ class MunicipalityController extends Controller
         $this->municipalityDelete->run($request->id);
 
         return $this->success([], "Registro de municipio borrado exitosamente");
+    }
+    public function getAllMunicipalityWithDepartment(GetAllMunicipalitiesRequest $request) {
+        $page = $request->query("page");
+        $per_page = $request->query("per_page");
+
+        $districtsCollection = $this->municipalityGetAllWithDepartment->run($page, $per_page);
+
+        $collections = array_map(fn($item) => MunicipalityAggregateDtoHttp::fromAggregate($item)->toArray(), $districtsCollection["data"]);
+
+        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
+
+        return $this->success($paginateData, "Success");
     }
 }
