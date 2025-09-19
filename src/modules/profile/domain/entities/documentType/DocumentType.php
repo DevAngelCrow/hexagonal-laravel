@@ -14,13 +14,13 @@ class DocumentType
     private readonly DocumentTypeName $name;
     private readonly DocumentTypeDescription $description;
     private readonly DocumentTypeActive $active;
-    private readonly DocumentTypeMask $mask;
+    private readonly ?DocumentTypeMask $mask;
 
     public function __construct(
         DocumentTypeName $name,
         DocumentTypeDescription $description,
         DocumentTypeActive $active,
-        DocumentTypeMask $mask,
+        ?DocumentTypeMask $mask = null,
         ?DocumentTypeId $id = null
     ) {
         $this->id = $id;
@@ -49,7 +49,7 @@ class DocumentType
     {
         return $this->active;
     }
-    public function getMask(): DocumentTypeMask {
+    public function getMask(): ?DocumentTypeMask {
         return $this->mask;
     }
 }
