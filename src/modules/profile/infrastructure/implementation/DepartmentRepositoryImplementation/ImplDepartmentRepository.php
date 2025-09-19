@@ -70,20 +70,32 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(int $page, int $per_page): array
+    public function getAll(?int $page, ?int $per_page): array
     {
         try {
-            $departmentsModels = DepartmentModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToDomain($item), $departmentsModels->items());
-            $this->departmentsArray = [
-                "data" => $data,
-                "pagination" => [
-                    'current_page' => $departmentsModels->currentPage(),
-                    'last_page' => $departmentsModels->lastPage(),
-                    'per_page' => $departmentsModels->perPage(),
-                    'total' => $departmentsModels->total(),
-                ]
-            ];
+
+            $query = DepartmentModel::select('id', 'name', 'description', 'id_country', 'active')->orderBy("id");
+
+            if ($page != null && $per_page != null) {
+                $departmentmodels = $query->paginate($per_page);
+                $data = array_map(fn($item) => $this->mapToDomain($item), $departmentmodels->items());
+
+                return $this->departmentsArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        'current_page' => $departmentmodels->currentPage(),
+                        'last_page' => $departmentmodels->lastPage(),
+                        'per_page' => $departmentmodels->perPage(),
+                        'total' => $departmentmodels->total(),
+                    ]
+                ];
+
+            }
+
+            $departmentsModels = $query->get();
+
+
+            $this->departmentsArray = array_map(fn($item) => $this->mapToDomain($item), $departmentsModels->all());
 
             return $this->departmentsArray;
         } catch (Exception $e) {
@@ -105,7 +117,7 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
 
     public function getAllWithCountry(int $page, int $per_page): array
     {
-        
+
         try {
             $departmentModels =  DepartmentModel::orderBy("id")->paginate($per_page);
             $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $departmentModels->items());
@@ -154,7 +166,7 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
     }
     private function mapToDomainCountry(DepartmentModel $department): Country
     {
-        
+
         $country = $department->country;
         $countryMapped = new Country(
             new CountryName($country->name),

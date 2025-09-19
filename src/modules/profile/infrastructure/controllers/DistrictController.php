@@ -69,7 +69,7 @@ class DistrictController extends Controller
             (int) $request->id_municipality,
             $request->active
         );
-      
+
         $this->districtUpdate->run($district);
 
         return $this->success([], "Distrito actualizado exitosamente");
@@ -78,22 +78,23 @@ class DistrictController extends Controller
     {
 
         $district = $this->districtGetOneById->run($request->id);
-        
+
         return $this->success(DistrictDtoHttp::fromEntity($district), "Success");
     }
     public function getAllDistrict(GetAllDistrictRequest $request)
     {
-        $page = $request->query("page");
-        $per_page = $request->query("per_page");
+        $districtsCollection = $this->districtGetAll->run($request->query("page"), $request->query("per_page"));
 
-        $districtsCollection = $this->districtGetAll->run($page, $per_page);
+        if($request->query("page") && $request->query("per_page")){
+            $collections = array_map(fn($item) => districtDtoHttp::fromEntity($item), $districtsCollection["data"]);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
+            return $this->success($paginateData, "Success");
+        }
 
-        $collections = array_map(fn($item) => districtDtoHttp::fromEntity($item), $districtsCollection["data"]);
-
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
-
-        return $this->success($paginateData, "Success");
+        $data = array_map(fn($item) => districtDtoHttp::fromEntity($item), $districtsCollection);
+        return $this->success($data, "Success");
     }
+
     public function deleteDistrict(DeleteDistrictRequest $request)
     {
         $this->districtDelete->run($request->id);

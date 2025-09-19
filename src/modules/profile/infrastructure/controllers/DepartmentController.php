@@ -79,21 +79,21 @@ class DepartmentController extends Controller
     {
 
         $department = $this->departmentGetOneById->run($request->id);
-        
+
         return $this->success(DepartmentDtoHttp::fromEntity($department), "Success");
     }
     public function getAllDepartment(GetAllDepartmentRequest $request)
     {
-        $page = $request->query("page");
-        $per_page = $request->query("per_page");
+        $departmentCollection = $this->departmentGetAll->run($request->query("page"), $request->query("per_page"));
+        if($request->query("page") && $request->query("per_page")){
+            $collections = array_map(fn($item) => DepartmentDtoHttp::fromEntity($item), $departmentCollection["data"]);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $departmentCollection["pagination"]);
+            return $this->success($paginateData, "Success");
+        }
 
-        $departmentsCollection = $this->departmentGetAll->run($page, $per_page);
+        $data = array_map(fn($item) => DepartmentDtoHttp::fromEntity($item), $departmentCollection);
 
-        $collections = array_map(fn($item) => DepartmentDtoHttp::fromEntity($item), $departmentsCollection["data"]);
-
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $departmentsCollection["pagination"]);
-
-        return $this->success($paginateData, "Success");
+        return $this->success($data, "Success");
     }
     public function deleteDepartment(DeleteDepartmentRequest $request)
     {

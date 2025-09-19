@@ -11,7 +11,7 @@ class DistrictGetAll {
         $this->districtRepository = $district_repository;
     }
 
-    public function run(int $page, int $per_page) : array {
+    public function run(?int $page, ?int $per_page) : array {
         return $this->districtRepository->getAll($page, $per_page);
     }
 }

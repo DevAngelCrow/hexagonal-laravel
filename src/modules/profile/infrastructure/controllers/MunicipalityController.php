@@ -85,16 +85,14 @@ class MunicipalityController extends Controller
     }
     public function getAllMunicipality(GetAllMunicipalitiesRequest $request)
     {
-        $page = $request->query("page");
-        $per_page = $request->query("per_page");
-
-        $municipalitiesCollection = $this->municipalityGetAll->run($page, $per_page);
-
-        $collections = array_map(fn($item) => MunicipalityDtoHttp::fromEntity($item), $municipalitiesCollection["data"]);
-
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $municipalitiesCollection["pagination"]);
-
-        return $this->success($paginateData, "Success");
+        $municipalityCollection = $this->municipalityGetAll->run($request->query("page"), $request->query("per_page"));
+        if($request->query("page") && $request->query("per_page")){
+            $collections = array_map(fn($item) => MunicipalityDtoHttp::fromEntity($item), $municipalityCollection["data"]);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $municipalityCollection["pagination"]);
+            return $this->success($paginateData, "Success");
+        }
+        $data = array_map(fn($item) => MunicipalityDtoHttp::fromEntity($item), $municipalityCollection);
+        return $this->success($data, "Success");
     }
     public function deletemunicipality(DeleteMunicipalityRequest $request)
     {

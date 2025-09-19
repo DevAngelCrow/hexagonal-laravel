@@ -70,22 +70,30 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(int $page, int $per_page): array
+    public function getAll(?int $page, ?int $per_page): array
     {
         try {
-            $districtsModels = DistrictModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToDomain($item), $districtsModels->items());
-            $this->districtsArray = [
-                "data" => $data,
-                "pagination" => [
-                    'current_page' => $districtsModels->currentPage(),
-                    'last_page' => $districtsModels->lastPage(),
-                    'per_page' => $districtsModels->perPage(),
-                    'total' => $districtsModels->total(),
-                ]
-            ];
+            $query = DistrictModel::select('id', 'name', 'description', 'id_municipality', 'active')->orderBy("id");
+            if ($page !== null || $per_page !== null) {
+                $districtsModels = $query->paginate($per_page);
+                $data = array_map(fn($item) => $this->mapToDomain($item), $districtsModels->items());
 
+                return $this->districtsArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        'current_page' => $districtsModels->currentPage(),
+                        'last_page' => $districtsModels->lastPage(),
+                        'per_page' => $districtsModels->perPage(),
+                        'total' => $districtsModels->total(),
+                    ]
+                ];
+
+            }
+            $districtsModels = $query->get();
+
+            $this->districtsArray = array_map(fn($item) => $this->mapToDomain($item), $districtsModels->all());
             return $this->districtsArray;
+
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -154,7 +162,7 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
     }
     private function mapToDomainDistrict(DistrictModel $district): Municipality
     {
-        
+
         $municipality = $district->municipality;
         $municipalityMapped = new Municipality(
             new MunicipalityName($municipality->name),

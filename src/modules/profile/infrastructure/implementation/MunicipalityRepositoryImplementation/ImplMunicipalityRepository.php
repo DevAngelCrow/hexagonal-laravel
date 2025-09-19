@@ -50,7 +50,7 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
             $municipalityModel->active = $municipality->getActive()->value();
 
             $municipalityModel->save();
-            
+
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -71,22 +71,32 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(int $page, int $per_page): array
+    public function getAll(?int $page, ?int $per_page): array
     {
         try {
-            $municipalitiesModels = MunicipalityModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToDomain($item), $municipalitiesModels->items());
-            $this->municipalitiesArray = [
-                "data" => $data,
-                "pagination" => [
-                    'current_page' => $municipalitiesModels->currentPage(),
-                    'last_page' => $municipalitiesModels->lastPage(),
-                    'per_page' => $municipalitiesModels->perPage(),
-                    'total' => $municipalitiesModels->total(),
-                ]
-            ];
 
+            $query = MunicipalityModel::select('id', 'name', 'description', 'id_department', 'active')->orderBy("id");
+            if($page !== null && $per_page !==null){
+                $municipalityModels = $query->paginate($per_page);
+                $data = array_map(fn($item) => $this->mapToDomain($item), $municipalityModels->items());
+
+                return $this->municipalitiesArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        'current_page' => $municipalityModels->currentPage(),
+                        'last_page' => $municipalityModels->lastPage(),
+                        'per_page' => $municipalityModels->perPage(),
+                        'total' => $municipalityModels->total(),
+                    ]
+                ];
+            }
+
+            $municipalityModels = $query->get();
+
+            $this->municipalitiesArray = array_map(fn($item) => $this->mapToDomain($item), $municipalityModels->all());
             return $this->municipalitiesArray;
+
+
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -157,7 +167,7 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
     }
     private function mapToDomainDepartment(MunicipalityModel $municipality): Department
     {
-        
+
         $department = $municipality->department;
         $departmentMapped = new Department(
             new DepartmentName($department->name),
