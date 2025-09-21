@@ -5,33 +5,32 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Src\modules\security\application\useCases\security_authorization_port\CheckPermissionUseCase;
-use Src\modules\security\application\useCases\security_authorization_port\HasRoleUseCase;
+use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Symfony\Component\HttpFoundation\Response;
-
+use Src\shared\infrastructure\HttpResponses;
 class UserHasPermission
 {
+    use HttpResponses;
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-
-    private $checkUserPermission;
-    private $hasRole;
-   public function __construct(/*CheckPermissionUseCase $checkUserPermission*/ HasRoleUseCase $hasRole)
+    private $checkPermission;
+    public function __construct(CheckPermissionUseCase $checkUserPermission)
     {
-       // $this->checkUserPermission = $checkUserPermission;
-       $this->hasRole = $hasRole;
+        $this->checkPermission = $checkUserPermission;
+        //$this->hasRole = $hasRole;
     }
 
     public function handle(Request $request, Closure $next, string $permission): Response
     {
+
+        $prueba = $this->checkPermission->run($permission);
         
-        $hola = $this->hasRole->run(["po la gran puta", "jeje"]);
-        dd($hola);
-        // if (!$this->checkUserPermission->run($permission)) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        if(!$prueba){
+            return $this->unauthorized("No autorizado");
+        }
 
         return $next($request);
     }

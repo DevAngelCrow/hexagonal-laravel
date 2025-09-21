@@ -29,7 +29,7 @@ Route::prefix('catalogs')->group(function () {
     require base_path("src/modules/catalogs/infrastructure/routes/GlobalStatusRoutes.php");
 });
 
-Route::prefix("security")->group(function () {
+Route::prefix("security")->middleware(["auth:api"])->group(function () {
     require base_path("src/modules/security/infrastructure/routes/CategoryPermissionsRoutes.php");
     require base_path("src/modules/security/infrastructure/routes/PermissionsRoutes.php");
     require base_path("src/modules/security/infrastructure/routes/RolRoutes.php");

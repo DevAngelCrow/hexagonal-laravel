@@ -18,12 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->api(append: [
-            
-        ]);
-
+        $middleware->api(append: []);
         $middleware->alias([
-        "permission" => \App\Http\Middleware\UserHasPermission::class,
+        "permission" => UserHasPermission::class,
     ]);
         
     })
