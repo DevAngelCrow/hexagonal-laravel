@@ -12,12 +12,8 @@ Route::prefix("profile")->group(function () {
     require base_path("src/modules/profile/infrastructure/routes/AddressRoutes.php");
     require base_path("src/modules/profile/infrastructure/routes/PeopleRoutes.php");
     require base_path("src/modules/profile/infrastructure/routes/DocumentRoutes.php");
-    require base_path("src/modules/profile/infrastructure/routes/CountryRoutes.php");
-    require base_path("src/modules/profile/infrastructure/routes/DepartmentRoutes.php");
-    require base_path("src/modules/profile/infrastructure/routes/MunicipalityRoutes.php");
-    require base_path("src/modules/profile/infrastructure/routes/DistrictRoutes.php");
+    
     require base_path("src/modules/profile/infrastructure/routes/DocumentTypeRoutes.php");
-    require base_path("src/modules/profile/infrastructure/routes/GenderRoutes.php");
 
 });
 Route::prefix("user")->group(base_path("src/modules/auth/infrastructure/routes/UserRoutes.php"));
@@ -27,6 +23,11 @@ Route::prefix("auth")->group(base_path("src/modules/auth/infrastructure/routes/A
 Route::prefix('catalogs')->group(function () {
     require base_path("src/modules/catalogs/infrastructure/routes/MaritalRoutes.php");
     require base_path("src/modules/catalogs/infrastructure/routes/GlobalStatusRoutes.php");
+    require base_path("src/modules/catalogs/infrastructure/routes/CountryRoutes.php");
+    require base_path("src/modules/catalogs/infrastructure/routes/DepartmentRoutes.php");
+    require base_path("src/modules/catalogs/infrastructure/routes/MunicipalityRoutes.php");
+    require base_path("src/modules/catalogs/infrastructure/routes/DistrictRoutes.php");
+    require base_path("src/modules/catalogs/infrastructure/routes/GenderRoutes.php");
 });
 
 Route::prefix("security")->middleware(["auth:api"])->group(function () {
