@@ -3,13 +3,9 @@
 namespace Src\modules\security\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
-use Src\modules\auth\infrastructure\validators\user\CreateUserRequest;
 use Src\modules\security\application\dtos\UserRoleDto;
 use Src\modules\security\application\useCases\user_role\UserRoleCreate;
 use Src\modules\security\application\useCases\user_role\UserRoleUpdate;
-use Src\modules\security\infraestructure\validators\serRol\GetByIdUserRolRequest;
-use Src\modules\security\infrastructure\dtos\userRoleDtoHttpReponse\UserRoleDtoHttp;
-use Src\modules\security\infrastructure\validators\rol\UpdateRolRequest;
 use Src\modules\security\infrastructure\validators\userRol\CreateUserRolRequest;
 use Src\modules\security\infrastructure\validators\userRol\UpdateUserRolRequest;
 use Src\shared\infrastructure\HttpResponses;

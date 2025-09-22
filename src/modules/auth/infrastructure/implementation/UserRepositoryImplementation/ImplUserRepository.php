@@ -24,7 +24,7 @@ use Src\modules\auth\domain\value_objects\user_value_objects\UserPassword;
 
 class ImplUserRepository implements UserRepositoryInterface
 {
-    public function create(User $user): void
+    public function create(User $user): User
     {
         try {
 
@@ -40,6 +40,7 @@ class ImplUserRepository implements UserRepositoryInterface
             $userModel->save();
             $userModel->load('people');
             event(new Registered($userModel));
+            return $this->mapToDomain($userModel);
             //Log::info($userModel);
         } catch (Exception $e) {
             throw new InfrastructureException($e);

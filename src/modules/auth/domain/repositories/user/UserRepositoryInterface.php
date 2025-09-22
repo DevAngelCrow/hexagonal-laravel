@@ -7,7 +7,7 @@ use Src\modules\auth\domain\value_objects\user_value_objects\UserId;
 use Src\modules\auth\domain\value_objects\user_value_objects\UserName;
 
 interface UserRepositoryInterface {
-    public function create(User $user) : void;
+    public function create(User $user) : User;
     public function update(User $user) : void;
     /**
      * @return User[];

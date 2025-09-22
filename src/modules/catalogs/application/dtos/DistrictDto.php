@@ -1,0 +1,26 @@
+<?php
+namespace Src\modules\catalogs\application\dtos;
+
+use Src\modules\catalogs\domain\entities\district\District;
+
+class DistrictDto
+{
+    public function __construct(
+        
+        public readonly string $name,
+        public readonly string $description,
+        public readonly int $id_municipality,
+        public readonly bool $active,
+        public readonly ?int $id = null,
+    ) {}
+    public static function fromEntity(District $district){
+        return new self(
+            
+            $district->getName()->value(),
+            $district->getDescription()->value(),
+            $district->getIdMunicipality()->value(),
+            $district->getActive()->value(),
+            $district->getId()->value() ?: null,
+        );
+    }
+}

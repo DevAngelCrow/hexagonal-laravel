@@ -62,6 +62,7 @@ class AuthController extends Controller
             $request->pathway,
             $request->current,
             null,
+            true,
             //document data input
             (int) $request->id_type_document,
             $request->document_number,

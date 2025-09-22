@@ -2,15 +2,21 @@
 
 namespace Src\modules\profile\infrastructure\implementation\AddressRepositoryImplementation;
 
-use LogicException;
+
 use Src\modules\profile\domain\entities\address\Address;
 use Src\modules\profile\domain\repositories\address\AddressRepositoryInterface;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressId;
 use App\Models\MntAddress as AddressModel;
 use ErrorException;
 use Exception;
+use Illuminate\Support\Facades\Auth;
+use Src\modules\catalogs\domain\entities\district\District;
+use Src\modules\catalogs\domain\value_objects\district_value_object\DistrictDescription;
+use Src\modules\catalogs\domain\value_objects\district_value_object\DistrictId;
+use Src\modules\catalogs\domain\value_objects\district_value_object\DistrictIdMunicipality;
+use Src\modules\catalogs\domain\value_objects\district_value_object\DistrictName;
+use Src\modules\catalogs\domain\value_objects\district_value_object\DistrictState;
 use Src\modules\profile\domain\aggregate\address\AddressWithDistrict;
-use Src\modules\profile\domain\entities\district\District;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressActive;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressBlock;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressCurrent;
@@ -21,11 +27,6 @@ use Src\modules\profile\domain\value_objects\address_value_object\AddressNeighbo
 use Src\modules\profile\domain\value_objects\address_value_object\AddressPathway;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressStreet;
 use Src\modules\profile\domain\value_objects\address_value_object\AddressStreetNumber;
-use Src\modules\profile\domain\value_objects\district_value_object\DistrictDescription;
-use Src\modules\profile\domain\value_objects\district_value_object\DistrictId;
-use Src\modules\profile\domain\value_objects\district_value_object\DistrictIdMunicipality;
-use Src\modules\profile\domain\value_objects\district_value_object\DistrictName;
-use Src\modules\profile\domain\value_objects\district_value_object\DistrictState;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -127,7 +128,14 @@ class ImplAddressRepository implements AddressRepositoryInterface
     public function getAllWithDistrict(int $page, int $per_page): array
     {
         try {
-            $addressModels =  AddressModel::orderBy("id")->paginate($per_page);
+
+            $user = Auth::user();
+
+            if(!$user){
+                throw new InfrastructureException('No autenticado', 401);
+            }
+
+            $addressModels =  AddressModel::where('id_people', (int)$user->id_people)->orderBy("id")->paginate($per_page);
             $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $addressModels->items());
 
             $this->addressArray = [
@@ -184,7 +192,6 @@ class ImplAddressRepository implements AddressRepositoryInterface
     }
     private function mapToDomainDistrict(AddressModel $address): District
     {
-        //dd($address);
         $district = $address->district;
         
         $districtMapped = new District(

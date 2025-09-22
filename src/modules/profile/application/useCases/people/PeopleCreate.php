@@ -6,10 +6,10 @@ use DateTimeImmutable;
 use Src\modules\profile\application\dtos\PeopleDto;
 use Src\modules\profile\domain\entities\people\People;
 use Src\modules\profile\domain\repositories\people\PeopleRepositoryInterface;
-use Src\modules\profile\domain\value_objects\country_value_object\CountryId;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleBirthDate;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleEmail;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleFirstName;
+use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdCountry;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdGender;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdMaritalStatus;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdStatus;
@@ -28,7 +28,7 @@ class PeopleCreate
 
     public function run(PeopleDto $peopleDto): ?People
     {
-        $nationsId = array_map(fn($id_country) => new CountryId($id_country), $peopleDto->nationalities ?? []);
+        $nationsId = array_map(fn($id_country) => new PeopleIdCountry($id_country), $peopleDto->nationalities ?? []);
         
         $person = new People(
             new PeopleFirstName($peopleDto->first_name),

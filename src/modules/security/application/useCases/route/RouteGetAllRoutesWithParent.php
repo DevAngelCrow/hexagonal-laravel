@@ -11,7 +11,7 @@ class RouteGetAllRoutesWithParent {
         $this->routeRepository = $route_repository;
     }
 
-    public function run (?int $page, ?int $per_page) : array {
+    public function run (?int $page = null, ?int $per_page = null) : array {
         return $this->routeRepository->getAllRoutesWithParentData($page, $per_page);
     }
 }

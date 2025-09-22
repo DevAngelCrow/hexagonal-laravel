@@ -1,0 +1,56 @@
+<?php
+
+namespace Src\modules\catalogs\domain\entities\district;
+
+use Src\modules\catalogs\domain\value_objects\district_value_object\DistrictDescription;
+use Src\modules\catalogs\domain\value_objects\district_value_object\DistrictId;
+use Src\modules\catalogs\domain\value_objects\district_value_object\DistrictIdMunicipality;
+use Src\modules\catalogs\domain\value_objects\district_value_object\DistrictName;
+use Src\modules\catalogs\domain\value_objects\district_value_object\DistrictState;
+
+class District
+{
+    private readonly DistrictIdMunicipality $id_municipality;
+    private readonly DistrictName $name;
+    private readonly DistrictDescription $description;
+    private readonly DistrictState $active;
+    private readonly ?DistrictId $id;
+
+    public function __construct(
+        DistrictIdMunicipality $id_municipality,
+        DistrictName $name,
+        DistrictDescription $description,
+        DistrictState $active,
+        ?DistrictId $id = null
+    ) {
+        $this->id_municipality = $id_municipality;
+        $this->name = $name;
+        $this->description = $description;
+        $this->active = $active;
+        $this->id = $id;
+    }
+
+    public function getIdMunicipality(): DistrictIdMunicipality
+    {
+        return $this->id_municipality;
+    }
+
+    public function getName(): DistrictName
+    {
+        return $this->name;
+    }
+
+    public function getDescription(): DistrictDescription
+    {
+        return $this->description;
+    }
+
+    public function getActive(): DistrictState
+    {
+        return $this->active;
+    }
+    public function getId(): ?DistrictId
+    {
+        return $this->id;
+    }
+}
