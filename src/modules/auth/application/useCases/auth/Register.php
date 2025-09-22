@@ -11,6 +11,8 @@ use Src\modules\profile\application\dtos\PeopleDto;
 use Src\modules\profile\application\services\address\AddressCreateService;
 use Src\modules\profile\application\services\document\DocumentCreateService;
 use Src\modules\profile\application\services\people\PeopleCreateService;
+use Src\modules\security\application\dtos\UserRoleDto;
+use Src\modules\security\application\services\user_role\UserRoleCreateService;
 use Src\modules\storage\application\dtos\StorageFilesDto;
 use Src\modules\storage\application\services\storageFiles\StorageFilesUploadService;
 use Src\shared\application\exceptions\ApplicationException;
@@ -24,6 +26,7 @@ class Register
     private readonly DocumentCreateService $documentCreateService;
     private readonly StorageFilesUploadService $storageFilesUploadService;
     private readonly UnitOfWorkTransactionDbInterface $transaction;
+    private readonly UserRoleCreateService $userRoleCreateService;
 
 
     public function __construct(
@@ -32,6 +35,7 @@ class Register
         AddressCreateService $address_create_service,
         documentCreateService $document_create_service,
         StorageFilesUploadService $storage_files_upload_service,
+        UserRoleCreateService $user_role_create_service,
         UnitOfWorkTransactionDbInterface $transaction_db
     ) {
         $this->userCreate = $user_create;
@@ -40,6 +44,7 @@ class Register
         $this->documentCreateService = $document_create_service;
         $this->storageFilesUploadService = $storage_files_upload_service;
         $this->transaction = $transaction_db;
+        $this->userRoleCreateService = $user_role_create_service;
     }
 
     public function run(
@@ -105,9 +110,14 @@ class Register
             $registerDto->last_access,
             $registerDto->is_validated
         );
-        $this->userCreate->run($userDto);
+        $user = $this->userCreate->run($userDto);
 
+        $userRolDto = new UserRoleDto(
+            $user->getId()->value(), [2]
+        );
 
+        $this->userRoleCreateService->userRoleCreateForUser($userRolDto);
+        
         $this->transaction->commit();
         }catch(ApplicationException $error){
             $this->transaction->rollback();

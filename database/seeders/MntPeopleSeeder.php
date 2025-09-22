@@ -5,8 +5,6 @@ namespace Database\Seeders;
 use App\Models\CtlGender;
 use App\Models\CtlMaritalStatus;
 use App\Models\CtlStatus;
-use App\Models\CtlStatusPeople;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 

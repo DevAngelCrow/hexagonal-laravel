@@ -3,11 +3,11 @@
 namespace Src\modules\profile\domain\entities\people;
 
 use Src\modules\profile\domain\exceptions\PeopleException;
-use Src\modules\profile\domain\value_objects\country_value_object\CountryId;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleBirthDate;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleEmail;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleFirstName;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleId;
+use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdCountry;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdGender;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdMaritalStatus;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdStatus;
@@ -15,6 +15,7 @@ use Src\modules\profile\domain\value_objects\people_value_object\PeopleImgPath;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleLastName;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleMiddleName;
 use Src\modules\profile\domain\value_objects\people_value_object\PeoplePhone;
+
 class People
 {
     private readonly  PeopleFirstName $first_name;
@@ -27,9 +28,10 @@ class People
     private readonly  PeopleMiddleName $middle_name;
     private readonly  PeopleLastName $last_name;
     private readonly  PeopleImgPath $img_path;
-    /** @var CountryId[] */
+    /** @var PeopleIdCountry[] */
     private readonly  ?array $countriesId;
     private readonly  ?PeopleId $id;
+    private readonly PeopleIdCountry $id_country;
 
     public function __construct(
         PeopleFirstName $first_name,
@@ -58,12 +60,12 @@ class People
         $this->countriesId = $countriesId;
         $this->id = $id;
 
-        if(!empty($countriesId)){
-            foreach($this->countriesId as $countryId){
-            if(!$countryId instanceof CountryId){
-                throw new PeopleException("La instancia de cada elemento debe ser de tipo CountryId");
+        if (!empty($countriesId)) {
+            foreach ($this->countriesId as $countryId) {
+                if (!$countryId instanceof PeopleIdCountry) {
+                    throw new PeopleException("La instancia de cada elemento debe ser de tipo CountryId");
+                }
             }
-        }
         }
     }
 
@@ -122,8 +124,16 @@ class People
         return $this->id;
     }
 
-    public function getCountries() : array {
+    public function getCountries(): array
+    {
         return $this->countriesId;
     }
-
+    public function setPeopleIdCountry(PeopleIdCountry $id_country): void
+    {
+        $this->id_country = $id_country;
+    }
+    public function getIdCountry(): PeopleIdCountry
+    {
+        return $this->id_country;
+    }
 }

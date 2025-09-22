@@ -2,6 +2,7 @@
 
 namespace Src\modules\security\infrastructure\implementation\AuthorizationPortImplementation;
 
+use App\Models\MntRoute;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Src\modules\security\domain\ports\SecurityAuthorizationPortInterface;
@@ -41,6 +42,30 @@ class ImplAuthorizationPort implements SecurityAuthorizationPortInterface
 
 
             return $permmisionCollection->contains(fn($perm) => $perm->name === $permission);
+        } catch (Exception $e) {
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    public function filterRoutesForUser(int $id_user): array
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user) {
+                throw new InfrastructureException("No autorizado", Response::HTTP_UNAUTHORIZED);
+            }
+
+            $permissionsIds = $user->permissions()->pluck('id')->all();
+
+            $routes = MntRoute::whereHas('permissions', function ($q) use ($permissionsIds) {
+                $q->whereIn('ctl_permissions.id', $permissionsIds);
+            })
+                ->with(['children', 'parent'])
+                ->get()
+                ->unique('id')
+                ->values();
+
+            return $routes->toArray();
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }

@@ -21,7 +21,7 @@ class UserCreate
         $this->userRepository = $repository;
     }
 
-    public function run(UserDto $userDto): void {
+    public function run(UserDto $userDto): User {
 
         $user = new User(
             new UserIdPeople($userDto->id_people),
@@ -32,6 +32,6 @@ class UserCreate
             new UserIsValidated($userDto->is_validated)
         );
 
-        $this->userRepository->create($user);
+        return $this->userRepository->create($user);
     }
 }

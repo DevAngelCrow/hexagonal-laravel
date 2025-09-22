@@ -76,8 +76,9 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
         try {
 
             $query = DepartmentModel::select('id', 'name', 'description', 'id_country', 'active')->orderBy("id");
-
-            if ($page != null && $per_page != null) {
+            
+            if ($page !== null && $per_page !== null) {
+                
                 $departmentmodels = $query->paginate($per_page);
                 $data = array_map(fn($item) => $this->mapToDomain($item), $departmentmodels->items());
 

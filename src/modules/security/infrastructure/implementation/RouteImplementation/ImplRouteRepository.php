@@ -78,10 +78,9 @@ class ImplRouteRepository implements RouteRepositoryInterface
         try {
 
             $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order')->orderBy('id');
-            //$routeModels = RouteModel::orderBy("id")->paginate($per_page);
-            //dump($page, $per_page);
+
             if ($page !== null && $per_page !== null) {
-                
+
                 $routeModels = $query->paginate($per_page);
 
                 $data = array_map(fn($item) => $this->mapToDomain($item), $routeModels->items());
@@ -101,9 +100,8 @@ class ImplRouteRepository implements RouteRepositoryInterface
 
 
             $this->routesArray = array_map(fn($item) => $this->mapToDomain($item), $routeModels->all());
-            
-            return $this->routesArray;
 
+            return $this->routesArray;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -136,24 +134,34 @@ class ImplRouteRepository implements RouteRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAllRoutesWithParentData(int $page, int $per_page): array
+    public function getAllRoutesWithParentData(?int $page, ?int $per_page): array
     {
         try {
-            $routeModels = RouteModel::orderBy("id")->paginate($per_page);
 
-            $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $routeModels->items());
+            $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order', 'id_parent')->orderBy('id');
+            
 
-            $this->routesArray = [
-                "data" => $data,
-                "pagination" => [
-                    "current_page" => $routeModels->currentPage(),
-                    "last_page" => $routeModels->lastPage(),
-                    "per_page" => $routeModels->perPage(),
-                    "total" => $routeModels->total()
-                ]
-            ];
+            if ($page !== null && $per_page !== null) {
+                
+                $routeModels = $query->paginate($per_page);
+                $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $routeModels->items());
+
+                return $this->routesArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        "current_page" => $routeModels->currentPage(),
+                        "last_page" => $routeModels->lastPage(),
+                        "per_page" => $routeModels->perPage(),
+                        "total" => $routeModels->total()
+                    ]
+                ];
+            }
+            $routeModels = $query->get();
+
+            $this->routesArray = array_map(fn($item) => $this->mapToAggregateDomain($item), $routeModels->all());
 
             return $this->routesArray;
+            
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -167,8 +175,6 @@ class ImplRouteRepository implements RouteRepositoryInterface
             )->toArray();
         }
 
-        //$parentRoute = $route->parent ? $this->mapToDomain($route->parent) : null;
-        //dump($parentRoute);
         $routeMapped = new Route(
             new RoutesName($route->name),
             new RoutesDescription($route->description),
@@ -189,6 +195,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
     private function mapToAggregateDomain(RouteModel $route): RouteWithChild
     {
         $parentRoute = $route->parent ? $this->mapToDomain($route->parent) : null;
+        
         $permissionIds = null;
         if (!empty($route->permissions)) {
             $permissionIds = collect($route->permissions->toArray())->map(

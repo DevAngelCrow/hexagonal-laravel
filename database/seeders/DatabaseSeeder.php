@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
         $this->call([
             CtlStatusSeeder::class,
             CtlCountrySeeder::class,
@@ -29,7 +29,14 @@ class DatabaseSeeder extends Seeder
             CtlGenderSeeder::class,
             CtlDocumentTypeSeeder::class,
             MntPeopleSeeder::class,
-            CtlProviderStorageSeeder::class
+            CtlProviderStorageSeeder::class,
+            MntUserSeeder::class,
+            CtlCategoryPermissionsSeeder::class,
+            CtlPermissionsSeeder::class,
+            MntRolSeeder::class,
+            RolPermissionsSeeder::class,
+            MntUserRol::class,
+            MntRouteSeeder::class
         ]);
     }
 }

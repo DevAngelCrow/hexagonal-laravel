@@ -8,10 +8,10 @@ use Src\modules\profile\domain\entities\people\People;
 use Src\modules\profile\domain\repositories\people\PeopleRepositoryInterface;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleId;
 use App\Models\MntPeople as PeopleModel;
-use Src\modules\profile\domain\value_objects\country_value_object\CountryId;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleBirthDate;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleEmail;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleFirstName;
+use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdCountry;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdGender;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdMaritalStatus;
 use Src\modules\profile\domain\value_objects\people_value_object\PeopleIdStatus;
@@ -138,7 +138,7 @@ class ImplPeopleRepository implements PeopleRepositoryInterface
 
 
                 $nationalities = collect($people->countries)->map(
-                    fn($country) => new CountryId($country->id)
+                    fn($country) => new PeopleIdCountry($country->id)
                 )->toArray();
             }
             return new People(
