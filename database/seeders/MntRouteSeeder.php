@@ -26,7 +26,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'requiredAuth' => false,
+                    'title' => 'Inicio de sesión'
                 ],
                 [
                     'name'=>'sign-up',
@@ -36,7 +38,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'requiredAuth' => false,
+                    'title' => 'Registro de cuenta de usuario'
                 ],
                 [
                     'name'=>'layout',
@@ -46,7 +50,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'requiredAuth' => true,
+                    'title' => 'Layout vista principal'
                 ],
                 [
                     'name'=>'forbidden',
@@ -56,7 +62,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'requiredAuth' => false,
+                    'title' => 'Vista no encontrada'
                 ],
                 [
                     'name'=>'verify-email',
@@ -66,7 +74,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'requiredAuth' => false,
+                    'title' => 'Vista de verificación de correo de usuario'
                 ],
                 [
                     'name'=>'pending-verification-email',
@@ -76,7 +86,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'requiredAuth' => false,
+                    'title' => 'Pantalla de información para verificar correo de usuario'
                 ],
             ]
         );
@@ -93,7 +105,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>2,
-                    'id_parent'=> $routes[2]->id
+                    'id_parent'=> $routes[2]->id,
+                    'requiredAuth' => true,
+                    'title' => 'Vista para testear componentes'
                 ],
                 [
                     'name'=>'dashboard',
@@ -103,7 +117,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>2,
-                    'id_parent'=> $routes[2]->id
+                    'id_parent'=> $routes[2]->id,
+                    'requiredAuth' => true,
+                    'title' => 'Vista del tablero principal'
                 ],
                 [
                     'name'=>'routes-administration',
@@ -113,7 +129,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>2,
-                    'id_parent'=> $routes[2]->id
+                    'id_parent'=> $routes[2]->id,
+                    'requiredAuth' => true,
+                    'title' => 'Vista de administración de rutas'
                 ],
             ]
         );
