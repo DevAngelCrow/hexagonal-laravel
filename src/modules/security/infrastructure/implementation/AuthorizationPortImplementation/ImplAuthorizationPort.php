@@ -14,11 +14,11 @@ class ImplAuthorizationPort implements SecurityAuthorizationPortInterface
 {
 
     use HttpResponses;
+    
     public function hasRole(array $role): bool
     {
         $user = Auth::user();
 
-        var_dump($user);
         if (!$user) {
             return false;
         }
@@ -32,6 +32,7 @@ class ImplAuthorizationPort implements SecurityAuthorizationPortInterface
     {
         try {
             $user = Auth::user();
+            /**@var \App\Models\MntUser $user */
             $permmisionCollection = $user->permissions();
 
             if (!$user) {
@@ -46,7 +47,7 @@ class ImplAuthorizationPort implements SecurityAuthorizationPortInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function filterRoutesForUser(int $id_user): array
+    public function filterRoutesForUser(): array
     {
         try {
             $user = Auth::user();
@@ -55,6 +56,7 @@ class ImplAuthorizationPort implements SecurityAuthorizationPortInterface
                 throw new InfrastructureException("No autorizado", Response::HTTP_UNAUTHORIZED);
             }
 
+            /**@var \App\Models\MntUser $user */
             $permissionsIds = $user->permissions()->pluck('id')->all();
 
             $routes = MntRoute::whereHas('permissions', function ($q) use ($permissionsIds) {

@@ -11,7 +11,7 @@ class FilterRoutesForUser {
         $this->securityAuthorizationPortInterface = $security_authorization_port_interface;
     }
 
-    public function run(int $id_user) : array {
-        return $this->securityAuthorizationPortInterface->filterRoutesForUser($id_user);
+    public function run() : array {
+        return $this->securityAuthorizationPortInterface->filterRoutesForUser();
     }
 }

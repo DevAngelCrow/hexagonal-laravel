@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Laravel\Passport\HasApiTokens;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
+/**
+ * @method \Illuminate\Support\Collection<int, \App\Models\CtlPermissions> permissions()
+ */
 
 class MntUser extends Authenticatable implements MustVerifyEmail
 {
@@ -88,6 +89,12 @@ class MntUser extends Authenticatable implements MustVerifyEmail
     }
 
     //apartado de permisos y roles
+
+
+    /**
+     * get permissions
+     * @return \Illuminate\Support\Collection<int, \App\Models\CtlPermissions>
+     */
 
     public function permissions() {
         return $this->roles()->with("permissions")->get()

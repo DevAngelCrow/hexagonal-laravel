@@ -17,9 +17,8 @@ class MenuController extends Controller {
     }
 
     public function getMenuUser(Request $request) {
-        $id_user = $request->id_user;
 
-        $menu = $this->filterRoutesForUser->run((int)$id_user);
+        $menu = $this->filterRoutesForUser->run();
         //dd($menu);
        return $this->success($menu, 'Success');
     }

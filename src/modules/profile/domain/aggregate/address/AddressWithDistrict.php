@@ -1,8 +1,8 @@
 <?php
 namespace Src\modules\profile\domain\aggregate\address;
 
+use Src\modules\catalogs\domain\entities\district\District;
 use Src\modules\profile\domain\entities\address\Address;
-use Src\modules\profile\domain\entities\district\District;
 
 class AddressWithDistrict {
     private Address $address;
