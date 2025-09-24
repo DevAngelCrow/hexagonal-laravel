@@ -50,11 +50,13 @@ class RouteController extends Controller
             $request->description,
             $request->icon,
             $request->uri,
-            $request->active,
+            $request->active ?? true,
             $request->show,
             $request->order,
             $request->id_parent,
-            $request->permissions_id
+            $request->permissions_id,
+            null,
+            $request->title
         );
         $this->routeCreate->run($createRoute);
 
@@ -74,6 +76,7 @@ class RouteController extends Controller
             $request->id_parent,
             $request->permissions_id,
             $request->id,
+            $request->title
         );
         $this->routeUpdate->run($updateRoute);
 

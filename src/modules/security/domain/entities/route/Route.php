@@ -11,6 +11,7 @@ use Src\modules\security\domain\value_objects\routes_value_object\RoutesIdParent
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesName;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesOrder;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesShow;
+use Src\modules\security\domain\value_objects\routes_value_object\RoutesTitle;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesUri;
 
 class Route{
@@ -25,9 +26,10 @@ class Route{
     /** @var PermissionsId[] */
     private readonly ?array $permissionsId;
     private readonly ?RoutesId $id;
+    private readonly ?RoutesTitle $title;
 
     public function __construct(RoutesName $name, RoutesDescription $description, RoutesIcon $icon, RoutesUri $uri,
-    RoutesActive $active, RoutesShow $show, RoutesOrder $order, ?RoutesIdParent $id_parent = null,  ?array $permissionsId = null, ?RoutesId $id = null
+    RoutesActive $active, RoutesShow $show, RoutesOrder $order, ?RoutesIdParent $id_parent = null,  ?array $permissionsId = null, ?RoutesId $id = null, ?RoutesTitle $title
     )
     {
         $this->id_parent = $id_parent;
@@ -40,6 +42,7 @@ class Route{
         $this->order = $order;
         $this->permissionsId = $permissionsId;
         $this->id = $id;
+        $this->title = $title;
 
          // Validar que cada elemento del array sea una instancia de PermissionsId
 
@@ -100,6 +103,10 @@ class Route{
     public function getPermissionsId(): array
     {
         return $this->permissionsId;
+    }
+
+    public function getTitle() : ?RoutesTitle{
+        return $this->title;
     }
     
 }

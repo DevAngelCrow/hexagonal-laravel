@@ -17,6 +17,7 @@ use Src\modules\security\domain\value_objects\routes_value_object\RoutesIdParent
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesName;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesOrder;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesShow;
+use Src\modules\security\domain\value_objects\routes_value_object\RoutesTitle;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesUri;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,6 +38,8 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModel->active = $route->getActive()->value();
             $routeModel->show = $route->getShow()->value();
             $routeModel->order = $route->getOrder()->value();
+            $routeModel->active = true;
+            $routeModel->title = $route->getTitle()->value();
             $routeModel->save();
 
             $permissionIds = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissionsId());
@@ -138,7 +141,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
     {
         try {
 
-            $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order', 'id_parent')->orderBy('id');
+            $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order', 'id_parent', 'title')->orderBy('id');
             
 
             if ($page !== null && $per_page !== null) {
@@ -186,9 +189,8 @@ class ImplRouteRepository implements RouteRepositoryInterface
             new RoutesIdParent($route->id_parent),
             $permissionIds,
             new RoutesId($route->id),
-            //$parentRoute
+            new RoutesTitle($route->title)
         );
-
 
         return $routeMapped;
     }
@@ -214,6 +216,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
                 null,
                 $permissionIds,
                 new RoutesId($route->id),
+                new RoutesTitle($route->title)
             ),
             $parentRoute
         );
