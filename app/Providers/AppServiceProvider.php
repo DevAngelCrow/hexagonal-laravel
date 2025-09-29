@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Src\modules\auth\domain\ports\CloseSessionPortInterface;
 use Src\modules\auth\domain\ports\CredentialValidatorPortInterface;
 use Src\modules\auth\domain\ports\HasVerifiedEmailPortInterface;
 use Src\modules\auth\domain\ports\TokenGeneratorPortInterface;
 use Src\modules\auth\domain\repositories\user\UserRepositoryInterface;
+use Src\modules\auth\infrastructure\implementation\AuthPortImplementation\ImplCloseSessionPortInterface;
 use Src\modules\auth\infrastructure\implementation\AuthPortImplementation\ImplCredentialValidatorPortInterface;
 use Src\modules\auth\infrastructure\implementation\AuthPortImplementation\ImplHasVerifiedEmailPortInterface;
 use Src\modules\auth\infrastructure\implementation\AuthPortImplementation\ImplTokenGeneratorPortInterface;
@@ -87,6 +89,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(HasVerifiedEmailPortInterface::class, ImplHasVerifiedEmailPortInterface::class);
         $this->app->bind(TokenGeneratorPortInterface::class, ImplTokenGeneratorPortInterface::class);
         $this->app->bind(SecurityAuthorizationPortInterface::class, ImplAuthorizationPort::class);
+        $this->app->bind(CloseSessionPortInterface::class, ImplCloseSessionPortInterface::class);
 
         /*--------------------------------------------------
          |  CATALOGOS

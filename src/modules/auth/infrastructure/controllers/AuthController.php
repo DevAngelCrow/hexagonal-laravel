@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Src\shared\infrastructure\HttpResponses;
 use Src\modules\auth\application\useCases\auth\Register;
 use Src\modules\auth\application\useCases\auth\Login;
+use Src\modules\auth\application\useCases\auth\Logout;
 use Src\modules\auth\application\useCases\dtos\RegisterDto;
 use Src\modules\auth\infrastructure\validators\auth\LoginRequest;
 use Src\modules\auth\infrastructure\validators\auth\RegisterRequest;
@@ -20,11 +21,13 @@ class AuthController extends Controller
 
     protected Register $registerUser;
     protected Login $loginUser;
+    protected Logout $logoutUser;
 
-    public function __construct(Register $register_user, Login $login_user)
+    public function __construct(Register $register_user, Login $login_user, Logout $logout_user)
     {
         $this->registerUser = $register_user;
         $this->loginUser = $login_user;
+        $this->logoutUser = $logout_user;
     }
 
 
@@ -92,6 +95,15 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'user' => $data['user']
         ], "Success");
+    }
+
+    public function logout(Request $request){
+        $session = $this->logoutUser->run($request->user_name);
+        
+        if(!$session){
+            return $this->internalServerError("Error interno al cerrar sesion");
+        }
+        return $this->success([], 'Session finalizada correctamente');
     }
 
     public function verifyEmail(Request $request)

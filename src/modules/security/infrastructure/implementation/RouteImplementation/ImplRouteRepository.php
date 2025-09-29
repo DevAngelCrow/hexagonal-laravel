@@ -152,10 +152,10 @@ class ImplRouteRepository implements RouteRepositoryInterface
                 return $this->routesArray = [
                     "data" => $data,
                     "pagination" => [
-                        "current_page" => $routeModels->currentPage(),
-                        "last_page" => $routeModels->lastPage(),
-                        "per_page" => $routeModels->perPage(),
-                        "total" => $routeModels->total()
+                        "currentPage" => $routeModels->currentPage(),
+                        "totalPage" => $routeModels->lastPage(),
+                        "perPage" => $routeModels->perPage(),
+                        "totalItems" => $routeModels->total()
                     ]
                 ];
             }

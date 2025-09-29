@@ -43,7 +43,5 @@ class Login
 
        return $this->tokenGenerator->run($user_name);
 
-        
-
     }
 }
