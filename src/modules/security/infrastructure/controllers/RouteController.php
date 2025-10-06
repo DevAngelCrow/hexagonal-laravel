@@ -101,7 +101,7 @@ class RouteController extends Controller
     }
     public function getAllRoutesWithParent(GetAllRouteRequest $request)
     {
-        $routesCollection = $this->routeGetAllRoutesWithParent->run($request->query("page"), $request->query("per_page"));
+        $routesCollection = $this->routeGetAllRoutesWithParent->run($request->query("page"), $request->query("per_page"), $request->query("filter_name"));
         if ($request->query("page") && $request->query("per_page")) {
             $collections = array_map(fn($item) => RouteAggregateDtoHttp::fromEntity($item)->toArray(), $routesCollection["data"]);
 

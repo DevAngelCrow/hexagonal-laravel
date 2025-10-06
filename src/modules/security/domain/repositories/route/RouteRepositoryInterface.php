@@ -17,5 +17,5 @@ interface RouteRepositoryInterface {
     /**
      * @return RouteWithChild[];
      */
-    public function getAllRoutesWithParentData(int $page, int $per_page) : array;
+    public function getAllRoutesWithParentData(int $page, int $per_page, ?string $filter_name = null) : array;
 }

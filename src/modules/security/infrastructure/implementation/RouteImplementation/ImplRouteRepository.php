@@ -137,12 +137,15 @@ class ImplRouteRepository implements RouteRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAllRoutesWithParentData(?int $page, ?int $per_page): array
+    public function getAllRoutesWithParentData(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
-
+            
             $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order', 'id_parent', 'title')->orderBy('id');
             
+            if($filter_name){
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
 
             if ($page !== null && $per_page !== null) {
                 
