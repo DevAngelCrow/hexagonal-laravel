@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\MntRoute;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +23,7 @@ class MntRouteSeeder extends Seeder
                     'icon'=>'pi pi-sign-in',
                     'uri'=>'/login',
                     'active'=>true,
-                    'show'=>true,
+                    'show'=>false,
                     'order'=>1,
                     'id_parent'=>null,
                     'requiredAuth' => false,
@@ -36,7 +35,7 @@ class MntRouteSeeder extends Seeder
                     'icon'=>'pi pi-user-plus',
                     'uri'=>'/sign-up',
                     'active'=>true,
-                    'show'=>true,
+                    'show'=>false,
                     'order'=>1,
                     'id_parent'=>null,
                     'requiredAuth' => false,
@@ -60,7 +59,7 @@ class MntRouteSeeder extends Seeder
                     'icon'=>'pi pi-exclamation-circle',
                     'uri'=>'/forbidden',
                     'active'=>true,
-                    'show'=>true,
+                    'show'=>false,
                     'order'=>1,
                     'id_parent'=>null,
                     'requiredAuth' => false,
@@ -72,7 +71,7 @@ class MntRouteSeeder extends Seeder
                     'icon'=>'pi pi-verified',
                     'uri'=>'/verify-email',
                     'active'=>true,
-                    'show'=>true,
+                    'show'=>false,
                     'order'=>1,
                     'id_parent'=>null,
                     'requiredAuth' => false,
@@ -84,7 +83,7 @@ class MntRouteSeeder extends Seeder
                     'icon'=>'pi pi-envelope',
                     'uri'=>'/pending-verification-email',
                     'active'=>true,
-                    'show'=>true,
+                    'show'=>false,
                     'order'=>1,
                     'id_parent'=>null,
                     'requiredAuth' => false,
