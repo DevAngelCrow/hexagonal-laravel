@@ -89,6 +89,18 @@ class MntRouteSeeder extends Seeder
                     'requiredAuth' => false,
                     'title' => 'Pantalla de información para verificar correo de usuario'
                 ],
+                [
+                    'name'=>'Usuario',
+                    'description'=>'Menu del usuario',
+                    'icon'=>'pi pi-directions',
+                    'uri'=>'/usuario-prueba',
+                    'active'=>true,
+                    'show'=>true,
+                    'order'=>1,
+                    'id_parent'=> null,
+                    'requiredAuth' => true,
+                    'title' => 'Usuario'
+                ],
             ]
         );
 
@@ -131,6 +143,18 @@ class MntRouteSeeder extends Seeder
                     'id_parent'=> $routes[2]->id,
                     'requiredAuth' => true,
                     'title' => 'Vista de administración de rutas'
+                ],
+                [
+                    'name'=>'Correo',
+                    'description'=>'Menu del usuario',
+                    'icon'=>'pi pi-directions',
+                    'uri'=>'/usuario-prueba',
+                    'active'=>true,
+                    'show'=>true,
+                    'order'=>2,
+                    'id_parent'=> $routes[6]->id,
+                    'requiredAuth' => true,
+                    'title' => 'Usuario'
                 ],
             ]
         );
