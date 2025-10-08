@@ -4,6 +4,7 @@ namespace Src\modules\security\infrastructure\implementation\RouteImplementation
 
 use App\Models\MntRoute as RouteModel;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use LogicException;
 use Src\modules\security\domain\aggregate\routes\RouteWithChild;
 use Src\modules\security\domain\entities\route\Route;
@@ -80,7 +81,21 @@ class ImplRouteRepository implements RouteRepositoryInterface
     {
         try {
 
-            $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order')->orderBy('id');
+            $user = Auth::user();
+            if (!$user) {
+                throw new InfrastructureException("No autorizado", Response::HTTP_UNAUTHORIZED);
+            }
+            
+            /**@var \App\Models\MntUser $user */
+            $permissionsIds = $user->permissions()->pluck('id')->all();
+
+            $query = RouteModel::whereHas('permissions', function ($q) use ($permissionsIds) {
+                $q->whereIn('ctl_permissions.id', $permissionsIds);
+            })
+            ->select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order')
+            ->with(['children', 'parent'])
+            ->orderBy('id')
+            ->distinct();
 
             if ($page !== null && $per_page !== null) {
 
@@ -141,8 +156,24 @@ class ImplRouteRepository implements RouteRepositoryInterface
     {
         try {
             
-            $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order', 'id_parent', 'title')->orderBy('id');
             
+            
+            $user = Auth::user();
+            if (!$user) {
+                throw new InfrastructureException("No autorizado", Response::HTTP_UNAUTHORIZED);
+            }
+            
+            /**@var \App\Models\MntUser $user */
+            $permissionsIds = $user->permissions()->pluck('id')->all();
+
+            $query = RouteModel::whereHas('permissions', function ($q) use ($permissionsIds) {
+                $q->whereIn('ctl_permissions.id', $permissionsIds);
+            })
+            ->select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order', 'id_parent', 'title')
+            ->with(['children', 'parent'])
+            ->orderBy('id')
+            ->distinct();
+
             if($filter_name){
                 $query->where('name', 'ILIKE', "%{$filter_name}%");
             }
