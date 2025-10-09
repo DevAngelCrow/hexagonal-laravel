@@ -1,4 +1,5 @@
 <?php
+
 namespace Src\modules\security\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
@@ -15,7 +16,8 @@ use Src\modules\security\infrastructure\validators\permissions\UpdatePermissions
 use Src\shared\infrastructure\generalDtos\PaginatedResponseDto;
 use Src\shared\infrastructure\HttpResponses;
 
-class PermissionsController extends Controller {
+class PermissionsController extends Controller
+{
     use HttpResponses;
 
     protected PermissionsCreate $permissionsCreate;
@@ -31,18 +33,21 @@ class PermissionsController extends Controller {
         $this->permissionsGetOneById = $permissions_get_one_by_id;
     }
 
-    public function createPermissions(CreatePermissionsRequest $request){
+    public function createPermissions(CreatePermissionsRequest $request)
+    {
         $createPermission = new PermissionsDto(
             $request->name,
             $request->id_category_permissions,
             $request->description,
+            $request->active
         );
 
         $this->permissionsCreate->run($createPermission);
 
         return $this->created([], "Permiso creado satisfactoriamente");
     }
-    public function updatePermissions(UpdatePermissionsRequest $request){
+    public function updatePermissions(UpdatePermissionsRequest $request)
+    {
         $updatePermission = new PermissionsDto(
             $request->name,
             $request->id_category_permissions,
@@ -54,15 +59,21 @@ class PermissionsController extends Controller {
 
         return $this->success([], "Registro de permiso actualizado satisfactoriamente");
     }
-    public function getOneByIdPermissions(GetByIdPermissionsRequest $request){
+    public function getOneByIdPermissions(GetByIdPermissionsRequest $request)
+    {
         $permission = $this->permissionsGetOneById->run($request->id);
 
         return $this->success(["data" => PermissionsDtoHttp::fromEntity($permission)]);
     }
-    public function getAllPermissions(GetAllPermissionsRequest $request){
+    public function getAllPermissions(GetAllPermissionsRequest $request)
+    {
         $permissionsCollection = $this->permissionsGetAll->run($request->query('page'), $request->query('per_page'));
-        $collections = array_map(fn($item)=> PermissionsDtoHttp::fromEntity($item), $permissionsCollection['data']);
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $permissionsCollection['pagination']);
-        return $this->success($paginateData, "Success");
+        if ($request->query("page") && $request->query("per_page")) {
+            $collections = array_map(fn($item) => PermissionsDtoHttp::fromEntity($item), $permissionsCollection['data']);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $permissionsCollection['pagination']);
+            return $this->success($paginateData, "Success");
+        }
+        $data = array_map(fn($item) => PermissionsDtoHttp::fromEntity($item), $permissionsCollection);
+        return $this->success($data, "Success");
     }
 }

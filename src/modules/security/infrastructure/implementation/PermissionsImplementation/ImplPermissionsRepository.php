@@ -7,6 +7,7 @@ use Exception;
 use LogicException;
 use Src\modules\security\domain\entities\permissions\Permissions;
 use Src\modules\security\domain\repositories\permissions\PermissionsRepositoryInterface;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsActive;
 use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsDescription;
 use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsId;
 use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsIdCategoryPermissions;
@@ -45,22 +46,32 @@ class ImplPermissionsRepository implements PermissionsRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(int $page, int $per_page): array
+    public function getAll(?int $page, ?int $per_page): array
     {
         try {
-            $permissionsModels = PermissionsModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToDomain($item), $permissionsModels->items());
 
-            $this->permissionsArray = [
-                "data" => $data,
-                "pagination" => [
-                    "current_page" => $permissionsModels->currentPage(),
-                    "last_page" => $permissionsModels->lastPage(),
-                    "per_page" => $permissionsModels->perPage(),
-                    "total" => $permissionsModels->total()
-                ]
-            ];
+            $query = PermissionsModel::select('id', 'name', 'description', 'active', 'id_category_permissions')->orderBy('id');
 
+            if ($page !== null && $per_page !== null) {
+                $permissionsModels = PermissionsModel::orderBy("id")->paginate($per_page);
+                $data = array_map(fn($item) => $this->mapToDomain($item), $permissionsModels->items());
+
+                $this->permissionsArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        "current_page" => $permissionsModels->currentPage(),
+                        "last_page" => $permissionsModels->lastPage(),
+                        "per_page" => $permissionsModels->perPage(),
+                        "total" => $permissionsModels->total()
+                    ]
+                ];
+
+                return $this->permissionsArray;
+            }
+
+            $permissionsModels = $query->get();
+
+            $this->permissionsArray = array_map(fn($item) => $this->mapToDomain($item), $permissionsModels->all());
             return $this->permissionsArray;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -71,7 +82,7 @@ class ImplPermissionsRepository implements PermissionsRepositoryInterface
         try {
             $permissionsModel = PermissionsModel::find($id->value());
 
-            if(!$permissionsModel){
+            if (!$permissionsModel) {
                 throw new InfrastructureException("Identificador de permiso no encontrado", Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
@@ -96,6 +107,7 @@ class ImplPermissionsRepository implements PermissionsRepositoryInterface
             new PermissionsName($permissions->name),
             new PermissionsIdCategoryPermissions($permissions->id_category_permissions),
             new PermissionsDescription($permissions->description),
+            new PermissionsActive($permissions->active),
             new PermissionsId($permissions->id)
         );
 

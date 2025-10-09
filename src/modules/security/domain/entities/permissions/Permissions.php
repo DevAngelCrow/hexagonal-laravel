@@ -2,6 +2,7 @@
 
 namespace Src\modules\security\domain\entities\permissions;
 
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsActive;
 use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsDescription;
 use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsId;
 use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsIdCategoryPermissions;
@@ -13,13 +14,15 @@ class Permissions
     private readonly PermissionsIdCategoryPermissions $id_category_permissions;
     private readonly PermissionsDescription $description;
     private readonly ?PermissionsId $id;
+    private readonly PermissionsActive $active;
 
-    public function __construct(PermissionsName $name, PermissionsIdCategoryPermissions $id_category_permissions, PermissionsDescription $description, ?PermissionsId $id = null)
+    public function __construct(PermissionsName $name, PermissionsIdCategoryPermissions $id_category_permissions, PermissionsDescription $description, PermissionsActive $active,?PermissionsId $id = null)
     {
         $this->name = $name;
         $this->id_category_permissions = $id_category_permissions;
         $this->description = $description;
         $this->id = $id;
+        $this->active = $active;
     }
 
     public function getName(): PermissionsName
@@ -40,5 +43,9 @@ class Permissions
     public function getId(): ?PermissionsId
     {
         return $this->id;
+    }
+
+    public function getActive() : PermissionsActive{
+        return $this->active;
     }
 }

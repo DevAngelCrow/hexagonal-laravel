@@ -81,21 +81,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
     {
         try {
 
-            $user = Auth::user();
-            if (!$user) {
-                throw new InfrastructureException("No autorizado", Response::HTTP_UNAUTHORIZED);
-            }
-            
-            /**@var \App\Models\MntUser $user */
-            $permissionsIds = $user->permissions()->pluck('id')->all();
-
-            $query = RouteModel::whereHas('permissions', function ($q) use ($permissionsIds) {
-                $q->whereIn('ctl_permissions.id', $permissionsIds);
-            })
-            ->select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order')
-            ->with(['children', 'parent'])
-            ->orderBy('id')
-            ->distinct();
+            $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order')->orderBy('id');
 
             if ($page !== null && $per_page !== null) {
 
