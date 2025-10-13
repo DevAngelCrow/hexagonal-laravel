@@ -59,10 +59,10 @@ class ImplPermissionsRepository implements PermissionsRepositoryInterface
                 $this->permissionsArray = [
                     "data" => $data,
                     "pagination" => [
-                        "current_page" => $permissionsModels->currentPage(),
-                        "last_page" => $permissionsModels->lastPage(),
-                        "per_page" => $permissionsModels->perPage(),
-                        "total" => $permissionsModels->total()
+                        "currentPage" => $permissionsModels->currentPage(),
+                        "lastPage" => $permissionsModels->lastPage(),
+                        "perPage" => $permissionsModels->perPage(),
+                        "totalItems" => $permissionsModels->total()
                     ]
                 ];
 

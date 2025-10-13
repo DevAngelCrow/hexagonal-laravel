@@ -20,6 +20,7 @@ class UpdateRouteRequest extends BaseRequest {
             "active"=>"bool",
             "show"=>"bool",
             "order"=>"integer",
+            "permissions_id"=>"array"
         ];
     }
 }
