@@ -46,14 +46,17 @@ class ImplPermissionsRepository implements PermissionsRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(?int $page, ?int $per_page): array
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
 
             $query = PermissionsModel::select('id', 'name', 'description', 'active', 'id_category_permissions')->orderBy('id');
 
+            if($filter_name){
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
             if ($page !== null && $per_page !== null) {
-                $permissionsModels = PermissionsModel::orderBy("id")->paginate($per_page);
+                $permissionsModels = $query->paginate($per_page);
                 $data = array_map(fn($item) => $this->mapToDomain($item), $permissionsModels->items());
 
                 $this->permissionsArray = [

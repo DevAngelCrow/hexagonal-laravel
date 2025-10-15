@@ -71,14 +71,14 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(?int $page, ?int $per_page): array
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
 
             $query = DepartmentModel::select('id', 'name', 'description', 'id_country', 'active')->orderBy("id");
-            
+
             if ($page !== null && $per_page !== null) {
-                
+
                 $departmentmodels = $query->paginate($per_page);
                 $data = array_map(fn($item) => $this->mapToDomain($item), $departmentmodels->items());
 
@@ -91,7 +91,6 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
                         'total' => $departmentmodels->total(),
                     ]
                 ];
-
             }
 
             $departmentsModels = $query->get();
@@ -117,22 +116,35 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
         }
     }
 
-    public function getAllWithCountry(int $page, int $per_page): array
+    public function getAllWithCountry(int $page, int $per_page, ?string $filter_name = null): array
     {
-
         try {
-            $departmentModels =  DepartmentModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $departmentModels->items());
+            $query = DepartmentModel::select('id', 'name', 'description', 'active', 'id_country')->orderBy('id');
+            if ($filter_name !== null || $filter_name !== '') {
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
 
-            $this->departmentsArray = [
-                "data" => $data,
-                "pagination" => [
-                    'current_page' => $departmentModels->currentPage(),
-                    'last_page' => $departmentModels->lastPage(),
-                    'per_page' => $departmentModels->perPage(),
-                    'total' => $departmentModels->total(),
-                ]
-            ];
+            if ($page !== null && $per_page !== null) {
+                $departmentModels =  $query->paginate($per_page);
+                
+                $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $departmentModels->items());
+                
+                $this->departmentsArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        'currentPage' => $departmentModels->currentPage(),
+                        'lastPage' => $departmentModels->lastPage(),
+                        'perPage' => $departmentModels->perPage(),
+                        'totalItems' => $departmentModels->total(),
+                    ]
+                ];
+
+                
+                return $this->departmentsArray;
+            }
+            $departmentModels = $query->get();
+
+            $this->departmentsArray = array_map(fn($item) => $this->mapToAggregateDomain($item), $departmentModels->all());
             return $this->departmentsArray;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -157,11 +169,12 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
         $departmentMapped = new DepartmentWithCountry(
             $country,
             new Department(
-            new DepartmentName($department->name),
-            new DepartmentDescription($department->description),
-            new DepartmentIdCountry($department->id_country),
-            new DepartmentActive($department->active),
-            new DepartmentId($department->id))
+                new DepartmentName($department->name),
+                new DepartmentDescription($department->description),
+                new DepartmentIdCountry($department->id_country),
+                new DepartmentActive($department->active),
+                new DepartmentId($department->id)
+            )
         );
 
         return $departmentMapped;

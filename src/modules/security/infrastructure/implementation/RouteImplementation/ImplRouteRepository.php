@@ -143,7 +143,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
         try {
             $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order', 'id_parent', 'title')->orderBy('id');
 
-            if($filter_name){
+            if($filter_name !== null || $filter_name !== ''){
                 $query->where('name', 'ILIKE', "%{$filter_name}%");
             }
 

@@ -7,7 +7,8 @@ class GetAllCountriesRequest extends BaseRequest {
     public function rules() : array{
         return [
             "page"=> "integer",
-            "per_page" => "integer"
+            "per_page" => "integer",
+            "filer_name" => "string"
         ];
     }
 }

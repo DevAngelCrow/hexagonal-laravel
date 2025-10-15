@@ -11,7 +11,7 @@ class DepartmentGetAllWithCountry {
         $this->departmentRepository = $department_repository;
     }
 
-    public function run(int $page, int $per_page) : array {
-        return $this->departmentRepository->getAllWithCountry($page, $per_page);
+    public function run(int $page, int $per_page, ?string $filter_name = null) : array {
+        return $this->departmentRepository->getAllWithCountry($page, $per_page, $filter_name);
     }
 }

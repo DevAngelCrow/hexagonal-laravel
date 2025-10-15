@@ -10,7 +10,7 @@ interface CountryRepositoryInterface {
     /**
      * @return Country[];
      */
-    public function getAll(?int $page, ?int $per_page) : array;
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null) : array;
     public function getOneById(CountryId $id): ?Country;
     public function delete(CountryId $id) : void; 
 }

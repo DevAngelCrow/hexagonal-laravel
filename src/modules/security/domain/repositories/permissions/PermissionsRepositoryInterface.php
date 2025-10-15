@@ -10,7 +10,7 @@ interface PermissionsRepositoryInterface {
     /**
      * @return Permissions[];
      */
-    public function getAll(?int $page, ?int $per_page) : array;
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null) : array;
     public function getOneById(PermissionsId $id): ?Permissions;
     public function delete(PermissionsId $id) : void;
 }

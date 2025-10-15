@@ -67,13 +67,14 @@ class PermissionsController extends Controller
     }
     public function getAllPermissions(GetAllPermissionsRequest $request)
     {
-        $permissionsCollection = $this->permissionsGetAll->run($request->query('page'), $request->query('per_page'));
+        $permissionsCollection = $this->permissionsGetAll->run($request->query('page'), $request->query('per_page'), $request->query('filter_name'));
         if ($request->query("page") && $request->query("per_page")) {
             $collections = array_map(fn($item) => PermissionsDtoHttp::fromEntity($item), $permissionsCollection['data']);
             $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $permissionsCollection['pagination']);
             return $this->success($paginateData, "Success");
         }
         $data = array_map(fn($item) => PermissionsDtoHttp::fromEntity($item), $permissionsCollection);
+        
         return $this->success($data, "Success");
     }
 }
