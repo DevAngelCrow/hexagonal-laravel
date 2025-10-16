@@ -18,8 +18,10 @@ class MunicipalityAggregateDtoHttp {
             "id" => $municipality->getId()->value(),
             "name" => $municipality->getName()->value(),
             "description" => $municipality->getDescription()->value(),
+            "active" => $municipality->getActive()->value(),
         ];
         $departmentMappedData = [
+            "id" => $department->getId()->value(),
             "name" => $department->getName()->value(),
             "description" => $department->getDescription()->value(),
         ];

@@ -54,7 +54,6 @@ class DepartmentController extends Controller
             $request->name,
             $request->description,
             (int) $request->id_country,
-            $request->active
         );
 
         $this->departmentCreate->run($department);

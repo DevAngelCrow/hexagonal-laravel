@@ -3,16 +3,16 @@ namespace Src\modules\catalogs\domain\value_objects\department_value_object;
 
 class DepartmentActive
 {
-    private bool $value;
+    private ?bool $value;
     
-    public function __construct(bool $value)
+    public function __construct(?bool $value)
     {
         $this->value = $value;
     }
 
     
 
-    public function value() : bool {
+    public function value() : ?bool {
         return $this->value;
     }
 }

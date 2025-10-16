@@ -33,7 +33,7 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
             $departmentModel->name = $department->getName()->value();
             $departmentModel->description = $department->getDescription()->value();
             $departmentModel->id_country = $department->getIdCountry()->value();
-            $departmentModel->active = $department->getActive()->value();
+            //$departmentModel->active = $department->getActive()->value();
 
             $departmentModel->save();
         } catch (Exception $e) {
@@ -110,13 +110,13 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
 
             $departmentModel->active = false;
             $departmentModel->save();
-            $departmentModel->delete();
+            //$departmentModel->delete();
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function getAllWithCountry(int $page, int $per_page, ?string $filter_name = null): array
+    public function getAllWithCountry(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
             $query = DepartmentModel::select('id', 'name', 'description', 'active', 'id_country')->orderBy('id');

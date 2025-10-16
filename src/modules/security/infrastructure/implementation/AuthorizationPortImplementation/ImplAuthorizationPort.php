@@ -40,8 +40,6 @@ class ImplAuthorizationPort implements SecurityAuthorizationPortInterface
 
                 return false;
             }
-
-
             return $permmisionCollection->contains(fn($perm) => $perm->name === $permission);
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);

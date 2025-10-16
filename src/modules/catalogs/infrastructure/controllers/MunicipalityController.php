@@ -10,7 +10,7 @@ use Src\modules\catalogs\application\usesCases\municipality\MunicipalityGetAll;
 use Src\modules\catalogs\application\usesCases\municipality\MunicipalityGetAllWithDepartment;
 use Src\modules\catalogs\application\usesCases\municipality\MunicipalityGetOneById;
 use Src\modules\catalogs\application\usesCases\municipality\MunicipalityUpdate;
-use Src\modules\catalogs\infrastructure\dtos\countryDtoHttpResponse\MunicipalityAggregateDtoHttp;
+use Src\modules\catalogs\infrastructure\dtos\municipalityDtoHttpResponse\MunicipalityAggregateDtoHttp;
 use Src\modules\catalogs\infrastructure\dtos\municipalityDtoHttpResponse\MunicipalityDtoHttp;
 use Src\modules\catalogs\infrastructure\validators\municipality\CreateMunicipalityRequest;
 use Src\modules\catalogs\infrastructure\validators\municipality\DeleteMunicipalityRequest;
@@ -85,7 +85,7 @@ class MunicipalityController extends Controller
     public function getAllMunicipality(GetAllMunicipalitiesRequest $request)
     {
         $municipalityCollection = $this->municipalityGetAll->run($request->query("page"), $request->query("per_page"));
-        if($request->query("page") && $request->query("per_page")){
+        if ($request->query("page") && $request->query("per_page")) {
             $collections = array_map(fn($item) => MunicipalityDtoHttp::fromEntity($item), $municipalityCollection["data"]);
             $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $municipalityCollection["pagination"]);
             return $this->success($paginateData, "Success");
@@ -99,16 +99,22 @@ class MunicipalityController extends Controller
 
         return $this->success([], "Registro de municipio borrado exitosamente");
     }
-    public function getAllMunicipalityWithDepartment(GetAllMunicipalitiesRequest $request) {
+    public function getAllMunicipalityWithDepartment(GetAllMunicipalitiesRequest $request)
+    {
         $page = $request->query("page");
         $per_page = $request->query("per_page");
+        $filter_name = $request->query('filter_name');
 
-        $districtsCollection = $this->municipalityGetAllWithDepartment->run($page, $per_page);
+        $districtsCollection = $this->municipalityGetAllWithDepartment->run($page, $per_page, $filter_name);
 
-        $collections = array_map(fn($item) => MunicipalityAggregateDtoHttp::fromAggregate($item)->toArray(), $districtsCollection["data"]);
+        if ($page && $per_page) {
+            $collections = array_map(fn($item) => MunicipalityAggregateDtoHttp::fromAggregate($item)->toArray(), $districtsCollection["data"]);
 
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
 
-        return $this->success($paginateData, "Success");
+            return $this->success($paginateData, "Success");
+        }
+        $data = array_map(fn($item) => MunicipalityAggregateDtoHttp::fromAggregate($item)->toArray(), $districtsCollection);
+        return $this->success($data, "Success");
     }
 }
