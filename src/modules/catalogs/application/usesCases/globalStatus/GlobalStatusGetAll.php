@@ -14,9 +14,9 @@ class GlobalStatusGetAll {
     }
 
     public function run(
-        ?int $page, ?int $per_page
+        ?int $page, ?int $per_page, ?string $filter_name = null
     ): array {
-        return $this->globalStatusrepository->getAll($page, $per_page);
+        return $this->globalStatusrepository->getAll($page, $per_page, $filter_name);
     }
 }
 

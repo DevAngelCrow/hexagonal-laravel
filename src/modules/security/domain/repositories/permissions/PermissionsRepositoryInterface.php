@@ -13,4 +13,5 @@ interface PermissionsRepositoryInterface {
     public function getAll(?int $page, ?int $per_page, ?string $filter_name = null) : array;
     public function getOneById(PermissionsId $id): ?Permissions;
     public function delete(PermissionsId $id) : void;
+    public function getAllWithCategories(?int $page, ?int $per_page, ?string $filter_name=null) : array;
 }

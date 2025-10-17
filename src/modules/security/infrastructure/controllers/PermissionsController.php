@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Src\modules\security\application\dtos\PermissionsDto;
 use Src\modules\security\application\useCases\permissions\PermissionsCreate;
 use Src\modules\security\application\useCases\permissions\PermissionsGetAll;
+use Src\modules\security\application\useCases\permissions\PermissionsGetAllWithCategories;
 use Src\modules\security\application\useCases\permissions\PermissionsGetOneById;
 use Src\modules\security\application\useCases\permissions\PermissionsUpdate;
+use Src\modules\security\infrastructure\dtos\permissionsDtoHttpResponse\PermissionsAggregateDtoHttp;
 use Src\modules\security\infrastructure\dtos\permissionsDtoHttpResponse\PermissionsDtoHttp;
 use Src\modules\security\infrastructure\validators\permissions\CreatePermissionsRequest;
 use Src\modules\security\infrastructure\validators\permissions\GetAllPermissionsRequest;
@@ -24,13 +26,20 @@ class PermissionsController extends Controller
     protected PermissionsUpdate $permissionsUpdate;
     protected PermissionsGetAll $permissionsGetAll;
     protected PermissionsGetOneById $permissionsGetOneById;
+    protected PermissionsGetAllWithCategories $permissionsGetAllWithCategories;
 
-    public function __construct(PermissionsCreate $permissions_create, PermissionsUpdate $permissions_update, PermissionsGetAll $permissions_get_all, PermissionsGetOneById $permissions_get_one_by_id)
-    {
+    public function __construct(
+        PermissionsCreate $permissions_create,
+        PermissionsUpdate $permissions_update,
+        PermissionsGetAll $permissions_get_all,
+        PermissionsGetOneById $permissions_get_one_by_id,
+        PermissionsGetAllWithCategories $permissions_get_all_with_categories
+    ) {
         $this->permissionsCreate = $permissions_create;
         $this->permissionsUpdate = $permissions_update;
         $this->permissionsGetAll = $permissions_get_all;
         $this->permissionsGetOneById = $permissions_get_one_by_id;
+        $this->permissionsGetAllWithCategories = $permissions_get_all_with_categories;
     }
 
     public function createPermissions(CreatePermissionsRequest $request)
@@ -74,7 +83,22 @@ class PermissionsController extends Controller
             return $this->success($paginateData, "Success");
         }
         $data = array_map(fn($item) => PermissionsDtoHttp::fromEntity($item), $permissionsCollection);
-        
+
+        return $this->success($data, "Success");
+    }
+    public function getAllPermissionsWithCategories(GetAllPermissionsRequest $request)
+    {
+        $page = $request->query("page");
+        $per_page = $request->query("per_page");
+        $filter_name = $request->query("filter_name");
+        $permissionsCollection = $this->permissionsGetAllWithCategories->run($page, $per_page, $filter_name);
+        if ($request->query("page") && $request->query("per_page")) {
+            $collections = array_map(fn($item) => PermissionsAggregateDtoHttp::fromAggregate($item)->toArray(), $permissionsCollection['data']);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $permissionsCollection['pagination']);
+            return $this->success($paginateData, "Success");
+        }
+        $data = array_map(fn($item) => PermissionsAggregateDtoHttp::fromAggregate($item)->toArray(), $permissionsCollection);
+
         return $this->success($data, "Success");
     }
 }

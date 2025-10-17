@@ -1,8 +1,7 @@
 <?php
 
-namespace Src\modules\catalogs\domain\value_objects\global_status_value_objects;
-
-class GlobalStatusActive
+namespace Src\modules\security\domain\value_objects\category_permissions_value_object;
+class CategoryPermissionsActive
 {
     private ?bool $value;
     public function __construct(?bool $value)
