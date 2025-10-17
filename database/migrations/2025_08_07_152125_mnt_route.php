@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean("active")->default(true);
             $table->boolean("show")->default(true);
             $table->integer("order")->nullable();
-            $table->boolean("requiredAuth")->default(true);
+            $table->boolean("required_auth")->default(true);
             $table->string("title", length: 150);
             $table->integer("id_parent")->nullable();
             $table->foreign("id_parent")->references("id")->on("mnt_route");
