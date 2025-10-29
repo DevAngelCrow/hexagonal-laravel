@@ -8,7 +8,7 @@ class PermissionsDto {
         public readonly string $name,
         public readonly int $id_category_permissions,
         public readonly string $description,
-        public readonly bool $active,
+        public readonly ?bool $active = null,
         public readonly ?int $id = null
     )
     {}
@@ -17,7 +17,7 @@ class PermissionsDto {
             $permissions->getName()->value(),
             $permissions->getIdCategoryPermissions()->value(),
             $permissions->getDescription()->value(),
-            $permissions->getActive()->value(),
+            $permissions->getActive()->value() ?: null,
             $permissions->getId()->value() ?: null
         );
     }

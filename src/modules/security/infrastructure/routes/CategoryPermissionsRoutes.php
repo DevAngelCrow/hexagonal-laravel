@@ -10,4 +10,5 @@ Route::prefix("category-permissions")->group(function () {
     Route::get("/", [CategoryPermissionsController::class, "getAllCategoryPermissions"]);
     Route::get("/{id}", [CategoryPermissionsController::class, "getOneByIdCategoryPermissions"]);
     Route::put("{id}", [CategoryPermissionsController::class, "updateCategoryPermissions"]);
+    Route::delete("{id}", [CategoryPermissionsController::class, "deleteCategoryPermission"]);
 });

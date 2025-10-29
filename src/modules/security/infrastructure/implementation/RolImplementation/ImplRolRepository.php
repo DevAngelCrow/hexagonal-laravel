@@ -5,6 +5,13 @@ namespace Src\modules\security\infrastructure\implementation\RolImplementation;
 use App\Models\MntRol as RolModel;
 use Exception;
 use LogicException;
+use Src\modules\catalogs\domain\entities\GlobalStatus;
+use Src\modules\catalogs\domain\value_objects\global_status_value_objects\GlobalStatusActive;
+use Src\modules\catalogs\domain\value_objects\global_status_value_objects\GlobalStatusDescription;
+use Src\modules\catalogs\domain\value_objects\global_status_value_objects\GlobalStatusId;
+use Src\modules\catalogs\domain\value_objects\global_status_value_objects\GlobalStatusName;
+use Src\modules\catalogs\domain\value_objects\global_status_value_objects\GlobalStatusTableHeader;
+use Src\modules\security\domain\aggregate\role\RoleWithStatus;
 use Src\modules\security\domain\entities\permissions\Permissions;
 use Src\modules\security\domain\entities\rol\Rol;
 use Src\modules\security\domain\repositories\rol\RolRepositoryInterface;
@@ -39,11 +46,9 @@ class ImplRolRepository implements RolRepositoryInterface
             $mapeoDominio = $this->mapToDomain($rolModel);
 
             return $mapeoDominio;
-
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        
     }
     public function update(Rol $rol): void
     {
@@ -56,7 +61,7 @@ class ImplRolRepository implements RolRepositoryInterface
             $rolModel->save();
 
 
-            $newPermissions = array_map(fn($id_permission) => $id_permission->value(), $rol->getPermissions() ?? [] ); ;
+            $newPermissions = array_map(fn($id_permission) => $id_permission->value(), $rol->getPermissions() ?? []);;
 
 
             $rolModel->permissions()->sync($newPermissions);
@@ -64,27 +69,35 @@ class ImplRolRepository implements RolRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(int $page, int $per_page): array
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
-            $rolModels = RolModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToDomain($item), $rolModels->items());
 
-            $this->rolArray = [
-                "data" => $data,
-                "pagination" => [
-                    "current_page" => $rolModels->currentPage(),
-                    "last_page" => $rolModels->lastPage(),
-                    "per_page" => $rolModels->perPage(),
-                    "total" => $rolModels->total()
-                ]
-            ];
+            $query = RolModel::select('id', 'name', 'description', 'id_status')->orderBy('id');
+            if ($filter_name) {
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
+            if ($page !== null && $per_page !== null) {
+                $rolModels = $query->paginate($per_page);
+                $data = array_map(fn($item) => $this->mapToDomain($item), $rolModels->items());
+                $this->rolArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        "currentPage" => $rolModels->currentPage(),
+                        "lastPage" => $rolModels->lastPage(),
+                        "perPage" => $rolModels->perPage(),
+                        "totalItems" => $rolModels->total()
+                    ]
+                ];
 
+                return $this->rolArray;
+            }
+            $rolModels = $query->get();
+            $this->rolArray = array_map(fn($item) => $this->mapToDomain($item), $rolModels->all());
             return $this->rolArray;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        
     }
     public function getOneById(RolId $id): ?Rol
     {
@@ -102,7 +115,6 @@ class ImplRolRepository implements RolRepositoryInterface
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        
     }
     public function delete(RolId $id): void
     {
@@ -112,13 +124,42 @@ class ImplRolRepository implements RolRepositoryInterface
         }
         throw new LogicException("Método no implementado");
     }
+    public function getAllWithStatus(?int $page, ?int $per_page, ?string $filter_name = null): array
+    {
+        try {
+            $query = RolModel::select('id', 'name', 'description', 'id_status')->orderBy('id');
+            if ($filter_name) {
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
+            if ($page !== null && $per_page !== null) {
+                $rolModels = $query->paginate($per_page);
+                $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $rolModels->items());
+                $this->rolArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        "currentPage" => $rolModels->currentPage(),
+                        "lastPage" => $rolModels->lastPage(),
+                        "perPage" => $rolModels->perPage(),
+                        "totalItems" => $rolModels->total()
+                    ]
+                ];
+
+                return $this->rolArray;
+            }
+            $rolModels = $query->get();
+            $this->rolArray = array_map(fn($item) => $this->mapToAggregateDomain($item), $rolModels->all());
+            return $this->rolArray;
+        } catch (Exception $e) {
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 
     private function mapToDomain(RolModel $rol): Rol
     {
 
         $permisssionIds = null;
 
-        if(!empty($rol->permissions->toArray())){
+        if (!empty($rol->permissions->toArray())) {
             $permisssionIds = collect($rol->permissions)->map(
                 fn($permission) => new PermissionsId($permission->id)
             )->toArray();
@@ -134,5 +175,41 @@ class ImplRolRepository implements RolRepositoryInterface
         );
 
         return $rolMapped;
+    }
+    private function mapToAggregateDomain(RolModel $role): RoleWithStatus
+    {
+
+        $permissionIds = null;
+        if (!empty($route->permissions)) {
+            $permissionIds = collect($role->permissions->toArray())->map(
+                fn($permission) => new PermissionsId($permission['id'])
+            )->toArray();
+        }
+        $globalStatus = $this->mapToDomainStatus($role);
+        $roleMapped = new RoleWithStatus(
+            new Rol(
+                new RolName($role->name),
+                new RolDescription($role->description),
+                new RolIdStatus($role->id_status),
+                
+                new RolId($role->id),
+                $permissionIds,
+            ),
+            $globalStatus,
+        );
+
+        return $roleMapped;
+    }
+    private function mapToDomainStatus(RolModel $role): GlobalStatus
+    {
+        $globalStatus = $role->status;
+        $globalStatusMapped = new GlobalStatus(
+            new GlobalStatusName($globalStatus->name),
+            new GlobalStatusDescription($globalStatus->description),
+            new GlobalStatusTableHeader($globalStatus->table_header),
+            new GlobalStatusActive($globalStatus->active),
+            new GlobalStatusId($globalStatus->id)
+        );
+        return $globalStatusMapped;
     }
 }

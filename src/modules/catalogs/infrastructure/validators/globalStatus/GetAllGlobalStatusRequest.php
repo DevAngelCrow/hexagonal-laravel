@@ -10,7 +10,8 @@ class GetAllGlobalStatusRequest extends BaseRequest
         return [
             "page" => "integer",
             "per_page" => "integer",
-            "filter_name" => "string"
+            "filter_name" => "string",
+            "table_header" => "string"
         ];
     }
 }

@@ -10,5 +10,6 @@ Route::prefix("permissions")->group(function () {
     Route::get("/list", [PermissionsController::class, 'getAllPermissionsWithCategories']);
     Route::get("/{id}", [PermissionsController::class, "getOneByIdPermissions"]);
     Route::put("{id}", [PermissionsController::class, "updatePermissions"]);
+    Route::delete("{id}", [PermissionsController::class, "deletePermission"]);
     
 });

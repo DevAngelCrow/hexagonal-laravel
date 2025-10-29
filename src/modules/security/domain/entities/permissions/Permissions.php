@@ -14,9 +14,9 @@ class Permissions
     private readonly PermissionsIdCategoryPermissions $id_category_permissions;
     private readonly PermissionsDescription $description;
     private readonly ?PermissionsId $id;
-    private readonly PermissionsActive $active;
+    private readonly ?PermissionsActive $active;
 
-    public function __construct(PermissionsName $name, PermissionsIdCategoryPermissions $id_category_permissions, PermissionsDescription $description, PermissionsActive $active,?PermissionsId $id = null)
+    public function __construct(PermissionsName $name, PermissionsIdCategoryPermissions $id_category_permissions, PermissionsDescription $description, ?PermissionsActive $active,?PermissionsId $id = null)
     {
         $this->name = $name;
         $this->id_category_permissions = $id_category_permissions;

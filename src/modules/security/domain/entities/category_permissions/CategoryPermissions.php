@@ -9,7 +9,7 @@ use Src\modules\security\domain\value_objects\category_permissions_value_object\
 class CategoryPermissions {
     private readonly CategoryPermissionsName $name;
     private readonly CategoryPermissionsDescription $description;
-    private readonly CategoryPermissionsActive $active;
+    private readonly ?CategoryPermissionsActive $active;
     private readonly ?CategoryPermissionsId $id;
 
     public function __construct(CategoryPermissionsName $name, CategoryPermissionsDescription $description, ?CategoryPermissionsActive $active = null,?CategoryPermissionsId $id = null)

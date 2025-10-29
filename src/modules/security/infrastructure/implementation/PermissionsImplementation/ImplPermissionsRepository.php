@@ -42,7 +42,6 @@ class ImplPermissionsRepository implements PermissionsRepositoryInterface
     {
         try {
             $permissionsModel = PermissionsModel::find($permissions->getId()->value());
-
             $permissionsModel->name = $permissions->getName()->value();
             $permissionsModel->id_category_permissions = $permissions->getIdCategoryPermissions()->value();
             $permissionsModel->description = $permissions->getDescription()->value();
@@ -105,18 +104,28 @@ class ImplPermissionsRepository implements PermissionsRepositoryInterface
     public function delete(PermissionsId $id): void
     {
         try {
+
+            $permissionModel = PermissionsModel::find($id->value());
+
+            $permissionModel->active = !$permissionModel->active;
+            $permissionModel->save();
+
+            
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        throw new LogicException("Método no implementado");
+        //throw new LogicException("Método no implementado");
     }
-    public function getAllWithCategories(?int $page, ?int $per_page, ?string $filter_name = null): array
-    {
+    public function getAllWithCategories(?int $page, ?int $per_page, ?string $filter_name = null, ?bool $active): array
+    { 
         try {
             $query = PermissionsModel::select('id', 'name', 'description', 'active', 'id_category_permissions')->orderBy('id');
 
             if ($filter_name) {
                 $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
+            if($active){
+                $query->where('active', $active);
             }
             if ($page !== null && $per_page !== null) {
                 $permissionsModels = $query->paginate($per_page);

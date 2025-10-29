@@ -10,7 +10,7 @@ interface CategoryPermissionsRepositoryInterface {
     /**
      * @return CategoryPermissions[];
      */
-    public function getAll(int $page, int $per_page) : array;
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null) : array;
     public function getOneById(CategoryPermissionsId $id): ?CategoryPermissions;
     public function delete(CategoryPermissionsId $id) : void;
 }

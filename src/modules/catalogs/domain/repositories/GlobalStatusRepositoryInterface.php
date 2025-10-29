@@ -10,7 +10,7 @@ interface GlobalStatusRepositoryInterface{
     /**
      * @return GlobalStatus[];
      */
-    public function getAll(?int $page, ?int $per_page, ?string $filter_name) : array;
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name, ?string $table_header) : array;
     public function getOneById(GlobalStatusId $id): ?GlobalStatus;
     public function delete(GlobalStatusId $id) : void;
 }

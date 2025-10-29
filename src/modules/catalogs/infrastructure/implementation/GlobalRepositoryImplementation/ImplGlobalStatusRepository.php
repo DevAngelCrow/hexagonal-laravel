@@ -48,14 +48,16 @@ class ImplGlobalStatusRepository implements GlobalStatusRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null): array
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null, ?string $table_header = null): array
     {
         try {
             $query = GlobalStatusModel::select('id', 'table_header', 'name', 'description', 'state')->orderBy('id');
             if ($filter_name !== null || $filter_name !== '') {
                 $query->where('name', 'ILIKE', "%{$filter_name}%");
             }
-
+            if($table_header !== null || $table_header !== ''){
+                $query->where('table_header', 'ILIKE', "%{$table_header}%");
+            }
             if ($page !== null && $per_page !== null) {
                 $globalStatusModels =  $query->paginate($per_page);
                 $data = array_map(fn($item) => $this->mapToDomain($item), $globalStatusModels->items());

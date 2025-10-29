@@ -10,7 +10,8 @@ interface RolRepositoryInterface {
     /**
      * @return Rol[];
      */
-    public function getAll(int $page, int $per_page) : array;
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null) : array;
     public function getOneById(RolId $id): ?Rol;
     public function delete(RolId $id) : void;
+    public function getAllWithStatus(?int $page, ?int $per_page, ?string $filter_name = null) : array;
 }

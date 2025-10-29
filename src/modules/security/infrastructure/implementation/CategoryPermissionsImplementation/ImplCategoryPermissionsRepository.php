@@ -7,6 +7,7 @@ use Exception;
 use LogicException;
 use Src\modules\security\domain\entities\category_permissions\CategoryPermissions;
 use Src\modules\security\domain\repositories\category_permissions\CategoryPermissionsRepositoryInterface;
+use Src\modules\security\domain\value_objects\category_permissions_value_object\CategoryPermissionsActive;
 use Src\modules\security\domain\value_objects\category_permissions_value_object\CategoryPermissionsDescription;
 use Src\modules\security\domain\value_objects\category_permissions_value_object\CategoryPermissionsId;
 use Src\modules\security\domain\value_objects\category_permissions_value_object\CategoryPermissionsName;
@@ -44,21 +45,33 @@ class ImplCategoryPermissionsRepository implements CategoryPermissionsRepository
         }
     }
 
-    public function getAll(int $page, int $per_page): array
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
-            $categoryPermissionsModels = CategoryPermissionsModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToDomain($item), $categoryPermissionsModels->items());
+            $query = CategoryPermissionsModel::select('id', 'name', 'description', 'active')->orderBy('id');
 
-            $this->categoryPermisionsArray = [
-                "data" => $data,
-                "pagination" => [
-                    "current_page" => $categoryPermissionsModels->currentPage(),
-                    "last_page" => $categoryPermissionsModels->lastPage(),
-                    "per_page" => $categoryPermissionsModels->perPage(),
-                    "total" => $categoryPermissionsModels->total()
-                ]
-            ];
+            if ($filter_name) {
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
+            if ($page !== null && $per_page !== null) {
+                $categoryPermissionsModels = $query->paginate($per_page);
+                $data = array_map(fn($item) => $this->mapToDomain($item), $categoryPermissionsModels->items());
+
+                $this->categoryPermisionsArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        "currentPage" => $categoryPermissionsModels->currentPage(),
+                        "lastPage" => $categoryPermissionsModels->lastPage(),
+                        "perPage" => $categoryPermissionsModels->perPage(),
+                        "totalItems" => $categoryPermissionsModels->total()
+                    ]
+                ];
+
+                return $this->categoryPermisionsArray;
+            }
+            $categoryPermissionsModels = $query->get();
+
+            $this->categoryPermisionsArray = array_map(fn($item) => $this->mapToDomain($item), $categoryPermissionsModels->all());
 
             return $this->categoryPermisionsArray;
         } catch (Exception $e) {
@@ -86,16 +99,22 @@ class ImplCategoryPermissionsRepository implements CategoryPermissionsRepository
     public function delete(CategoryPermissionsId $id): void
     {
         try {
+
+            $categoryPermissionModel = CategoryPermissionsModel::find($id->value());
+
+            $categoryPermissionModel->active = !$categoryPermissionModel->active;
+            $categoryPermissionModel->save();
+            
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        throw new LogicException("Método no implementado");
     }
     private function mapToDomain(CategoryPermissionsModel $categoryPermission): CategoryPermissions
     {
         $categoryPermissionMapped = new CategoryPermissions(
             new CategoryPermissionsName($categoryPermission->name),
             new CategoryPermissionsDescription($categoryPermission->description),
+            new CategoryPermissionsActive($categoryPermission->active),
             new CategoryPermissionsId($categoryPermission->id)
         );
 

@@ -5,6 +5,7 @@ namespace Src\modules\security\infrastructure\controllers;
 use App\Http\Controllers\Controller;
 use Src\modules\security\application\dtos\PermissionsDto;
 use Src\modules\security\application\useCases\permissions\PermissionsCreate;
+use Src\modules\security\application\useCases\permissions\PermissionsDelete;
 use Src\modules\security\application\useCases\permissions\PermissionsGetAll;
 use Src\modules\security\application\useCases\permissions\PermissionsGetAllWithCategories;
 use Src\modules\security\application\useCases\permissions\PermissionsGetOneById;
@@ -27,19 +28,22 @@ class PermissionsController extends Controller
     protected PermissionsGetAll $permissionsGetAll;
     protected PermissionsGetOneById $permissionsGetOneById;
     protected PermissionsGetAllWithCategories $permissionsGetAllWithCategories;
+    protected PermissionsDelete $permissionsDelete;
 
     public function __construct(
         PermissionsCreate $permissions_create,
         PermissionsUpdate $permissions_update,
         PermissionsGetAll $permissions_get_all,
         PermissionsGetOneById $permissions_get_one_by_id,
-        PermissionsGetAllWithCategories $permissions_get_all_with_categories
+        PermissionsGetAllWithCategories $permissions_get_all_with_categories,
+        PermissionsDelete $permissions_delete,
     ) {
         $this->permissionsCreate = $permissions_create;
         $this->permissionsUpdate = $permissions_update;
         $this->permissionsGetAll = $permissions_get_all;
         $this->permissionsGetOneById = $permissions_get_one_by_id;
         $this->permissionsGetAllWithCategories = $permissions_get_all_with_categories;
+        $this->permissionsDelete = $permissions_delete;
     }
 
     public function createPermissions(CreatePermissionsRequest $request)
@@ -61,6 +65,7 @@ class PermissionsController extends Controller
             $request->name,
             $request->id_category_permissions,
             $request->description,
+            $request->active,
             $request->id
         );
 
@@ -91,7 +96,8 @@ class PermissionsController extends Controller
         $page = $request->query("page");
         $per_page = $request->query("per_page");
         $filter_name = $request->query("filter_name");
-        $permissionsCollection = $this->permissionsGetAllWithCategories->run($page, $per_page, $filter_name);
+        $active = (bool) $request->query("active");
+        $permissionsCollection = $this->permissionsGetAllWithCategories->run($page, $per_page, $filter_name, $active);
         if ($request->query("page") && $request->query("per_page")) {
             $collections = array_map(fn($item) => PermissionsAggregateDtoHttp::fromAggregate($item)->toArray(), $permissionsCollection['data']);
             $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $permissionsCollection['pagination']);
@@ -100,5 +106,9 @@ class PermissionsController extends Controller
         $data = array_map(fn($item) => PermissionsAggregateDtoHttp::fromAggregate($item)->toArray(), $permissionsCollection);
 
         return $this->success($data, "Success");
+    }
+    public function deletePermission(GetByIdPermissionsRequest $request){
+        $this->permissionsDelete->run($request->id);
+        return $this->success([], 'Permiso actualizado correctamente');
     }
 }

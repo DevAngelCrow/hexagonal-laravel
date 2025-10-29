@@ -74,8 +74,9 @@ class GlobalStatusController extends Controller
         $page = $request->query("page");
         $per_page = $request->query("per_page");
         $filter_name = $request->query("filter_name");
+        $table_header = $request->query("table_header");
 
-        $globalStatusCollection = $this->globalStatusGetAll->run($page, $per_page, $filter_name);
+        $globalStatusCollection = $this->globalStatusGetAll->run($page, $per_page, $filter_name, $table_header);
 
         if ($page && $per_page) {
             $collections = array_map(fn($item) => GlobalStatusDtoHttp::fromEntity($item), $globalStatusCollection["data"]);
