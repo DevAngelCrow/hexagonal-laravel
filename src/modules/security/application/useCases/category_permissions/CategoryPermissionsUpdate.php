@@ -4,6 +4,7 @@ namespace Src\modules\security\application\useCases\category_permissions;
 use Src\modules\security\application\dtos\CategoryPermissionsDto;
 use Src\modules\security\domain\entities\category_permissions\CategoryPermissions;
 use Src\modules\security\domain\repositories\category_permissions\CategoryPermissionsRepositoryInterface;
+use Src\modules\security\domain\value_objects\category_permissions_value_object\CategoryPermissionsActive;
 use Src\modules\security\domain\value_objects\category_permissions_value_object\CategoryPermissionsDescription;
 use Src\modules\security\domain\value_objects\category_permissions_value_object\CategoryPermissionsId;
 use Src\modules\security\domain\value_objects\category_permissions_value_object\CategoryPermissionsName;
@@ -27,6 +28,7 @@ class CategoryPermissionsUpdate {
         $categoryPermissionsUpdate = new CategoryPermissions(
             new CategoryPermissionsName($categoryPermissionDto->name),
             new CategoryPermissionsDescription($categoryPermissionDto->description),
+            new CategoryPermissionsActive($categoryPermissionDto->active),
             new CategoryPermissionsId($categoryPermissionDto->id),
         );
 

@@ -10,8 +10,8 @@ interface DepartmentRepositoryInterface {
     /**
      * @return Department[];
      */
-    public function getAll(?int $page, ?int $per_page) : array;
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null) : array;
     public function getOneById(DepartmentId $id): ?Department;
     public function delete(DepartmentId $id) : void;
-    public function getAllWithCountry(int $page, int $per_page) : array;
+    public function getAllWithCountry(?int $page, ?int $per_page, ?string $filter_name=null) : array;
 }

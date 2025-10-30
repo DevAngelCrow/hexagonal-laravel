@@ -21,6 +21,7 @@ class DepartmentAggregateDtoHttp {
             "active" => $department->getActive()->value()
         ];
         $countryMappedData = [
+            "id" => $country->getId()->value(),
             "name" => $country->getName()->value(),
             "abbreviation" => $country->getAbbreviation()->value(),
             "code" => $country->getCode()->value(),

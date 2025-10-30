@@ -81,8 +81,9 @@ class CountryController extends Controller
     {
         $page = $request->query("page");
         $per_page = $request->query("per_page");
+        $filer_name = $request->query("filter_name");
 
-        $countriesCollection = $this->countryGetAll->run($page, $per_page);
+        $countriesCollection = $this->countryGetAll->run($page, $per_page, $filer_name);
         if ($page !== null && $per_page !== null) {
             
             $collections = array_map(fn($item) => CountryDtoHttp::fromEntity($item), $countriesCollection["data"]);

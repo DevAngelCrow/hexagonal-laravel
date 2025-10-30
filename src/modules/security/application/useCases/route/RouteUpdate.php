@@ -13,6 +13,7 @@ use Src\modules\security\domain\value_objects\routes_value_object\RoutesIdParent
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesName;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesOrder;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesShow;
+use Src\modules\security\domain\value_objects\routes_value_object\RoutesTitle;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesUri;
 use Src\shared\application\exceptions\ApplicationException;
 use Src\shared\domain\HttpStatusCode;
@@ -44,7 +45,8 @@ class RouteUpdate {
             new RoutesOrder($routeDto->order),
             new RoutesIdParent($routeDto->id_parent),
             $permissionsId,
-            new RoutesId($routeDto->id)
+            new RoutesId($routeDto->id),
+            new RoutesTitle($routeDto->title)
         );
 
         $this->routeRepository->update($routeUpdate);

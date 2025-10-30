@@ -54,7 +54,6 @@ class DepartmentController extends Controller
             $request->name,
             $request->description,
             (int) $request->id_country,
-            $request->active
         );
 
         $this->departmentCreate->run($department);
@@ -84,7 +83,7 @@ class DepartmentController extends Controller
     public function getAllDepartment(GetAllDepartmentRequest $request)
     {
         $departmentCollection = $this->departmentGetAll->run($request->query("page"), $request->query("per_page"));
-        if($request->query("page") && $request->query("per_page")){
+        if ($request->query("page") && $request->query("per_page")) {
             $collections = array_map(fn($item) => DepartmentDtoHttp::fromEntity($item), $departmentCollection["data"]);
             $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $departmentCollection["pagination"]);
             return $this->success($paginateData, "Success");
@@ -100,16 +99,21 @@ class DepartmentController extends Controller
 
         return $this->success([], "Registro de departamento borrado exitosamente");
     }
-    public function getAllDepartmentWithCountry(GetAllDepartmentRequest $request) {
+    public function getAllDepartmentWithCountry(GetAllDepartmentRequest $request)
+    {
         $page = $request->query("page");
         $per_page = $request->query("per_page");
+        $filter_name = $request->query("filter_name");
 
-        $districtsCollection = $this->departmentGetAllWithCountry->run($page, $per_page);
+        $deparmentsCollection = $this->departmentGetAllWithCountry->run($page, $per_page, $filter_name);
+        if ($page && $per_page) {
+            $collections = array_map(fn($item) => DepartmentAggregateDtoHttp::fromAggregate($item)->toArray(), $deparmentsCollection["data"]);
 
-        $collections = array_map(fn($item) => DepartmentAggregateDtoHttp::fromAggregate($item)->toArray(), $districtsCollection["data"]);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $deparmentsCollection["pagination"]);
 
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
-
-        return $this->success($paginateData, "Success");
+            return $this->success($paginateData, "Success");
+        }
+        $data = array_map(fn($item) => DepartmentAggregateDtoHttp::fromAggregate($item)->toArray(), $deparmentsCollection);
+        return $this->success($data, "Success");
     }
 }

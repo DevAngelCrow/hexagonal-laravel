@@ -14,6 +14,7 @@ class RouteDto {
         public readonly ?int $id_parent = null,
         public readonly ?array $permissions_ids = null,
         public readonly ?int $id = null,
+        public readonly ?string $title = null
     )
     {
 
@@ -31,6 +32,7 @@ class RouteDto {
             $route->getIdParent()->value() ?: null,
             $route->getPermissionsId() ?: null,
             $route->getId()->value() ?: null,
+            $route->getTitle()->value() ?: null
         );
 
     }

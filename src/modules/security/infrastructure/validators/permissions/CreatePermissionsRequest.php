@@ -9,6 +9,7 @@ class CreatePermissionsRequest extends BaseRequest {
             "name" => "required|string",
             "id_category_permissions" => "required|integer",
             "description" => "string",
+            "active"=> "bool"
         ];
     }
 }

@@ -13,7 +13,8 @@ class UpdatePermissionsRequest extends BaseRequest {
             "id"=>"required|integer",
             "name" => "required|string",
             "id_category_permissions" => "required|integer",
-            "description" => "string"
+            "description" => "string",
+            "active"=>"bool"
         ];
     }
 }

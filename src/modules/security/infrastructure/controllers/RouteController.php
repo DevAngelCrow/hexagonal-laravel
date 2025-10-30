@@ -5,6 +5,7 @@ namespace Src\modules\security\infrastructure\controllers;
 use App\Http\Controllers\Controller;
 use Src\modules\security\application\dtos\RouteDto;
 use Src\modules\security\application\useCases\route\RouteCreate;
+use Src\modules\security\application\useCases\route\RouteDelete;
 use Src\modules\security\application\useCases\route\RouteGetAll;
 use Src\modules\security\application\useCases\route\RouteGetAllRoutesWithParent;
 use Src\modules\security\application\useCases\route\RouteGetOneById;
@@ -27,19 +28,22 @@ class RouteController extends Controller
     protected RouteGetAll $routeGetAll;
     protected RouteGetOneById $routeGetOneById;
     protected RouteGetAllRoutesWithParent $routeGetAllRoutesWithParent;
+    protected RouteDelete $routeDelete;
 
     public function __construct(
         RouteCreate $route_create,
         RouteUpdate $route_update,
         RouteGetAll $route_get_all,
         RouteGetOneById $route_get_one_by_id,
-        RouteGetAllRoutesWithParent $route_get_all_routes_with_parent
+        RouteGetAllRoutesWithParent $route_get_all_routes_with_parent,
+        RouteDelete $route_delete
     ) {
         $this->routeCreate = $route_create;
         $this->routeUpdate = $route_update;
         $this->routeGetAll = $route_get_all;
         $this->routeGetOneById = $route_get_one_by_id;
         $this->routeGetAllRoutesWithParent = $route_get_all_routes_with_parent;
+        $this->routeDelete = $route_delete;
     }
 
     public function createRoute(CreateRouteRequest $request)
@@ -50,11 +54,13 @@ class RouteController extends Controller
             $request->description,
             $request->icon,
             $request->uri,
-            $request->active,
+            $request->active ?? true,
             $request->show,
             $request->order,
             $request->id_parent,
-            $request->permissions_id
+            $request->permissions_id,
+            null,
+            $request->title
         );
         $this->routeCreate->run($createRoute);
 
@@ -74,6 +80,7 @@ class RouteController extends Controller
             $request->id_parent,
             $request->permissions_id,
             $request->id,
+            $request->title
         );
         $this->routeUpdate->run($updateRoute);
 
@@ -98,7 +105,7 @@ class RouteController extends Controller
     }
     public function getAllRoutesWithParent(GetAllRouteRequest $request)
     {
-        $routesCollection = $this->routeGetAllRoutesWithParent->run($request->query("page"), $request->query("per_page"));
+        $routesCollection = $this->routeGetAllRoutesWithParent->run($request->query("page"), $request->query("per_page"), $request->query("filter_name"));
         if ($request->query("page") && $request->query("per_page")) {
             $collections = array_map(fn($item) => RouteAggregateDtoHttp::fromEntity($item)->toArray(), $routesCollection["data"]);
 
@@ -108,5 +115,9 @@ class RouteController extends Controller
         }
         $data = array_map(fn($item)=> RouteAggregateDtoHttp::fromEntity($item)->toArray(), $routesCollection);
         return $this->success($data, "Success");
+    }
+    public function deleteRoute(GetByIdRouteRequest $request){
+        $this->routeDelete->run($request->id);
+        return $this->success([], 'Ruta eliminada correctamente');
     }
 }

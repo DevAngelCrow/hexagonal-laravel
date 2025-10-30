@@ -29,6 +29,7 @@ class RouteAggregateDtoHttp
             'order' => $child->getOrder()->value(),
             'permissionsId' => $child->getPermissionsId() ? array_map(fn($p) => $p->value(), $child->getPermissionsId()) : null,
             'id' => $child->getId()?->value(),
+            'title' => $child->getTitle()?->value()
         ];
         $parentArray = null;
         if ($parent) {
@@ -43,6 +44,7 @@ class RouteAggregateDtoHttp
                 'order' => $parent->getOrder()->value(),
                 'permissionsId' => $parent->getPermissionsId() ? array_map(fn($p) => $p->value(), $parent->getPermissionsId()) : null,
                 'id' => $parent->getId()?->value(),
+                'title' => $child->getTitle()?->value()
             ];
         }
         $childArray["parent_route"] = $parentArray;

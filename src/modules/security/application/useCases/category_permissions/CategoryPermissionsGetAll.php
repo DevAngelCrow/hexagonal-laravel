@@ -11,7 +11,7 @@ class CategoryPermissionsGetAll {
         $this->categoryPermissionsRepository = $category_permissions_repository;
     }
 
-    public function run(?int $page, ?int $per_page) : array {
-        return $this->categoryPermissionsRepository->getAll($page, $per_page);
+    public function run(?int $page, ?int $per_page, ?string $filter_name) : array {
+        return $this->categoryPermissionsRepository->getAll($page, $per_page, $filter_name);
     }
 }

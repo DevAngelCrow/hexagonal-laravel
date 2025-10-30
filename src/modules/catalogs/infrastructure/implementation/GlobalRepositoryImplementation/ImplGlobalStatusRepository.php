@@ -1,4 +1,5 @@
 <?php
+
 namespace Src\modules\catalogs\infrastructure\implementation\GlobalRepositoryImplementation;
 
 use Src\modules\catalogs\domain\entities\GlobalStatus;
@@ -25,7 +26,7 @@ class ImplGlobalStatusRepository implements GlobalStatusRepositoryInterface
             $globalStatusModel->name = $globalStatus->getName()->value();
             $globalStatusModel->description = $globalStatus->getDescription()->value();
             $globalStatusModel->table_header = $globalStatus->getTableHeader()->value();
-            $globalStatusModel->state = $globalStatus->getActive()->value();
+            //$globalStatusModel->state = $globalStatus->getActive()->value();
             $globalStatusModel->save();
         } catch (ErrorException $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -40,28 +41,40 @@ class ImplGlobalStatusRepository implements GlobalStatusRepositoryInterface
             $globalStatusModel->name = $globalStatus->getName()->value();
             $globalStatusModel->description = $globalStatus->getDescription()->value();
             $globalStatusModel->table_header = $globalStatus->getTableHeader()->value();
-            
-            
+
+
             $globalStatusModel->save();
         } catch (ErrorException $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(?int $page = 1, ?int $per_page = 10): array
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null, ?string $table_header = null): array
     {
         try {
-            $globalStatusModels =  GlobalStatusModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToDomain($item), $globalStatusModels->items());
+            $query = GlobalStatusModel::select('id', 'table_header', 'name', 'description', 'state')->orderBy('id');
+            if ($filter_name !== null || $filter_name !== '') {
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
+            if($table_header !== null || $table_header !== ''){
+                $query->where('table_header', 'ILIKE', "%{$table_header}%");
+            }
+            if ($page !== null && $per_page !== null) {
+                $globalStatusModels =  $query->paginate($per_page);
+                $data = array_map(fn($item) => $this->mapToDomain($item), $globalStatusModels->items());
 
-            $this->globalStatusArray = [
-                "data" => $data,
-                "pagination" => [
-                    'current_page' => $globalStatusModels->currentPage(),
-                    'last_page' => $globalStatusModels->lastPage(),
-                    'per_page' => $globalStatusModels->perPage(),
-                    'total' => $globalStatusModels->total(),
-                ]
-            ];
+                $this->globalStatusArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        'currentPage' => $globalStatusModels->currentPage(),
+                        'lastPage' => $globalStatusModels->lastPage(),
+                        'perPage' => $globalStatusModels->perPage(),
+                        'totalItems' => $globalStatusModels->total(),
+                    ]
+                ];
+                return $this->globalStatusArray;
+            }
+            $globalStatusModels = $query->get();
+            $this->globalStatusArray = array_map(fn($item) => $this->mapToDomain($item), $globalStatusModels->all());
             return $this->globalStatusArray;
         } catch (Exception $e) {
 
@@ -70,19 +83,18 @@ class ImplGlobalStatusRepository implements GlobalStatusRepositoryInterface
     }
     public function getOneById(GlobalStatusId $id): ?GlobalStatus
     {
-        try{
+        try {
 
             $globalStatusDb = GlobalStatusModel::where("id", $id->value())->first();
 
-            if(!$globalStatusDb){
+            if (!$globalStatusDb) {
                 throw new InfrastructureException("identificador de Global Status no encontrado", Response::HTTP_NOT_FOUND);
             }
 
             $globalStatus = $this->mapToDomain($globalStatusDb);
 
             return $globalStatus;
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -93,8 +105,7 @@ class ImplGlobalStatusRepository implements GlobalStatusRepositoryInterface
 
             $documentTypeDb->state = false;
             $documentTypeDb->save();
-            $documentTypeDb->delete();
-
+            //$documentTypeDb->delete();
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }

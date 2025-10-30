@@ -63,11 +63,11 @@ class DistrictController extends Controller
     public function updateDistrict(UpdateDistrictRequest $request)
     {
         $district = new DistrictDto(
-            (int) $request->id,
             $request->name,
             $request->description,
             (int) $request->id_municipality,
-            $request->active
+            $request->active,
+            (int) $request->id,
         );
 
         $this->districtUpdate->run($district);
@@ -85,7 +85,7 @@ class DistrictController extends Controller
     {
         $districtsCollection = $this->districtGetAll->run($request->query("page"), $request->query("per_page"));
 
-        if($request->query("page") && $request->query("per_page")){
+        if ($request->query("page") && $request->query("per_page")) {
             $collections = array_map(fn($item) => districtDtoHttp::fromEntity($item), $districtsCollection["data"]);
             $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
             return $this->success($paginateData, "Success");
@@ -101,16 +101,23 @@ class DistrictController extends Controller
 
         return $this->success([], "Registro de distrito borrado exitosamente");
     }
-    public function getAllDistrictWithMunicipality(GetAllDistrictRequest $request) {
+    public function getAllDistrictWithMunicipality(GetAllDistrictRequest $request)
+    {
         $page = $request->query("page");
         $per_page = $request->query("per_page");
+        $filter_name = $request->query("filter_name");
 
-        $districtsCollection = $this->districtGetAllDistrictWithMunicipality->run($page, $per_page);
 
-        $collections = array_map(fn($item) => DistrictAggregateDtoHttp::fromAggregate($item)->toArray(), $districtsCollection["data"]);
 
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
+        $districtsCollection = $this->districtGetAllDistrictWithMunicipality->run($page, $per_page, $filter_name);
+        if ($page && $per_page) {
+            $collections = array_map(fn($item) => DistrictAggregateDtoHttp::fromAggregate($item)->toArray(), $districtsCollection["data"]);
 
-        return $this->success($paginateData, "Success");
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $districtsCollection["pagination"]);
+
+            return $this->success($paginateData, "Success");
+        }
+        $data = array_map(fn($item)=> DistrictAggregateDtoHttp::fromAggregate($item)->toArray(), $districtsCollection);
+        return $this->success($data, "Success");
     }
 }

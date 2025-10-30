@@ -11,7 +11,7 @@ class GlobalStatusDto
         public readonly string $table_header,
         public readonly string $name,
         public readonly string $description,
-        public readonly bool $active,
+        public readonly ?bool $active = null,
         public readonly ?int $id = null,
     ) {}
     public static function fromEntity(GlobalStatus $globalStatus)
@@ -21,7 +21,7 @@ class GlobalStatusDto
             table_header: $globalStatus->getTableHeader()->value(),
             name: $globalStatus->getName()->value(),
             description: $globalStatus->getDescription()->value(),
-            active: $globalStatus->getActive()->value(),
+            active: $globalStatus->getActive()->value() ?: null,
             id: $globalStatus->getId()->value() ?: null,
         );
     }

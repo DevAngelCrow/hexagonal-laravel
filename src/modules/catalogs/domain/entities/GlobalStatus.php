@@ -14,13 +14,13 @@ class GlobalStatus
     private readonly GlobalStatusName $name;
     private readonly GlobalStatusDescription $description;
     private readonly GlobalStatusTableHeader $table_header;
-    private readonly GlobalStatusActive $active;
+    private readonly ?GlobalStatusActive $active;
 
     public function __construct(
         GlobalStatusName $name,
         GlobalStatusDescription $description,
         GlobalStatusTableHeader $table_header,
-        GlobalStatusActive $active,
+        ?GlobalStatusActive $active = null,
         ?GlobalStatusId $id = null
     ) {
         $this->id = $id;

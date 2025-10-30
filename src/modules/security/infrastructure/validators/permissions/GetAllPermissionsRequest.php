@@ -8,7 +8,9 @@ class GetAllPermissionsRequest extends BaseRequest {
     {
         return [
             "page" => "integer",
-            "per_page" => "integer"
+            "per_page" => "integer",
+            "filter_name" => "string",
+            "active" => "boolean"
         ];
     }
 }

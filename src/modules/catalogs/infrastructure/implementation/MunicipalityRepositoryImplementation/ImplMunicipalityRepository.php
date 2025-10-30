@@ -32,7 +32,7 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
             $municipalityModel->name = $municipality->getName()->value();
             $municipalityModel->description = $municipality->getDescription()->value();
             $municipalityModel->id_department = $municipality->getIdDepartment()->value();
-            $municipalityModel->active = $municipality->getActive()->value();
+            //$municipalityModel->active = $municipality->getActive()->value();
 
             $municipalityModel->save();
         } catch (Exception $e) {
@@ -47,7 +47,7 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
             $municipalityModel->name = $municipality->getName()->value();
             $municipalityModel->description = $municipality->getDescription()->value();
             $municipalityModel->id_department = $municipality->getIdDepartment()->value();
-            $municipalityModel->active = $municipality->getActive()->value();
+            //$municipalityModel->active = $municipality->getActive()->value();
 
             $municipalityModel->save();
 
@@ -108,27 +108,38 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
 
             $municipalityModel->active = false;
             $municipalityModel->save();
-            $municipalityModel->delete();
+            //$municipalityModel->delete();
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function getAllWithDepartment(int $page, int $per_page): array
+    public function getAllWithDepartment(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
-            $municipalitiesModels =  MunicipalityModel::orderBy("id")->paginate($per_page);
+            $query = MunicipalityModel::select('id', 'name', 'description', 'active', 'id_department')->orderBy('id');
+            
+            if($filter_name !== null && $filter_name !== ''){
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
+            if($page !== null && $per_page !== ''){
+                $municipalitiesModels =  $query->paginate($per_page);
             $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $municipalitiesModels->items());
 
             $this->municipalitiesArray = [
                 "data" => $data,
                 "pagination" => [
-                    'current_page' => $municipalitiesModels->currentPage(),
-                    'last_page' => $municipalitiesModels->lastPage(),
-                    'per_page' => $municipalitiesModels->perPage(),
-                    'total' => $municipalitiesModels->total(),
+                    'currentPage' => $municipalitiesModels->currentPage(),
+                    'lastPage' => $municipalitiesModels->lastPage(),
+                    'perPage' => $municipalitiesModels->perPage(),
+                    'totalItems' => $municipalitiesModels->total(),
                 ]
             ];
+            return $this->municipalitiesArray;
+            }
+
+            $municipalitiesModels = $query->get();
+            $this->municipalitiesArray = array_map(fn($item) => $this->mapToAggregateDomain($item), $municipalitiesModels->all());
             return $this->municipalitiesArray;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -137,7 +148,6 @@ class ImplMunicipalityRepository implements MunicipalityRepositoryInterface
 
     private function mapToDomain(MunicipalityModel $municipality)
     {
-        //dd($municipality);
         $municipalityMapped = new Municipality(
             new MunicipalityName($municipality->name),
             new MunicipalityDescription($municipality->description),

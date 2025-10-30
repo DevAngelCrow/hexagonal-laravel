@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\MntRoute;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -24,9 +23,11 @@ class MntRouteSeeder extends Seeder
                     'icon'=>'pi pi-sign-in',
                     'uri'=>'/login',
                     'active'=>true,
-                    'show'=>true,
+                    'show'=>false,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'required_auth' => false,
+                    'title' => 'Inicio de sesión'
                 ],
                 [
                     'name'=>'sign-up',
@@ -34,9 +35,11 @@ class MntRouteSeeder extends Seeder
                     'icon'=>'pi pi-user-plus',
                     'uri'=>'/sign-up',
                     'active'=>true,
-                    'show'=>true,
+                    'show'=>false,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'required_auth' => false,
+                    'title' => 'Registro de cuenta de usuario'
                 ],
                 [
                     'name'=>'layout',
@@ -46,7 +49,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'required_auth' => true,
+                    'title' => 'Layout vista principal'
                 ],
                 [
                     'name'=>'forbidden',
@@ -54,9 +59,11 @@ class MntRouteSeeder extends Seeder
                     'icon'=>'pi pi-exclamation-circle',
                     'uri'=>'/forbidden',
                     'active'=>true,
-                    'show'=>true,
+                    'show'=>false,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'required_auth' => false,
+                    'title' => 'Vista no encontrada'
                 ],
                 [
                     'name'=>'verify-email',
@@ -64,9 +71,11 @@ class MntRouteSeeder extends Seeder
                     'icon'=>'pi pi-verified',
                     'uri'=>'/verify-email',
                     'active'=>true,
-                    'show'=>true,
+                    'show'=>false,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=>null,
+                    'required_auth' => false,
+                    'title' => 'Vista de verificación de correo de usuario'
                 ],
                 [
                     'name'=>'pending-verification-email',
@@ -74,9 +83,23 @@ class MntRouteSeeder extends Seeder
                     'icon'=>'pi pi-envelope',
                     'uri'=>'/pending-verification-email',
                     'active'=>true,
+                    'show'=>false,
+                    'order'=>1,
+                    'id_parent'=>null,
+                    'required_auth' => false,
+                    'title' => 'Pantalla de información para verificar correo de usuario'
+                ],
+                [
+                    'name'=>'Usuario',
+                    'description'=>'Menu del usuario',
+                    'icon'=>'pi pi-directions',
+                    'uri'=>'/usuario-prueba',
+                    'active'=>true,
                     'show'=>true,
                     'order'=>1,
-                    'id_parent'=>null
+                    'id_parent'=> null,
+                    'required_auth' => true,
+                    'title' => 'Usuario'
                 ],
             ]
         );
@@ -93,7 +116,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>2,
-                    'id_parent'=> $routes[2]->id
+                    'id_parent'=> $routes[2]->id,
+                    'required_auth' => true,
+                    'title' => 'Vista para testear componentes'
                 ],
                 [
                     'name'=>'dashboard',
@@ -103,7 +128,9 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>2,
-                    'id_parent'=> $routes[2]->id
+                    'id_parent'=> $routes[2]->id,
+                    'required_auth' => true,
+                    'title' => 'Vista del tablero principal'
                 ],
                 [
                     'name'=>'routes-administration',
@@ -113,7 +140,21 @@ class MntRouteSeeder extends Seeder
                     'active'=>true,
                     'show'=>true,
                     'order'=>2,
-                    'id_parent'=> $routes[2]->id
+                    'id_parent'=> $routes[2]->id,
+                    'required_auth' => true,
+                    'title' => 'Vista de administración de rutas'
+                ],
+                [
+                    'name'=>'Correo',
+                    'description'=>'Menu del usuario',
+                    'icon'=>'pi pi-directions',
+                    'uri'=>'/usuario-prueba',
+                    'active'=>true,
+                    'show'=>true,
+                    'order'=>2,
+                    'id_parent'=> $routes[6]->id,
+                    'required_auth' => true,
+                    'title' => 'Usuario'
                 ],
             ]
         );

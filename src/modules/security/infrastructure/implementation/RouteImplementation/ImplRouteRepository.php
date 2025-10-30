@@ -4,6 +4,7 @@ namespace Src\modules\security\infrastructure\implementation\RouteImplementation
 
 use App\Models\MntRoute as RouteModel;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use LogicException;
 use Src\modules\security\domain\aggregate\routes\RouteWithChild;
 use Src\modules\security\domain\entities\route\Route;
@@ -17,6 +18,7 @@ use Src\modules\security\domain\value_objects\routes_value_object\RoutesIdParent
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesName;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesOrder;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesShow;
+use Src\modules\security\domain\value_objects\routes_value_object\RoutesTitle;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesUri;
 use Src\shared\infrastructure\exceptions\InfrastructureException;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,6 +39,8 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModel->active = $route->getActive()->value();
             $routeModel->show = $route->getShow()->value();
             $routeModel->order = $route->getOrder()->value();
+            $routeModel->active = true;
+            $routeModel->title = $route->getTitle()->value();
             $routeModel->save();
 
             $permissionIds = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissionsId());
@@ -134,12 +138,14 @@ class ImplRouteRepository implements RouteRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAllRoutesWithParentData(?int $page, ?int $per_page): array
+    public function getAllRoutesWithParentData(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
+            $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order', 'id_parent', 'title')->orderBy('id');
 
-            $query = RouteModel::select('id', 'name', 'description', 'icon', 'uri', 'active', 'show', 'order', 'id_parent')->orderBy('id');
-            
+            if($filter_name !== null || $filter_name !== ''){
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
 
             if ($page !== null && $per_page !== null) {
                 
@@ -149,10 +155,10 @@ class ImplRouteRepository implements RouteRepositoryInterface
                 return $this->routesArray = [
                     "data" => $data,
                     "pagination" => [
-                        "current_page" => $routeModels->currentPage(),
-                        "last_page" => $routeModels->lastPage(),
-                        "per_page" => $routeModels->perPage(),
-                        "total" => $routeModels->total()
+                        "currentPage" => $routeModels->currentPage(),
+                        "totalPage" => $routeModels->lastPage(),
+                        "perPage" => $routeModels->perPage(),
+                        "totalItems" => $routeModels->total()
                     ]
                 ];
             }
@@ -186,9 +192,8 @@ class ImplRouteRepository implements RouteRepositoryInterface
             new RoutesIdParent($route->id_parent),
             $permissionIds,
             new RoutesId($route->id),
-            //$parentRoute
+            new RoutesTitle($route->title)
         );
-
 
         return $routeMapped;
     }
@@ -214,6 +219,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
                 null,
                 $permissionIds,
                 new RoutesId($route->id),
+                new RoutesTitle($route->title)
             ),
             $parentRoute
         );

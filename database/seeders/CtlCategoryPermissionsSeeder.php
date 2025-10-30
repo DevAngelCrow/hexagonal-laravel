@@ -141,6 +141,30 @@ class CtlCategoryPermissionsSeeder extends Seeder
                 'active' => true,
                 'created_at' => now(),
             ],
+            [
+                'name' => 'Layout',
+                'description' => 'Para ver el layout principal',
+                'active' => true,
+                'created_at' => now(),
+            ],
+            [
+                'name' => 'Test',
+                'description' => 'Para la vista de test de componentes',
+                'active' => true,
+                'created_at' => now(),
+            ],
+            [
+                'name' => 'Dashboard',
+                'description' => 'Para la vista de tablero',
+                'active' => true,
+                'created_at' => now(),
+            ],
+            [
+                'name' => 'Menu usuario',
+                'description' => 'Para el menú del usuario que desplega en el avatar',
+                'active' => true,
+                'created_at' => now(),
+            ]
         ]);
     }
 }

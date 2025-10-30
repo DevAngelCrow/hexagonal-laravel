@@ -4,6 +4,8 @@ namespace Src\modules\security\infrastructure\controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Src\modules\security\application\useCases\security_authorization_port\FilterRoutesForUser;
+use Src\modules\security\domain\entities\menu\Menu;
+use Src\modules\security\infrastructure\dtos\secutiryAuthorizationPortHttpResponse\MenuDtoHttp;
 use Src\shared\infrastructure\HttpResponses;
 
 class MenuController extends Controller {
@@ -18,7 +20,11 @@ class MenuController extends Controller {
 
     public function getMenuUser(Request $request) {
 
-        $menu = $this->filterRoutesForUser->run();
+        $menuRaw = $this->filterRoutesForUser->run();
+        //dd($menuRaw);
+        $menu = array_map(fn($route) => 
+            
+            MenuDtoHttp::fromEntity($route), $menuRaw);
         //dd($menu);
        return $this->success($menu, 'Success');
     }

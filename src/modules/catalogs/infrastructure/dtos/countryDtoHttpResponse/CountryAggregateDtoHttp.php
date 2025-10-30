@@ -3,7 +3,7 @@ namespace Src\modules\catalogs\infrastructure\dtos\countryDtoHttpResponse;
 
 use Src\modules\catalogs\domain\aggregate\department\DepartmentWithCountry;
 
-class MunicipalityAggregateDtoHttp {
+class CountryAggregateDtoHttp {
     public function __construct(public readonly DepartmentWithCountry $departmentWithCountry)
     {
         

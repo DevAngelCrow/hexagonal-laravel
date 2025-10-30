@@ -11,7 +11,7 @@ class RolGetAll {
         $this->rolRepository = $rol_repository;
     }
 
-    public function run(?int $page, ?int $per_page) : array{
-        return $this->rolRepository->getAll($page, $per_page);
+    public function run(?int $page, ?int $per_page, ?string $filter_name = null) : array{
+        return $this->rolRepository->getAll($page, $per_page, $filter_name);
     }
 }

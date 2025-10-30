@@ -12,7 +12,7 @@ class UpdateDistrictRequest extends BaseRequest {
         return [
             "name"=>"required|string",
             "description"=>"required|string",
-            "id_country"=>"required|integer",
+            "id_municipality"=>"required|integer",
             "id" => "required|integer"
         ];
     }

@@ -64,11 +64,14 @@ class ImplCountryRepository implements CountryRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAll(?int $page, ?int $per_page): array
+    public function getAll(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
             $query = CountryModel::select('id', 'name', 'abbreviation', 'code', 'active')->orderBy('id');
 
+            if($filter_name !== null || $filter_name !== ''){
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
             if ($page !== null && $per_page !== null) {
 
                 $countriesModels = $query->paginate($per_page);

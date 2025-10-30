@@ -1,4 +1,5 @@
 <?php
+
 namespace Src\modules\catalogs\infrastructure\controllers;
 
 use App\Http\Controllers\Controller;
@@ -27,61 +28,75 @@ class GlobalStatusController extends Controller
 
     protected GlobalStatusDelete $globalStatusDelete;
 
-    public function __construct(GlobalStatusCreate $globalStatus_create, GlobalStatusGetAll $globalStatus_get_all,
-    GlobalStatusGetOneById $globalStatus_get_one_by_id, GlobalStatusUpdate $globalStatus_update)
-    {
+    public function __construct(
+        GlobalStatusCreate $globalStatus_create,
+        GlobalStatusGetAll $globalStatus_get_all,
+        GlobalStatusGetOneById $globalStatus_get_one_by_id,
+        GlobalStatusUpdate $globalStatus_update,
+        GlobalStatusDelete $globalStatus_delete,
+    ) {
         $this->globalStatusCreate = $globalStatus_create;
         $this->globalStatusGetAll = $globalStatus_get_all;
         $this->globalStatusGetOneById = $globalStatus_get_one_by_id;
         $this->globalStatusUpdate = $globalStatus_update;
+        $this->globalStatusDelete = $globalStatus_delete;
     }
 
     public function createGlobalStatus(CreateGlobalStatusRequest $request)
     {
-            $globalDto = new GlobalStatusDto(
-                name: $request->name,
-                description: $request->description,
-                table_header: $request->table_header,
-                active: $request->active,
-            );
+        $globalDto = new GlobalStatusDto(
+            name: $request->name,
+            description: $request->description,
+            table_header: $request->table_header,
+            //active: $request->active,
+        );
 
-            $this->globalStatusCreate->run($globalDto);
-            return $this->created([], "Global Status creado satisfactoriamente");
-
+        $this->globalStatusCreate->run($globalDto);
+        return $this->created([], "Global Status creado satisfactoriamente");
     }
 
-    public function updateGlobalStatus(UpdateGlobalStatusRequest $request){
+    public function updateGlobalStatus(UpdateGlobalStatusRequest $request)
+    {
 
-            $globalDto = new GlobalStatusDto(
-                name: $request->name,
-                description: $request->description,
-                table_header: $request->table_header,
-                active: $request->active,
-                id: (int) $request->id,
-            );
-            $this->globalStatusUpdate->run($globalDto);
+        $globalDto = new GlobalStatusDto(
+            name: $request->name,
+            description: $request->description,
+            table_header: $request->table_header,
+            active: $request->active,
+            id: (int) $request->id,
+        );
+        $this->globalStatusUpdate->run($globalDto);
 
-            return $this->success([], "Global Status actualizado con éxito");
+        return $this->success([], "Global Status actualizado con éxito");
     }
-    public function getAllGlobalStatus(GetAllGlobalStatusRequest $request){
+    public function getAllGlobalStatus(GetAllGlobalStatusRequest $request)
+    {
+        $page = $request->query("page");
+        $per_page = $request->query("per_page");
+        $filter_name = $request->query("filter_name");
+        $table_header = $request->query("table_header");
 
+        $globalStatusCollection = $this->globalStatusGetAll->run($page, $per_page, $filter_name, $table_header);
 
-        $globalStatusCollection = $this->globalStatusGetAll->run($request->query('page'), $request->query('per_page'));
+        if ($page && $per_page) {
+            $collections = array_map(fn($item) => GlobalStatusDtoHttp::fromEntity($item), $globalStatusCollection["data"]);
 
-        $collections = array_map(fn($item) => GlobalStatusDtoHttp::fromEntity($item), $globalStatusCollection["data"]);
+            $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $globalStatusCollection['pagination']);
 
-        $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $globalStatusCollection['pagination']);
-
-        return $this->success($paginateData, "Success");
+            return $this->success($paginateData, "Success");
+        }
+        $data = array_map(fn($item) => GlobalStatusDtoHttp::fromEntity($item), $globalStatusCollection);
+        return $this->success($data, "Success");
     }
 
-    public function getOneByIdGlobalStatus(GetByIdGlobalStatusRequest $request){
+    public function getOneByIdGlobalStatus(GetByIdGlobalStatusRequest $request)
+    {
 
 
-        $document = $this->globalStatusGetOneById->run($request->id);
+        $globalStatus = $this->globalStatusGetOneById->run($request->id);
 
 
-        return $this->success(GlobalStatusDtoHttp::fromEntity($document), "Success");
+        return $this->success(GlobalStatusDtoHttp::fromEntity($globalStatus), "Success");
     }
     public function deleteGlobalStatus(DeleteGlobalStatusRequest $request)
     {

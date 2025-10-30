@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string("table_header");
             $table->string("name");
             $table->string("description");
-            $table->boolean("state");
+            $table->boolean("state")->default(true);
             $table->softDeletes();
             $table->timestamps();
         });

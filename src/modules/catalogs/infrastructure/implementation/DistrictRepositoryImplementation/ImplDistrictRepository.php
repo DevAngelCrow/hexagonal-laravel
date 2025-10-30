@@ -32,7 +32,7 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
             $districtModel->name = $district->getName()->value();
             $districtModel->description = $district->getDescription()->value();
             $districtModel->id_municipality = $district->getIdMunicipality()->value();
-            $districtModel->active = $district->getActive()->value();
+            //$districtModel->active = $district->getActive()->value();
 
             $districtModel->save();
         } catch (Exception $e) {
@@ -47,7 +47,7 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
             $districtModel->name = $district->getName()->value();
             $districtModel->description = $district->getDescription()->value();
             $districtModel->id_municipality = $district->getIdMunicipality()->value();
-            $districtModel->active = $district->getActive()->value();
+            //$districtModel->active = $district->getActive()->value();
 
             $districtModel->save();
         } catch (Exception $e) {
@@ -87,13 +87,11 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
                         'total' => $districtsModels->total(),
                     ]
                 ];
-
             }
             $districtsModels = $query->get();
 
             $this->districtsArray = array_map(fn($item) => $this->mapToDomain($item), $districtsModels->all());
             return $this->districtsArray;
-
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -105,26 +103,37 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
 
             $districtModel->active = false;
             $districtModel->save();
-            $districtModel->delete();
+            //$districtModel->delete();
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getAllDistrictWithMunicipality(int $page, int $per_page): array
+    public function getAllDistrictWithMunicipality(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
-            $districtModels =  DistrictModel::orderBy("id")->paginate($per_page);
-            $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $districtModels->items());
+            $query = DistrictModel::select('id', 'name', 'description', 'active', 'id_municipality')->orderBy('id');
+            if ($filter_name !== null || $filter_name !== '') {
+                $query->where('name', 'ILIKE', "%{$filter_name}%");
+            }
 
-            $this->districtsArray = [
-                "data" => $data,
-                "pagination" => [
-                    'current_page' => $districtModels->currentPage(),
-                    'last_page' => $districtModels->lastPage(),
-                    'per_page' => $districtModels->perPage(),
-                    'total' => $districtModels->total(),
-                ]
-            ];
+            if ($page !== null && $per_page !== null) {
+                $districtModels = $query->paginate($per_page);
+
+                $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $districtModels->items());
+
+                $this->districtsArray = [
+                    "data" => $data,
+                    "pagination" => [
+                        'currentPage' => $districtModels->currentPage(),
+                        'lastPage' => $districtModels->lastPage(),
+                        'perPage' => $districtModels->perPage(),
+                        'totalItems' => $districtModels->total(),
+                    ]
+                ];
+                return $this->districtsArray;
+            }
+            $districtModels = $query->get();
+            $this->districtsArray = array_map(fn($item) => $this->mapToAggregateDomain($item), $districtModels->all());
             return $this->districtsArray;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);

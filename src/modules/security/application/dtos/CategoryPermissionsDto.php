@@ -7,6 +7,7 @@ class CategoryPermissionsDto {
     public function __construct(
         public readonly string $name,
         public readonly string $description,
+        public readonly ?bool $active = null,
         public readonly ?int $id = null
     )
     {}
@@ -14,6 +15,7 @@ class CategoryPermissionsDto {
             return new self(
                 $categoryPermissions->getName()->value(),
                 $categoryPermissions->getDescription()->value(),
+                $categoryPermissions->getActive()->value() ?: null,
                 $categoryPermissions->getId()->value() ?: null
             );
         }

@@ -8,7 +8,8 @@ class PermissionsDtoHttp {
         public readonly string $name,
         public readonly int $id_category_permissions,
         public readonly string $description,
-        public readonly ?int $id = null
+        public readonly bool $active,
+        public readonly ?int $id = null,
     )
     {}
     public static function fromEntity(Permissions $permissions) : self {
@@ -16,6 +17,7 @@ class PermissionsDtoHttp {
             $permissions->getName()->value(),
             $permissions->getIdCategoryPermissions()->value(),
             $permissions->getDescription()->value(),
+            $permissions->getActive()->value(),
             $permissions->getId()->value() ?: null
         );
     }

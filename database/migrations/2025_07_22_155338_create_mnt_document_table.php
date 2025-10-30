@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer("id_document_type");
             $table->integer("id_people");
             $table->string("description", length: 150);
-            $table->boolean("active");
+            $table->boolean("active")->default(true);
             $table->timestamps();
             $table->softDeletes();
             $table->foreign("id_document_type")->references("id")->on("ctl_document_type");

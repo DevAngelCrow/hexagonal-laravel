@@ -13,14 +13,14 @@ class Municipality
     private readonly MunicipalityName $name;
     private readonly MunicipalityDescription $description;
     private readonly MunicipalityIdDepartment $id_department;
-    private readonly MunicipalityActive $active;
+    private readonly ?MunicipalityActive $active;
     private readonly ?MunicipalityId $id;
 
     public function __construct(
         MunicipalityName $name,
         MunicipalityDescription $description,
         MunicipalityIdDepartment $id_department,
-        MunicipalityActive $active,
+        ?MunicipalityActive $active = null,
         ?MunicipalityId $id = null
     ) {
         $this->name = $name;
@@ -44,7 +44,7 @@ class Municipality
     {
         return $this->id_department;
     }
-    public function getActive(): MunicipalityActive
+    public function getActive(): ?MunicipalityActive
     {
         return $this->active;
     }

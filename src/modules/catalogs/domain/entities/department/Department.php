@@ -13,14 +13,14 @@ class Department
     private readonly DepartmentName $name;
     private readonly DepartmentDescription $description;
     private readonly DepartmentIdCountry $id_country;
-    private readonly DepartmentActive $active;
+    private readonly ?DepartmentActive $active;
     private readonly ?DepartmentId $id;
 
     public function __construct(
         DepartmentName $name,
         DepartmentDescription $description,
         DepartmentIdCountry $id_country,
-        DepartmentActive $active,
+        ?DepartmentActive $active = null,
         ?DepartmentId $id = null
     ) {
         $this->name = $name;
@@ -44,7 +44,7 @@ class Department
     {
         return $this->id_country;
     }
-    public function getActive(): DepartmentActive
+    public function getActive(): ?DepartmentActive
     {
         return $this->active;
     }

@@ -7,6 +7,7 @@ class CategoryPermissionDtoHttp {
     public function __construct(
         public readonly string $name,
         public readonly string $description,
+        public readonly bool $active,
         public readonly ?int $id = null
     )
     {}
@@ -14,6 +15,7 @@ class CategoryPermissionDtoHttp {
             return new self(
                 $categoryPermissions->getName()->value(),
                 $categoryPermissions->getDescription()->value(),
+                $categoryPermissions->getActive()->value(),
                 $categoryPermissions->getId()->value() ?: null
             );
         }

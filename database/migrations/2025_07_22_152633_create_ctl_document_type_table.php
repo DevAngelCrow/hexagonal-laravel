@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string("name", length: 150);
             $table->string("description", length: 150);
             $table->string("mask", length: 150);
-            $table->boolean("active");
+            $table->boolean("active")->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

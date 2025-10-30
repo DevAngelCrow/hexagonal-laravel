@@ -628,6 +628,38 @@ class CtlPermissionsSeeder extends Seeder
                     'created_at' => now(),
                     'active' => true,
                 ],
+                //PERMISOS DEL LAYOUT
+                [
+                    'name' => 'ver-layout',
+                    'description' => 'Permite ver el layout del sistema',
+                    'id_category_permissions' => $idCategoryPermissions[21]->id,
+                    'created_at' => now(),
+                    'active' => true,
+                ],
+                //PERMISOS PARA LA VISTA TEST
+                [
+                    'name' => 'ver-test-components',
+                    'description' => 'Permite ver la vista para testear componentes',
+                    'id_category_permissions' => $idCategoryPermissions[22]->id,
+                    'created_at' => now(),
+                    'active' => true,
+                ],
+                //PERMISOS PARA EL TABLERO
+                [
+                    'name' => 'ver-tablero',
+                    'description' => 'Permite ver la vista del tablero',
+                    'id_category_permissions' => $idCategoryPermissions[23]->id,
+                    'created_at' => now(),
+                    'active' => true,
+                ],
+                //PERMISO MENU USUARIO
+                [
+                    'name' => 'ver-menu-usuario',
+                    'description' => 'Permite ver los elementos desplegables del menu usuario del avatar',
+                    'id_category_permissions' => $idCategoryPermissions[24]->id,
+                    'created_at' => now(),
+                    'active' => true,
+                ],
             ]
         );
     }

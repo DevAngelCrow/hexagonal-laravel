@@ -13,5 +13,5 @@ interface DistrictRepositoryInterface {
     public function getAll(?int $page, ?int $per_page) : array;
     public function getOneById(DistrictId $id): ?District;
     public function delete(DistrictId $id) : void;
-    public function getAllDistrictWithMunicipality(int $page, int $per_page) : array;
+    public function getAllDistrictWithMunicipality(?int $page, ?int $per_page, ?string $filter_name = null) : array;
 }

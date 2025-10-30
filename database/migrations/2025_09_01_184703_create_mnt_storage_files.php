@@ -19,7 +19,7 @@ return new class extends Migration
             $table->bigInteger("size");
             $table->string("mime_type", length: 150);
             $table->integer("id_user")->nullable();
-            $table->boolean("active");
+            $table->boolean("active")->default(true);
             $table->softDeletes();
             $table->timestamps();
             $table->foreign("id_provider")->references("id")->on("ctl_provider_storage");

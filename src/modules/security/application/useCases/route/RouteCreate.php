@@ -12,6 +12,7 @@ use Src\modules\security\domain\value_objects\routes_value_object\RoutesIdParent
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesName;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesOrder;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesShow;
+use Src\modules\security\domain\value_objects\routes_value_object\RoutesTitle;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesUri;
 
 class RouteCreate {
@@ -36,7 +37,8 @@ class RouteCreate {
             new RoutesOrder($routeDto->order),
             new RoutesIdParent($routeDto->id_parent),
             $permissionsId,
-            null
+            null,
+            new RoutesTitle($routeDto->title)
         );
 
 
