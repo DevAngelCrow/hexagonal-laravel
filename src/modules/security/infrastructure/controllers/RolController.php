@@ -97,12 +97,12 @@ class RolController extends Controller
 
         $rolCollection = $this->rolGetAllWithStatus->run($page, $per_page, $filter_name);
         if ($page && $per_page) {
-            $collections = array_map(fn($item) => RolAggregateDtoHttp::fromAggregate($item), $rolCollection["data"]);
+            $collections = array_map(fn($item) => RolAggregateDtoHttp::fromAggregate($item)->toArray(), $rolCollection["data"]);
             $paginateData = PaginatedResponseDto::fromPaginatedResponse($collections, $rolCollection["pagination"]);
 
             return $this->success($paginateData, "Success");
         }
-        $data = array_map(fn($item) => RolAggregateDtoHttp::fromAggregate($item), $rolCollection);
+        $data = array_map(fn($item) => RolAggregateDtoHttp::fromAggregate($item)->toArray(), $rolCollection);
         return $this->success($data, "Success");
     }
 }

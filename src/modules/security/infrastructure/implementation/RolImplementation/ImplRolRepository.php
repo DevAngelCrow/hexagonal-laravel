@@ -197,7 +197,6 @@ class ImplRolRepository implements RolRepositoryInterface
             ),
             $globalStatus,
         );
-
         return $roleMapped;
     }
     private function mapToDomainStatus(RolModel $role): GlobalStatus
