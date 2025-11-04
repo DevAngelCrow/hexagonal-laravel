@@ -90,7 +90,7 @@ class RouteController extends Controller
     public function getOneByIdRoute(GetByIdRouteRequest $request)
     {
         $route = $this->routeGetOneById->run($request->id);
-        return $this->success(["data" => RouteDtoHttp::fromEntity($route)]);
+        return $this->success(RouteAggregateDtoHttp::fromEntity($route)->toArray());
     }
     public function getAllRoutes(GetAllRouteRequest $request)
     {
