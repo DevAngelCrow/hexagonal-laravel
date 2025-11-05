@@ -71,7 +71,7 @@ class RolController extends Controller
     {
         $rol = $this->rolGetOneById->run($request->id);
 
-        return $this->success(["data" => RolDtoHttp::fromEntity($rol)]);
+        return $this->success(RolAggregateDtoHttp::fromAggregate($rol)->toArray(), "Success");
     }
     public function getAllRol(GetAllRolRequest $request)
     {

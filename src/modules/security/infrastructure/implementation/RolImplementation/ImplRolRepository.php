@@ -15,7 +15,11 @@ use Src\modules\security\domain\aggregate\role\RoleWithStatus;
 use Src\modules\security\domain\entities\permissions\Permissions;
 use Src\modules\security\domain\entities\rol\Rol;
 use Src\modules\security\domain\repositories\rol\RolRepositoryInterface;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsActive;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsDescription;
 use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsId;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsIdCategoryPermissions;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsName;
 use Src\modules\security\domain\value_objects\rol_value_object\RolDescription;
 use Src\modules\security\domain\value_objects\rol_value_object\RolId;
 use Src\modules\security\domain\value_objects\rol_value_object\RolIdStatus;
@@ -99,18 +103,18 @@ class ImplRolRepository implements RolRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getOneById(RolId $id): ?Rol
+    public function getOneById(RolId $id): ?RoleWithStatus
     {
         try {
 
-            $rolModel = RolModel::find($id->value());
+            $rolModel = RolModel::with('permissions:id,name,description,id_category_permissions,active')->select('id', 'name', 'description', 'id_status')->where('id', $id->value())->first();
 
             if (!$rolModel) {
                 throw new InfrastructureException("Identificador de rol no encontrado", Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
-            $rol = $this->mapToDomain($rolModel);
-
+            $rol = $this->mapToAggregateDomain($rolModel);
+            
             return $rol;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -127,7 +131,7 @@ class ImplRolRepository implements RolRepositoryInterface
     public function getAllWithStatus(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
         try {
-            $query = RolModel::select('id', 'name', 'description', 'id_status')->orderBy('id');
+            $query = RolModel::with('permissions:id,name,description,id_category_permissions,active')->select('id', 'name', 'description', 'id_status')->orderBy('id');
             if ($filter_name) {
                 $query->where('name', 'ILIKE', "%{$filter_name}%");
             }
@@ -178,11 +182,18 @@ class ImplRolRepository implements RolRepositoryInterface
     }
     private function mapToAggregateDomain(RolModel $role): RoleWithStatus
     {
-
-        $permissionIds = null;
-        if (!empty($route->permissions)) {
-            $permissionIds = collect($role->permissions->toArray())->map(
-                fn($permission) => new PermissionsId($permission['id'])
+        $permissions = null;
+        if (!empty($role->permissions)) {
+            $permissions = collect($role->permissions->toArray())->map(
+                function ($permission) {
+                    return new Permissions(
+                        new PermissionsName($permission['name']),
+                        new PermissionsIdCategoryPermissions($permission['id_category_permissions']),
+                        new PermissionsDescription($permission['description']),
+                        new PermissionsActive($permission['active']),
+                        new PermissionsId($permission['id'])
+                    );
+                }
             )->toArray();
         }
         $globalStatus = $this->mapToDomainStatus($role);
@@ -191,11 +202,10 @@ class ImplRolRepository implements RolRepositoryInterface
                 new RolName($role->name),
                 new RolDescription($role->description),
                 new RolIdStatus($role->id_status),
-                
                 new RolId($role->id),
-                $permissionIds,
             ),
             $globalStatus,
+            $permissions
         );
         return $roleMapped;
     }
@@ -210,5 +220,15 @@ class ImplRolRepository implements RolRepositoryInterface
             new GlobalStatusId($globalStatus->id)
         );
         return $globalStatusMapped;
+    }
+    private function mapToDomainPermissions(RolModel $role): Permissions
+    {
+        return new Permissions(
+            new PermissionsName($role->permissions['name']),
+            new PermissionsIdCategoryPermissions($role->permission['id_category_permissions']),
+            new PermissionsDescription($role->permission['description']),
+            new PermissionsActive($role->permission['active']),
+            new PermissionsId($role->permission['id'])
+        );
     }
 }
