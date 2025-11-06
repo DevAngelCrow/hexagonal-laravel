@@ -120,13 +120,18 @@ class ImplRolRepository implements RolRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function delete(RolId $id): void
+    public function delete(RolId $id, int $id_status): void
     {
         try {
+            $rolModel = RolModel::find($id->value());
+            if (!$rolModel) {
+                throw new InfrastructureException("Identificador de rol no encontrado", Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+            $rolModel->id_status = $id_status;
+            $rolModel->save();
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        throw new LogicException("Método no implementado");
     }
     public function getAllWithStatus(?int $page, ?int $per_page, ?string $filter_name = null): array
     {
@@ -154,6 +159,22 @@ class ImplRolRepository implements RolRepositoryInterface
             $this->rolArray = array_map(fn($item) => $this->mapToAggregateDomain($item), $rolModels->all());
             return $this->rolArray;
         } catch (Exception $e) {
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    public function getOneByIdEntity(RolId $id): ?Rol
+    {
+        try{
+            $rolModel = RolModel::find($id->value());
+            
+            if (!$rolModel) {
+                throw new InfrastructureException("Identificador de rol no encontrado", Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            $rol = $this->mapToDomain($rolModel);
+            
+            return $rol;
+        }catch(Exception $e){
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

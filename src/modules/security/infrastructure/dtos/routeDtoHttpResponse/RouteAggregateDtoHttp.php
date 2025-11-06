@@ -59,7 +59,7 @@ class RouteAggregateDtoHttp
                 ];
             } , $child->getPermissions()) : null,
                 'id' => $parent->getId()?->value(),
-                'title' => $child->getTitle()?->value()
+                'title' => $parent->getTitle()?->value()
             ];
         }
         $childArray["parent_route"] = $parentArray;

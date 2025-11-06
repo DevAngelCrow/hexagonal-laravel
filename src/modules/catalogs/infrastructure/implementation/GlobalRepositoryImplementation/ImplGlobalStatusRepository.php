@@ -110,7 +110,20 @@ class ImplGlobalStatusRepository implements GlobalStatusRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
+    public function getOneByName(GlobalStatusName $name, GlobalStatusTableHeader $table_header): ?GlobalStatus
+    {
+        try{
+            $globalStatusDb = GlobalStatusModel::where("name", $name->value())->where("table_header", $table_header->value())->first();
+            
+            if (!$globalStatusDb) {
+                throw new InfrastructureException("nombre de Global Status no encontrado", Response::HTTP_NOT_FOUND);
+            }
+            $globalStatus = $this->mapToDomain($globalStatusDb);
+            return $globalStatus;
+        }catch(Exception $e){
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
     private function mapToDomain(GlobalStatusModel $globalStatus): GlobalStatus
     {
         return new GlobalStatus(

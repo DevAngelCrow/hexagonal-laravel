@@ -156,7 +156,6 @@ class ImplRouteRepository implements RouteRepositoryInterface
                 
                 $routeModels = $query->paginate($per_page);
                 $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $routeModels->items());
-
                 return $this->routesArray = [
                     "data" => $data,
                     "pagination" => [
@@ -170,9 +169,25 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModels = $query->get();
 
             $this->routesArray = array_map(fn($item) => $this->mapToAggregateDomain($item), $routeModels->all());
-
+            
             return $this->routesArray;
             
+        } catch (Exception $e) {
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    public function getOneRouteEntityById(RoutesId $id): ?Route
+    {
+        try {
+            $routeModel = RouteModel::find($id->value());
+            
+            if (!$routeModel) {
+                throw new InfrastructureException("Identificador de ruta no encontrado", Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            $route = $this->mapToDomain($routeModel);
+           
+            return $route;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -185,9 +200,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
                 fn($permission) => new PermissionsId($permission['id'])
             )->toArray();
         }
-
-
-
+       
         $routeMapped = new Route(
             new RoutesName($route->name),
             new RoutesDescription($route->description),
@@ -237,7 +250,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
             ),
             $parentRoute
         );
-
+        
         return $routeMapped;
     }
 }

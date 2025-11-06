@@ -13,6 +13,7 @@ interface RolRepositoryInterface {
      */
     public function getAll(?int $page, ?int $per_page, ?string $filter_name = null) : array;
     public function getOneById(RolId $id): ?RoleWithStatus;
-    public function delete(RolId $id) : void;
+    public function getOneByIdEntity(RolId $id): ?Rol;
+    public function delete(RolId $id, int $id_status) : void;
     public function getAllWithStatus(?int $page, ?int $per_page, ?string $filter_name = null) : array;
 }

@@ -14,7 +14,7 @@ interface RouteRepositoryInterface {
     public function getAll(?int $page, ?int $per_page) : array;
     public function getOneById(RoutesId $id): ?RouteWithChild;
     public function delete(RoutesId $id) : void;
-
+    public function getOneRouteEntityById(RoutesId $id): ?Route;
     /**
      * @return RouteWithChild[];
      */

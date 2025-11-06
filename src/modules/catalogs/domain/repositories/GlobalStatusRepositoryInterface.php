@@ -3,6 +3,8 @@ namespace Src\modules\catalogs\domain\repositories;
 
 use Src\modules\catalogs\domain\entities\GlobalStatus;
 use Src\modules\catalogs\domain\value_objects\global_status_value_objects\GlobalStatusId;
+use Src\modules\catalogs\domain\value_objects\global_status_value_objects\GlobalStatusName;
+use Src\modules\catalogs\domain\value_objects\global_status_value_objects\GlobalStatusTableHeader;
 
 interface GlobalStatusRepositoryInterface{
     public function create(GlobalStatus $globalStatus) : void;
@@ -12,5 +14,6 @@ interface GlobalStatusRepositoryInterface{
      */
     public function getAll(?int $page, ?int $per_page, ?string $filter_name, ?string $table_header) : array;
     public function getOneById(GlobalStatusId $id): ?GlobalStatus;
+    public function getOneByName(GlobalStatusName $name, GlobalStatusTableHeader $table_header) : ?GlobalStatus;
     public function delete(GlobalStatusId $id) : void;
 }
