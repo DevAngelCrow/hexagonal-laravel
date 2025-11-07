@@ -101,10 +101,10 @@ class ImplGlobalStatusRepository implements GlobalStatusRepositoryInterface
     public function delete(GlobalStatusId $id): void
     {
         try {
-            $documentTypeDb = GlobalStatusModel::find($id->value());
+            $globalStatusDb = GlobalStatusModel::find($id->value());
 
-            $documentTypeDb->state = false;
-            $documentTypeDb->save();
+            $globalStatusDb->state = !$globalStatusDb->state;
+            $globalStatusDb->save();
             //$documentTypeDb->delete();
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
