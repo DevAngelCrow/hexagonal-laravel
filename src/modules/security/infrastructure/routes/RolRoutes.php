@@ -11,4 +11,5 @@ Route::prefix("roles")->group(function () {
     Route::get("list", [RolController::class, "getAllRolWithStatus"]);
     Route::get("/{id}", [RolController::class, "getOneByIdRol"]);
     Route::put("{id}", [RolController::class, "updateRol"]);
+    Route::delete("/{id}", [RolController::class, "deleteRol"]);
 });

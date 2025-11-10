@@ -13,7 +13,8 @@ class UpdateRolRequest extends BaseRequest {
             "id"=>"required|integer",
             "name" => "required|string",
             "description" => "string",
-            "id_status" => "required|integer"
+            "id_status" => "required|integer",
+            "permissions_id"=>"array"
         ];
     }
 }

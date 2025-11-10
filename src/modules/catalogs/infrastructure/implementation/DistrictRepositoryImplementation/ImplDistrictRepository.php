@@ -101,7 +101,7 @@ class ImplDistrictRepository implements DistrictRepositoryInterface
         try {
             $districtModel = DistrictModel::find($id->value());
 
-            $districtModel->active = false;
+            $districtModel->active = !$districtModel->active;
             $districtModel->save();
             //$districtModel->delete();
         } catch (Exception $e) {

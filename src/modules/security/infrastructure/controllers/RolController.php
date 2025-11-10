@@ -5,6 +5,7 @@ namespace Src\modules\security\infrastructure\controllers;
 use App\Http\Controllers\Controller;
 use Src\modules\security\application\dtos\RolDto;
 use Src\modules\security\application\useCases\rol\RolCreate;
+use Src\modules\security\application\useCases\rol\RolDelete;
 use Src\modules\security\application\useCases\rol\RolGetAll;
 use Src\modules\security\application\useCases\rol\RolGetAllWithStatus;
 use Src\modules\security\application\useCases\rol\RolGetOneById;
@@ -26,19 +27,22 @@ class RolController extends Controller
     protected RolGetAll $rolGetAll;
     protected RolGetOneById $rolGetOneById;
     protected RolGetAllWithStatus $rolGetAllWithStatus;
+    protected RolDelete $rolDelete;
 
     public function __construct(
         RolCreate $rol_create,
         RolUpdate $rol_update,
         RolGetAll $rol_get_all,
         RolGetOneById $rol_get_one_by_id,
-        RolGetAllWithStatus $rol_get_all_with_status
+        RolGetAllWithStatus $rol_get_all_with_status,
+        RolDelete $rol_delete
     ) {
         $this->rolCreate = $rol_create;
         $this->rolUpdate = $rol_update;
         $this->rolGetAll = $rol_get_all;
         $this->rolGetOneById = $rol_get_one_by_id;
         $this->rolGetAllWithStatus = $rol_get_all_with_status;
+        $this->rolDelete = $rol_delete;
     }
     public function createRol(CreateRolRequest $request)
     {
@@ -71,7 +75,7 @@ class RolController extends Controller
     {
         $rol = $this->rolGetOneById->run($request->id);
 
-        return $this->success(["data" => RolDtoHttp::fromEntity($rol)]);
+        return $this->success(RolAggregateDtoHttp::fromAggregate($rol)->toArray(), "Success");
     }
     public function getAllRol(GetAllRolRequest $request)
     {
@@ -104,5 +108,9 @@ class RolController extends Controller
         }
         $data = array_map(fn($item) => RolAggregateDtoHttp::fromAggregate($item)->toArray(), $rolCollection);
         return $this->success($data, "Success");
+    }
+    public function deleteRol(GetByIdRolRequest $request){
+        $this->rolDelete->run($request->id);
+        return $this->success([], "Rol eliminado satisfactoriamente");
     }
 }

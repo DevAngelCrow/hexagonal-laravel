@@ -16,7 +16,7 @@ class RouteDelete {
 
     public function run(int $id) : void {
 
-        $routeDb = $this->routeRepository->getOneById(new RoutesId($id));
+        $routeDb = $this->routeRepository->getOneRouteEntityById(new RoutesId($id));
         if(!$routeDb){
             throw new ApplicationException("Identificador de ruta no encontrado", HttpStatusCode::HTTP_BAD_REQUEST->value);
         }

@@ -7,9 +7,14 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use LogicException;
 use Src\modules\security\domain\aggregate\routes\RouteWithChild;
+use Src\modules\security\domain\entities\permissions\Permissions;
 use Src\modules\security\domain\entities\route\Route;
 use Src\modules\security\domain\repositories\route\RouteRepositoryInterface;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsActive;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsDescription;
 use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsId;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsIdCategoryPermissions;
+use Src\modules\security\domain\value_objects\permissions_value_object\PermissionsName;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesActive;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesDescription;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesIcon;
@@ -43,7 +48,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModel->title = $route->getTitle()->value();
             $routeModel->save();
 
-            $permissionIds = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissionsId());
+            $permissionIds = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissions());
 
             $routeModel->RoutePermissions()->syncWithoutDetaching($permissionIds);
 
@@ -70,7 +75,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModel->id = $route->getId()->value();
             $routeModel->save();
 
-            $newPermissions = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissionsId() ?? []);
+            $newPermissions = array_map(fn($id_permission) => $id_permission->value(), $route->getPermissions() ?? []);
 
             $routeModel->permissions()->sync($newPermissions);
         } catch (Exception $e) {
@@ -110,17 +115,17 @@ class ImplRouteRepository implements RouteRepositoryInterface
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function getOneById(RoutesId $id): ?Route
+    public function getOneById(RoutesId $id): ?RouteWithChild
     {
         try {
-            $routeModel = RouteModel::find($id->value());
-
+            $routeModel = RouteModel::with(["RoutePermissions:id,name,description,active,id_category_permissions", "parent", "children"])->find($id->value());;
+            
             if (!$routeModel) {
                 throw new InfrastructureException("Identificador de rol no encontrado", Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
-            $route = $this->mapToDomain($routeModel);
-
+            $route = $this->mapToAggregateDomain($routeModel);
+           
             return $route;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -151,7 +156,6 @@ class ImplRouteRepository implements RouteRepositoryInterface
                 
                 $routeModels = $query->paginate($per_page);
                 $data = array_map(fn($item) => $this->mapToAggregateDomain($item), $routeModels->items());
-
                 return $this->routesArray = [
                     "data" => $data,
                     "pagination" => [
@@ -165,9 +169,25 @@ class ImplRouteRepository implements RouteRepositoryInterface
             $routeModels = $query->get();
 
             $this->routesArray = array_map(fn($item) => $this->mapToAggregateDomain($item), $routeModels->all());
-
+            
             return $this->routesArray;
             
+        } catch (Exception $e) {
+            throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    public function getOneRouteEntityById(RoutesId $id): ?Route
+    {
+        try {
+            $routeModel = RouteModel::find($id->value());
+            
+            if (!$routeModel) {
+                throw new InfrastructureException("Identificador de ruta no encontrado", Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            $route = $this->mapToDomain($routeModel);
+           
+            return $route;
         } catch (Exception $e) {
             throw new InfrastructureException($e, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -180,7 +200,7 @@ class ImplRouteRepository implements RouteRepositoryInterface
                 fn($permission) => new PermissionsId($permission['id'])
             )->toArray();
         }
-
+       
         $routeMapped = new Route(
             new RoutesName($route->name),
             new RoutesDescription($route->description),
@@ -201,12 +221,19 @@ class ImplRouteRepository implements RouteRepositoryInterface
     {
         $parentRoute = $route->parent ? $this->mapToDomain($route->parent) : null;
         
-        $permissionIds = null;
-        if (!empty($route->permissions)) {
-            $permissionIds = collect($route->permissions->toArray())->map(
-                fn($permission) => new PermissionsId($permission['id'])
-            )->toArray();
+        $permissions = null;
+        if (!empty($route->RoutePermissions)) {
+            $permissions = collect($route->RoutePermissions->toArray())->map(
+                fn($permission) => new Permissions(
+                    new PermissionsName($permission['name']),
+                    new PermissionsIdCategoryPermissions($permission['id_category_permissions']),
+                    new PermissionsDescription($permission['description']),
+                    new PermissionsActive($permission['active']),
+                    new PermissionsId($permission['id']
+                )
+                ))->toArray();
         }
+        
         $routeMapped = new RouteWithChild(
             new Route(
                 new RoutesName($route->name),
@@ -217,13 +244,13 @@ class ImplRouteRepository implements RouteRepositoryInterface
                 new RoutesShow($route->show),
                 new RoutesOrder($route->order),
                 null,
-                $permissionIds,
+                $permissions,
                 new RoutesId($route->id),
                 new RoutesTitle($route->title)
             ),
             $parentRoute
         );
-
+        
         return $routeMapped;
     }
 }

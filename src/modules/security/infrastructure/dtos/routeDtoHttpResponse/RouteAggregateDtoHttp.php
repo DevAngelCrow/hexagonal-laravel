@@ -11,7 +11,6 @@ class RouteAggregateDtoHttp
     public function __construct(public readonly RouteWithChild $route) {}
     public static function fromEntity(RouteWithChild $route): self
     {
-
         return new self($route);
     }
     public function toArray(): array
@@ -27,7 +26,15 @@ class RouteAggregateDtoHttp
             'active' => $child->getActive()->value(),
             'show' => $child->getShow()->value(),
             'order' => $child->getOrder()->value(),
-            'permissionsId' => $child->getPermissionsId() ? array_map(fn($p) => $p->value(), $child->getPermissionsId()) : null,
+            'permissions' => $child->getPermissions() ? array_map(function ($p) {
+                return [
+                    'id' => $p->getId()?->value(),
+                    'name' => $p->getName()->value(),
+                    'description' => $p->getDescription()->value(),
+                    'id_category_permissions' => $p->getIdCategoryPermissions()->value(),
+                    'active' => $p->getActive()->value()
+                ];
+            } , $child->getPermissions()) : null,
             'id' => $child->getId()?->value(),
             'title' => $child->getTitle()?->value()
         ];
@@ -42,9 +49,17 @@ class RouteAggregateDtoHttp
                 'active' => $parent->getActive()->value(),
                 'show' => $parent->getShow()->value(),
                 'order' => $parent->getOrder()->value(),
-                'permissionsId' => $parent->getPermissionsId() ? array_map(fn($p) => $p->value(), $parent->getPermissionsId()) : null,
+                'permissions' => $child->getPermissions() ? array_map(function ($p) {
+                return [
+                    'id' => $p->getId()?->value(),
+                    'name' => $p->getName()->value(),
+                    'description' => $p->getDescription()->value(),
+                    'id_category_permissions' => $p->getIdCategoryPermissions()->value(),
+                    'active' => $p->getActive()->value()
+                ];
+            } , $child->getPermissions()) : null,
                 'id' => $parent->getId()?->value(),
-                'title' => $child->getTitle()?->value()
+                'title' => $parent->getTitle()?->value()
             ];
         }
         $childArray["parent_route"] = $parentArray;

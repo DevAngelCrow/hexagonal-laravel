@@ -1,6 +1,7 @@
 <?php
 namespace Src\modules\security\domain\repositories\route;
 
+use Src\modules\security\domain\aggregate\routes\RouteWithChild;
 use Src\modules\security\domain\entities\route\Route;
 use Src\modules\security\domain\value_objects\routes_value_object\RoutesId;
 
@@ -11,9 +12,9 @@ interface RouteRepositoryInterface {
      * @return Route[];
      */
     public function getAll(?int $page, ?int $per_page) : array;
-    public function getOneById(RoutesId $id): ?Route;
+    public function getOneById(RoutesId $id): ?RouteWithChild;
     public function delete(RoutesId $id) : void;
-
+    public function getOneRouteEntityById(RoutesId $id): ?Route;
     /**
      * @return RouteWithChild[];
      */

@@ -108,7 +108,7 @@ class ImplDepartmentRepository implements DepartmentRepositoryInterface
         try {
             $departmentModel = DepartmentModel::find($id->value());
 
-            $departmentModel->active = false;
+            $departmentModel->active = !$departmentModel->active;
             $departmentModel->save();
             //$departmentModel->delete();
         } catch (Exception $e) {
